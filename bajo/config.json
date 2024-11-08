@@ -1,0 +1,11 @@
+{
+  "waibu": {
+    "prefix": "maps"
+  },
+  "mapOptions": {
+    "center": [106.8229, -6.1944],
+    "zoom": 7,
+    "style": "https://demotiles.maplibre.org/style.json"
+  },
+  "dependencies": ["bajo-spatial"]
+}
