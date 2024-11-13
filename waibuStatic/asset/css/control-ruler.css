@@ -1,0 +1,12 @@
+.maplibregl-ctrl-ruler button.active img {
+  background-color: orange;
+}
+
+.maplibregl-ctrl-ruler button.disabled img {
+  background-color: silver;
+}
+
+[data-bs-theme=dark] .maplibregl-ctrl-ruler img {
+  filter: invert(1);
+}
+

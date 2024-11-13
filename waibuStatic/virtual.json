@@ -1,4 +1,7 @@
 [{
   "prefix": "maplibre",
   "root": "maplibre-gl:/dist"
+}, {
+  "prefix": "terra-draw",
+  "root": "terra-draw:/dist"
 }]

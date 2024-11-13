@@ -11,8 +11,8 @@ const controlAttribution = {
     if (params.attr.compact) opts.compact = true
     if (isString(params.attr.text)) opts.customAttribution = params.attr.text
     const pos = ctrlPos.includes(params.attr.position) ? params.attr.position : undefined
-    params.html = `<script control-attribution>
-      map.addControl(new maplibregl.AttributionControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
+    params.html = `<script type="controlAttribution">
+      this.map.addControl(new maplibregl.AttributionControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
     </script>`
   }
 }

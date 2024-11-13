@@ -11,8 +11,8 @@ const controlScale = {
     if (['imperial', 'metric', 'nautical'].includes(params.attr.unit)) opts.unit = params.attr.unit
     if (isString(params.attr.maxWidth) && Number(params.attr.maxWidth)) opts.maxWidth = Number(params.attr.maxWidth)
     const pos = ctrlPos.includes(params.attr.position) ? params.attr.position : undefined
-    params.html = `<script control-scale>
-      map.addControl(new maplibregl.ScaleControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
+    params.html = `<script type="controlScale">
+      this.map.addControl(new maplibregl.ScaleControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
     </script>`
   }
 }

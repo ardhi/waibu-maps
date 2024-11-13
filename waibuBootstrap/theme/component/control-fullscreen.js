@@ -10,8 +10,8 @@ const controlFullscreen = {
     const opts = {}
     if (isString(params.attr.container)) opts.container = params.attr.container
     const pos = ctrlPos.includes(params.attr.position) ? params.attr.position : undefined
-    params.html = `<script control-fullscreen>
-      map.addControl(new maplibregl.FullscreenControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
+    params.html = `<script type="controlFullscreen">
+      this.map.addControl(new maplibregl.FullscreenControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
     </script>`
   }
 }

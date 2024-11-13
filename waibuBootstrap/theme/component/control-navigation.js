@@ -11,8 +11,8 @@ const controlNavigation = {
     if (params.attr.noZoom) opts.showZoom = false
     if (params.attr.visualizePitch) opts.visualizePitch = true
     const pos = ctrlPos.includes(params.attr.position) ? params.attr.position : undefined
-    params.html = `<script control-navigation>
-      map.addControl(new maplibregl.NavigationControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
+    params.html = `<script type="controlNavigation">
+      this.map.addControl(new maplibregl.NavigationControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
     </script>`
   }
 }
