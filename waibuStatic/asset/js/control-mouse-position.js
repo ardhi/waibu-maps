@@ -16,6 +16,7 @@ class ControlMousePosition { // eslint-disable-line no-unused-vars
     this.container = document.createElement('div')
     this.container.classList.add('maplibregl-ctrl', 'maplibregl-ctrl-mouse-position')
     this.panel = document.createElement('div')
+    this.panel.classList.add('maplibregl-ctrl-attrib-inner')
     if (this.trackCenter) this.onMouseMove()
     else this.panel.innerHTML = this.labelFormat({ lng: '', lat: '', lngLat: null, map: this.map })
     this.container.appendChild(this.panel)

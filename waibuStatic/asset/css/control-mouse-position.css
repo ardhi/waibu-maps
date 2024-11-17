@@ -1,12 +1,12 @@
 .maplibregl-ctrl-mouse-position {
-  padding: 0 5px;
-  background-color: hsla(0,0%,100%,.75);
-  margin: 0;
-  border: 2px solid #333;
-}
-
-[data-bs-theme=dark] .maplibregl-ctrl-mouse-position {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: #fff;
+  border-radius: 12px;
+  box-sizing: content-box;
+  color: #000;
+  margin: 10px;
+  min-height: 20px;
+  padding: 2px 8px 2px 8px;
+  position: relative;
 }
 
 .maplibregl-ctrl-mouse-position-lat-lng {

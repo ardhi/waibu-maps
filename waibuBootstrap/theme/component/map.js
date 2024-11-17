@@ -1,11 +1,14 @@
 import { opts, cmpMapOptions } from '../../../lib/cmp-map-options.js'
 
-export const scriptTypes = ['run', 'handler', 'mapLoad', 'nonReactive']
+export const scriptTypes = ['init', 'initializing', 'run', 'handler', 'mapLoad', 'nonReactive']
 export const scripts = [
   'waibuMaps.virtual:/maplibre/maplibre-gl.js',
   'waibuMaps.asset:/js/wmaps.js'
 ]
-export const css = ['waibuMaps.virtual:/maplibre/maplibre-gl.css']
+export const css = [
+  'waibuMaps.virtual:/maplibre/maplibre-gl.css',
+  'waibuMaps.asset:/css/map.css'
+]
 export const ctrlPos = ['top-left', 'top-right', 'bottom-left', 'bottom-right']
 
 const loadResource = `async loadResource (src) {
@@ -27,13 +30,11 @@ const map = {
     params.attr.id = params.attr.id ?? generateId('alpha')
     const mapOpts = this.plugin.app.waibuMaps.getConfig().mapOptions
     mapOpts.style = routePath(mapOpts.style)
-    if ($(`<div>${params.html}</div>`).find('script[control-attribution]').prop('innerHTML')) {
-      mapOpts.attributionControl = false
-    }
+    mapOpts.attributionControl = $(`<div>${params.html}</div>`).find('script[type="controlAttribution"]').length === 0
     cmpMapOptions.call(this, params, mapOpts)
     const inits = []
     $(`<div>${params.html}</div>`).find('script[type^="control"]').each(function () {
-      inits.push(trim($(this).prop('innerHTML')))
+      inits.push($(this).prop('innerHTML'))
     })
     const handlers = [
       'get map () { return map }',
@@ -79,15 +80,20 @@ const map = {
             async run (instance) {
               map = instance
               wmaps = new WMaps(instance)
+              let el
               ${script.run.join('\n')}
               this.map.on('load', this.onMapLoad.bind(this))
             }
           }
         })
+        ${script.init.join('\n')}
+      </script>
+      <script type="alpine:initializing">
+        ${script.initializing.join('\n')}
       </script>
     `
     const html = []
-    $(`<div>${params.html}</div>`).find('.maplibregl-childmap').each(function () {
+    $(`<div>${params.html}</div>`).find('.childmap').each(function () {
       html.push($(this).prop('outerHTML'))
     })
     params.html = html.join('\n')

@@ -1,4 +1,4 @@
-/* global maplibregl, geolib */
+/* global maplibregl, geolib, wbs, wmpa */
 
 class WMaps { // eslint-disable-line no-unused-vars
   constructor (map) {
@@ -77,16 +77,9 @@ class WMaps { // eslint-disable-line no-unused-vars
       this.map.getCanvas().style.cursor = ''
     })
   }
+}
 
-  // utils
-
-  // based on: https://github.com/manuelbieh/geolib/blob/master/src/decimalToSexagesimal.ts
-
-  imprecise (number, decimals = 4) {
-    const factor = Math.pow(10, decimals)
-    return Math.round(number * factor) / factor
-  }
-
+class WMapsUtil {
   decToDms (decimal, opts = {}) {
     if (opts === true || opts === false) opts = { isLng: opts }
     opts.north = opts.north ?? 'N'
@@ -97,4 +90,18 @@ class WMaps { // eslint-disable-line no-unused-vars
     if (opts.isLng) return `${result} ${decimal >= 0 ? opts.east : opts.west}`
     else return `${result} ${decimal >= 0 ? opts.north : opts.south}`
   }
+
+  async controlsSetting () {
+    const id = wmpa.randomId()
+    const body = [`<c:wmaps-modal-controls id="${id}" />`]
+    return await wbs.openModal(id, body)
+  }
+
+  async layersSetting () {
+    const id = wmpa.randomId()
+    const body = [`<c:wmaps-modal-layers id="${id}" />`]
+    return await wbs.openModal(id, body)
+  }
 }
+
+const wmapsUtil = new WMapsUtil() // eslint-disable-line no-unused-vars

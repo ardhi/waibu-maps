@@ -29,7 +29,7 @@ class ControlRuler { // eslint-disable-line no-unused-vars
     this.markers = []
     this.coordinates = []
     this.labels = []
-    this.icon = options.icon
+    this.imageUrl = options.imageUrl
     this.units = options.units || 'km'
     // this.font = options.font || ['Noto Sans Regular']
     this.fontSize = options.fontSize || 12
@@ -50,7 +50,7 @@ class ControlRuler { // eslint-disable-line no-unused-vars
     this.button = document.createElement('button')
     this.button.setAttribute('type', 'button')
     const img = document.createElement('img')
-    img.src = this.icon
+    img.src = this.imageUrl
     this.button.appendChild(img)
     this.container.appendChild(this.button)
   }
