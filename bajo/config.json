@@ -5,7 +5,7 @@
   "mapOptions": {
     "center": [106.8229, -6.1944],
     "zoom": 7,
-    "style": "waibuMaps.asset:/map-style/osm.json"
+    "style": "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
   },
   "dependencies": ["bajo-spatial"]
 }

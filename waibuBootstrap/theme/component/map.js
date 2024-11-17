@@ -1,5 +1,3 @@
-import { opts, cmpMapOptions } from '../../../lib/cmp-map-options.js'
-
 export const scriptTypes = ['init', 'initializing', 'run', 'handler', 'mapLoad', 'nonReactive']
 export const scripts = [
   'waibuMaps.virtual:/maplibre/maplibre-gl.js',
@@ -10,6 +8,16 @@ export const css = [
   'waibuMaps.asset:/css/map.css'
 ]
 export const ctrlPos = ['top-left', 'top-right', 'bottom-left', 'bottom-right']
+export const opts = {
+  boolTrue: ['antialias', 'hash', 'maplibreLogo'],
+  boolFalse: ['noBoxZoom', 'noDoubleClickZoom', 'noDoubleClickZoom', 'noDragPan', 'noDragRotate',
+    'noInteractive', 'noKeyboard', 'noPitchWithRotate', 'noRenderWorldCopies', 'noScrollZoom',
+    'noTouchPitch', 'noTouchZoomRotate', 'noTrackResize', 'noValidateStyle'],
+  number: ['zoom', 'bearing', 'bearingSnap', 'clickTolerance', 'fadeDuration', 'maxPitch',
+    'maxZoom', 'minPitch', 'minZoom', 'pitch'],
+  array: ['center', 'bounds', 'maxBounds'],
+  string: []
+}
 
 const loadResource = `async loadResource (src) {
   const resp = await fetch(src)
@@ -22,16 +30,29 @@ const map = {
   css,
   handler: async function (params = {}) {
     const { generateId } = this.plugin.app.bajo
-    const { uniq, trim, omit, keys, trimStart, trimEnd, isString } = this.plugin.app.bajo.lib._
-    const { jsonStringify } = this.plugin.app.waibuMpa
+    const { uniq, trim, omit, trimStart, trimEnd, isString, camelCase } = this.plugin.app.bajo.lib._
     const { routePath } = this.plugin.app.waibu
+    const { jsonStringify, attrToArray } = this.plugin.app.waibuMpa
+    const { buildMapStyle } = this.plugin.app.waibuMaps
     const $ = this.$
 
     params.attr.id = params.attr.id ?? generateId('alpha')
     const mapOpts = this.plugin.app.waibuMaps.getConfig().mapOptions
-    mapOpts.style = routePath(mapOpts.style)
+    mapOpts.container = params.attr.id
+    for (const key in params.attr) {
+      const val = params.attr[key]
+      if (val === true) {
+        if (opts.boolTrue.includes(key)) mapOpts[key] = true
+        if (opts.boolFalse.includes(key)) mapOpts[camelCase(key.slice(2))] = false
+      } else {
+        if (key === 'mapStyle') mapOpts.style = val
+        else if (opts.number.includes(key)) mapOpts[key] = Number(val)
+        else if (opts.array.includes(key)) mapOpts[key] = attrToArray(val).map(v => Number(v))
+        else if (opts.string.includes(key)) mapOpts[key] = val
+      }
+    }
+    mapOpts.style = buildMapStyle(routePath(mapOpts.style))
     mapOpts.attributionControl = $(`<div>${params.html}</div>`).find('script[type="controlAttribution"]').length === 0
-    cmpMapOptions.call(this, params, mapOpts)
     const inits = []
     $(`<div>${params.html}</div>`).find('script[type^="control"]').each(function () {
       inits.push($(this).prop('innerHTML'))
@@ -97,16 +118,7 @@ const map = {
       html.push($(this).prop('outerHTML'))
     })
     params.html = html.join('\n')
-    const omitted = []
-    for (const key in params.attr) {
-      if (key.startsWith('ctrl')) omitted.push(key)
-      else {
-        for (const k in opts) {
-          if (k === 'transform') omitted.push(...keys(opts.transform))
-          else omitted.push(...opts[k])
-        }
-      }
-    }
+    const omitted = ['mapStyle', ...Object.keys(opts)]
     params.attr = omit(params.attr, omitted)
   }
 }
