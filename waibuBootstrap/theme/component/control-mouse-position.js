@@ -16,7 +16,7 @@ const controlMousePosition = {
     params.noTag = true
     const pos = ctrlPos.includes(params.attr.position) ? params.attr.position : 'bottom-left'
     const centerTrack = params.attr.centerTrack ? 'trackCenter: true,' : ''
-    params.attr.store = isString(params.attr.store) ? params.attr.store : 'controlMousePosition'
+    const hasStore = isString(params.attr.store)
     const labelFormatDms = `
       labelFormat: ({ lng, lat }) => {
         const opts = { north: '${this.req.t('dirN')}', south: '${this.req.t('dirS')}', east: '${this.req.t('dirE')}', west: '${this.req.t('dirW')}' }
@@ -33,16 +33,19 @@ const controlMousePosition = {
         ${centerTrack}
         ${params.attr.format === 'DD' ? labelFormatDd : labelFormatDms}
       }
-      this.map.addControl(new ControlMousePosition(cmpOpts)${pos ? `, '${pos}'` : ''})
-      el = document.querySelector('#' + this.map._container.id + ' .maplibregl-ctrl-mouse-position')
-      el.setAttribute('x-data', '')
-      el.setAttribute('x-show', '$store.${params.attr.store}.on')
-    </script>
-    <script type="initializing">
-      Alpine.store('${params.attr.store}', {
-        on: Alpine.$persist(true).as('${params.attr.store}On')
-      })
-    </script>`
+      this.map.addControl(new ControlMousePosition(cmpOpts)${pos ? `, '${pos}'` : ''})`
+    if (hasStore) {
+      params.html += `
+          el = document.querySelector('#' + this.map._container.id + ' .maplibregl-ctrl-mouse-position')
+          el.setAttribute('x-data', '')
+          el.setAttribute('x-show', '$store.${params.attr.store}.on')
+        </script>
+        <script type="initializing">
+          Alpine.store('${params.attr.store}', {
+            on: Alpine.$persist(true).as('${params.attr.store}On')
+          })
+        </script>`
+    } else params.html += '</script>'
   }
 }
 

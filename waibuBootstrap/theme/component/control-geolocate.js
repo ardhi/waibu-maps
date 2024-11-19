@@ -10,19 +10,22 @@ const controlGeolocate = {
     const opts = {}
     if (params.attr.highAccuracy) set(opts, 'positionOptions.enableHighAccuracy', true)
     if (params.attr.trackUserLocation) opts.trackUserLocation = true
-    params.attr.store = isString(params.attr.store) ? params.attr.store : 'controlGeolocate'
+    const hasStore = isString(params.attr.store)
     const pos = ctrlPos.includes(params.attr.position) ? params.attr.position : undefined
     params.html = `<script type="controlFullscreen">
-      this.map.addControl(new maplibregl.GeolocateControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
-      el = document.querySelector('#' + this.map._container.id + ' .maplibregl-ctrl-geolocate').closest('.maplibregl-ctrl-group')
-      el.setAttribute('x-data', '')
-      el.setAttribute('x-show', '$store.${params.attr.store}.on')
-    </script>
-    <script type="initializing">
-      Alpine.store('${params.attr.store}', {
-        on: Alpine.$persist(true).as('${params.attr.store}On')
-      })
-    </script>`
+      this.map.addControl(new maplibregl.GeolocateControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})`
+    if (hasStore) {
+      params.html += `
+          el = document.querySelector('#' + this.map._container.id + ' .maplibregl-ctrl-geolocate').closest('.maplibregl-ctrl-group')
+          el.setAttribute('x-data', '')
+          el.setAttribute('x-show', '$store.${params.attr.store}.on')
+        </script>
+        <script type="initializing">
+          Alpine.store('${params.attr.store}', {
+            on: Alpine.$persist(true).as('${params.attr.store}On')
+          })
+        </script>`
+    } else params.html += '</script>'
   }
 }
 

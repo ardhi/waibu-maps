@@ -66,7 +66,7 @@ export function buildSource (params, extra = []) {
   `
 }
 
-const layer = {
+const layerGeojson = {
   scripts,
   css,
   handler: async function (params = {}) {
@@ -92,4 +92,4 @@ const layer = {
   }
 }
 
-export default layer
+export default layerGeojson

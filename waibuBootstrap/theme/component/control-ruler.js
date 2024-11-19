@@ -16,25 +16,28 @@ const controlMousePosition = {
     const { routePath } = this.plugin.app.waibu
     const { jsonStringify } = this.plugin.app.waibuMpa
     params.noTag = true
-    params.attr.store = isString(params.attr.store) ? params.attr.store : 'controlRuler'
+    const hasStore = isString(params.attr.store)
     const pos = ctrlPos.includes(params.attr.position) ? params.attr.position : 'top-left'
     const opts = {
       imageUrl: routePath('waibuMaps.asset:/image/ruler.svg')
     }
     params.html = `<script type="controlRuler">
       const rulerCtrl = new ControlRuler(${jsonStringify(opts, true)})
-      this.map.addControl(rulerCtrl${pos ? `, '${pos}'` : ''})
-      el = document.querySelector('#' + this.map._container.id + ' .maplibregl-ctrl-ruler')
-      el.setAttribute('x-data', '')
-      el.setAttribute('x-show', '$store.${params.attr.store}.on')
-      // TODO: disable measuring first
-      // el.setAttribute('x-init', "$watch('$store.${params.attr.store}.on', val => console.log(rulerCtrl))")
-    </script>
-    <script type="initializing">
-      Alpine.store('${params.attr.store}', {
-        on: Alpine.$persist(true).as('${params.attr.store}On')
-      })
-    </script>`
+      this.map.addControl(rulerCtrl${pos ? `, '${pos}'` : ''})`
+    if (hasStore) {
+      params.html += `
+          el = document.querySelector('#' + this.map._container.id + ' .maplibregl-ctrl-ruler')
+          el.setAttribute('x-data', '')
+          el.setAttribute('x-show', '$store.${params.attr.store}.on')
+          // TODO: disable measuring first
+          // el.setAttribute('x-init', "$watch('$store.${params.attr.store}.on', val => console.log(rulerCtrl))")
+        </script>
+        <script type="initializing">
+          Alpine.store('${params.attr.store}', {
+            on: Alpine.$persist(true).as('${params.attr.store}On')
+          })
+        </script>`
+    } else params.html += '</script>'
   }
 }
 

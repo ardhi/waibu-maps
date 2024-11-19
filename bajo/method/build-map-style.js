@@ -3,7 +3,8 @@ import path from 'path'
 const defSources = {
   type: 'raster',
   tileSize: 256,
-  maxzoom: 19
+  maxzoom: 19,
+  attribution: 'Waibu Maps'
 }
 const defLayer = {
   type: 'raster'
@@ -21,19 +22,20 @@ function buildMapStyle (src) {
   if ((isPlainObject(src) && src.version && src.sources) || (isString(src) && path.extname(src) === '.json')) return src
   const result = {}
   if (isString(src)) {
-    const url = new URL(src)
+    const [u, a] = src.split('|')
+    const url = new URL(u)
     const domain = camelCase(url.hostname)
     const sources = {}
-    sources[domain] = merge({}, { tiles: [src] }, defSources)
-    const layers = [merge({}, { id: domain, source: domain }, defLayer)]
+    sources[domain] = merge({}, defSources, { tiles: [u], attribution: a })
+    const layers = [merge({}, defLayer, { id: domain, source: domain })]
     merge(result, defStyle, { sources, layers })
   } else {
     const sources = {}
-    sources[src.code] = merge({}, { tiles: [src.url], attribution: src.attribution, minzoom: src.minZoom ?? 1, maxzoom: src.maxZoom ?? 19 }, defSources)
-    const layers = [merge({}, { id: src.code, source: src.code }, defLayer)]
+    const code = camelCase(src.code)
+    sources[code] = merge({}, defSources, { name: src.name, provider: src.provider, tiles: [src.url], attribution: src.attribution, minzoom: src.minZoom ?? 1, maxzoom: src.maxZoom ?? 19 })
+    const layers = [merge({}, defLayer, { id: code, source: code })]
     merge(result, defStyle, { sources, layers })
   }
-  console.log(result)
   return result
 }
 

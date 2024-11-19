@@ -11,16 +11,19 @@ const controlCenterPosition = {
   handler: async function (params = {}) {
     const { isString } = this.plugin.app.bajo.lib._
     params.noTag = true
-    params.attr.store = isString(params.attr.store) ? params.attr.store : 'controlCenterPosition'
-    params.html = `<div class="childmap maplibregl-ctrl-center" x-data>
-      <div x-show="$store.${params.attr.store}.on"></div>
-    </div>
-    <script type="initializing">
-      Alpine.store('${params.attr.store}', {
-        on: Alpine.$persist(true).as('${params.attr.store}On')
-      })
-    </script>
-    `
+    const hasStore = isString(params.attr.store)
+    params.html = '<div class="childmap maplibregl-ctrl-center" x-data>'
+    if (hasStore) {
+      params.html += `
+        <div x-show="$store.${params.attr.store}.on"></div>
+      </div>
+      <script type="initializing">
+        Alpine.store('${params.attr.store}', {
+          on: Alpine.$persist(true).as('${params.attr.store}On')
+        })
+      </script>
+      `
+    } else params.html += '</div>'
   }
 }
 

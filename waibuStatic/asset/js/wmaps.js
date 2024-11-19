@@ -1,4 +1,4 @@
-/* global maplibregl, geolib, wbs, wmpa */
+/* global maplibregl, geolib */
 
 class WMaps { // eslint-disable-line no-unused-vars
   constructor (map) {
@@ -89,18 +89,6 @@ class WMapsUtil {
     const result = geolib.decimalToSexagesimal(decimal)
     if (opts.isLng) return `${result} ${decimal >= 0 ? opts.east : opts.west}`
     else return `${result} ${decimal >= 0 ? opts.north : opts.south}`
-  }
-
-  async controlsSetting () {
-    const id = wmpa.randomId()
-    const body = [`<c:wmaps-modal-controls id="${id}" />`]
-    return await wbs.openModal(id, body)
-  }
-
-  async layersSetting () {
-    const id = wmpa.randomId()
-    const body = [`<c:wmaps-modal-layers id="${id}" />`]
-    return await wbs.openModal(id, body)
   }
 }
 

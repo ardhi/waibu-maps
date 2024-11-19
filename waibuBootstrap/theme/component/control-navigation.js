@@ -11,19 +11,22 @@ const controlNavigation = {
     if (params.attr.noCompass) opts.showCompass = false
     if (params.attr.noZoom) opts.showZoom = false
     if (params.attr.visualizePitch) opts.visualizePitch = true
-    params.attr.store = isString(params.attr.store) ? params.attr.store : 'controlNavigation'
+    const hasStore = isString(params.attr.store)
     const pos = ctrlPos.includes(params.attr.position) ? params.attr.position : undefined
     params.html = `<script type="controlNavigation">
-      this.map.addControl(new maplibregl.NavigationControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
-      el = document.querySelector('#' + this.map._container.id + ' .maplibregl-ctrl-zoom-in').closest('.maplibregl-ctrl-group')
-      el.setAttribute('x-data', '')
-      el.setAttribute('x-show', '$store.${params.attr.store}.on')
-    </script>
-    <script type="initializing">
-      Alpine.store('${params.attr.store}', {
-        on: Alpine.$persist(true).as('${params.attr.store}On')
-      })
-    </script>`
+      this.map.addControl(new maplibregl.NavigationControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})`
+    if (hasStore) {
+      params.html += `
+          el = document.querySelector('#' + this.map._container.id + ' .maplibregl-ctrl-zoom-in').closest('.maplibregl-ctrl-group')
+          el.setAttribute('x-data', '')
+          el.setAttribute('x-show', '$store.${params.attr.store}.on')
+        </script>
+        <script type="initializing">
+          Alpine.store('${params.attr.store}', {
+            on: Alpine.$persist(true).as('${params.attr.store}On')
+          })
+        </script>`
+    } else params.html += '</script>'
   }
 }
 

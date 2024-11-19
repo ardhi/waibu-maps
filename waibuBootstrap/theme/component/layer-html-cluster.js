@@ -1,5 +1,5 @@
 import { scripts, css } from './map.js'
-import { buildSource } from './layer.js'
+import { buildSource } from './layer-geojson.js'
 
 const cscripts = [...scripts]
 cscripts.push('waibuMaps.asset:/js/donut-chart.js')
