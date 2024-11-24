@@ -4,8 +4,7 @@
   },
   "mapOptions": {
     "center": [106.8229, -6.1944],
-    "zoom": 7,
-    "style": "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png|&copy; OpenStreetMap Contributors"
+    "zoom": 7
   },
   "dependencies": ["bajo-spatial"]
 }

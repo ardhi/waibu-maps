@@ -1,23 +1,17 @@
-export const scriptTypes = ['init', 'initializing', 'run', 'handler', 'mapLoad', 'nonReactive']
+import initializing from './map/initializing.js'
+import options from './map/options.js'
+
+export const scriptTypes = ['init', 'initializing', 'run', 'handler', 'mapLoad',
+  'nonReactive', 'dataInit', 'mapOptions', 'mapStyle']
 export const scripts = [
   'waibuMaps.virtual:/maplibre/maplibre-gl.js',
-  'waibuMaps.asset:/js/wmaps.js'
+  'waibuMaps:/wmaps.js'
 ]
 export const css = [
   'waibuMaps.virtual:/maplibre/maplibre-gl.css',
   'waibuMaps.asset:/css/map.css'
 ]
 export const ctrlPos = ['top-left', 'top-right', 'bottom-left', 'bottom-right']
-export const opts = {
-  boolTrue: ['antialias', 'hash', 'maplibreLogo'],
-  boolFalse: ['noBoxZoom', 'noDoubleClickZoom', 'noDoubleClickZoom', 'noDragPan', 'noDragRotate',
-    'noInteractive', 'noKeyboard', 'noPitchWithRotate', 'noRenderWorldCopies', 'noScrollZoom',
-    'noTouchPitch', 'noTouchZoomRotate', 'noTrackResize', 'noValidateStyle'],
-  number: ['zoom', 'bearing', 'bearingSnap', 'clickTolerance', 'fadeDuration', 'maxPitch',
-    'maxZoom', 'minPitch', 'minZoom', 'pitch'],
-  array: ['center', 'bounds', 'maxBounds'],
-  string: []
-}
 
 const loadResource = `async loadResource (src) {
   const resp = await fetch(src)
@@ -30,29 +24,11 @@ const map = {
   css,
   handler: async function (params = {}) {
     const { generateId } = this.plugin.app.bajo
-    const { uniq, trim, omit, trimStart, trimEnd, isString, camelCase } = this.plugin.app.bajo.lib._
-    const { routePath } = this.plugin.app.waibu
-    const { jsonStringify, attrToArray } = this.plugin.app.waibuMpa
-    const { buildMapStyle } = this.plugin.app.waibuMaps
+    const { uniq, trim, omit, trimStart, trimEnd, isString } = this.plugin.app.bajo.lib._
+    const { jsonStringify } = this.plugin.app.waibuMpa
     const $ = this.$
 
     params.attr.id = params.attr.id ?? generateId('alpha')
-    const mapOpts = this.plugin.app.waibuMaps.getConfig().mapOptions
-    mapOpts.container = params.attr.id
-    for (const key in params.attr) {
-      const val = params.attr[key]
-      if (val === true) {
-        if (opts.boolTrue.includes(key)) mapOpts[key] = true
-        if (opts.boolFalse.includes(key)) mapOpts[camelCase(key.slice(2))] = false
-      } else {
-        if (key === 'mapStyle') mapOpts.style = val
-        else if (opts.number.includes(key)) mapOpts[key] = Number(val)
-        else if (opts.array.includes(key)) mapOpts[key] = attrToArray(val).map(v => Number(v))
-        else if (opts.string.includes(key)) mapOpts[key] = val
-      }
-    }
-    mapOpts.style = buildMapStyle(routePath(mapOpts.style))
-    mapOpts.attributionControl = $(`<div>${params.html}</div>`).find('script[type="controlAttribution"]').length === 0
     const inits = []
     $(`<div>${params.html}</div>`).find('script[type^="control"]').each(function () {
       inits.push($(this).prop('innerHTML'))
@@ -61,15 +37,9 @@ const map = {
       'get map () { return map }',
       'get wmaps () { return wmaps }'
     ]
-
     params.tag = 'div'
     params.attr['x-data'] = `map${params.attr.id}`
-    params.attr['@load.window'] = `
-      async () => {
-        const options = ${jsonStringify(mapOpts, true)}
-        await run(new maplibregl.Map(options))
-      }
-    `
+    const defInitializing = await initializing.call(this, params)
     const script = {}
     let canLoadResource = false
     for (const type of scriptTypes) {
@@ -82,11 +52,22 @@ const map = {
       })
       script[type] = uniq(script[type])
     }
+    const mapOptions = await options.call(this, params)
+    handlers.push(`async windowLoad () {
+      const mapOpts = ${jsonStringify(mapOptions, true)}
+      const mapInfo = Alpine.store('mapInfo')
+      for (const item of ['center', 'zoom', 'bearing', 'pitch']) {
+       if (_.get(mapInfo, item)) mapOpts[item] = _.get(mapInfo, item)
+      }
+      ${script.mapOptions.join('\n')}
+      await this.run(new maplibregl.Map(mapOpts))
+    }`)
     if (canLoadResource) {
       handlers.push(loadResource)
     }
     handlers.push(...script.handler)
     script.run.unshift(...inits)
+    params.attr['@load.window'] = 'await windowLoad()'
     params.append = `
       <script type="alpine:init">
         Alpine.data('map${params.attr.id}', () => {
@@ -94,15 +75,22 @@ const map = {
           let wmaps
           ${script.nonReactive.join('\n')}
           return {
+            init () {
+              ${script.dataInit.join('\n')}
+            },
             ${handlers.join(',\n')},
             async onMapLoad () {
               ${script.mapLoad.join('\n')}
+            },
+            async onMapStyle () {
+              ${script.mapStyle.join('\n')}
             },
             async run (instance) {
               map = instance
               wmaps = new WMaps(instance)
               let el
               ${script.run.join('\n')}
+              this.map.on('styledata', this.onMapStyle.bind(this))
               this.map.on('load', this.onMapLoad.bind(this))
             }
           }
@@ -110,6 +98,7 @@ const map = {
         ${script.init.join('\n')}
       </script>
       <script type="alpine:initializing">
+        ${defInitializing.join('\n')}
         ${script.initializing.join('\n')}
       </script>
     `
@@ -118,7 +107,7 @@ const map = {
       html.push($(this).prop('outerHTML'))
     })
     params.html = html.join('\n')
-    const omitted = ['mapStyle', ...Object.keys(opts)]
+    const omitted = ['noBasemap', ...Object.keys(mapOptions)]
     params.attr = omit(params.attr, omitted)
   }
 }
