@@ -23,19 +23,22 @@ const controlButtons = {
         attrs[camelCase(k)] = this.attribs[k]
       }
       const opts = { id: attrs.id ?? generateId('alpha') }
-      if (isString(attrs.popup)) {
-        opts.popup = true
+      if (attrs.popup) {
+        opts.fn = attrs.popup
         opts.fnParams = opts.id
-      } else {
-        if (isString(attrs.url)) opts.url = routePath(attrs.url)
+        opts.popup = true
+      } else if (attrs.openTab) {
+        opts.url = attrs.openTab
+        opts.tab = true
+      } else if (attrs.openUrl) {
+        opts.url = attrs.openTab
+      } else { // open modal
+        opts.url = routePath(attrs.url)
         if (isString(attrs.dataBsTarget)) {
           opts.attrib = pick(attrs, ['dataBsTarget', 'dataBsToggle', 'ariaControls'])
         }
-        if (isString(attrs.newTab)) opts.newTab = true
-        if (isString(attrs.fnParams)) opts.fnParams = attrs.fnParams
       }
       if (isString(attrs.imageUrl)) opts.imageUrl = routePath(attrs.imageUrl)
-      if (isString(attrs.fn)) opts.fn = attrs.fn
       opts.icon = $(this).find('i').prop('class')
       items.push(opts)
     })

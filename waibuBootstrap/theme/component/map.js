@@ -2,8 +2,9 @@ import initializing from './map/initializing.js'
 import options from './map/options.js'
 
 export const scriptTypes = ['init', 'initializing', 'run', 'handler', 'mapLoad',
-  'nonReactive', 'dataInit', 'mapOptions', 'mapStyle']
+  'nonReactive', 'dataInit', 'mapOptions', 'mapStyle', 'layerVisible', 'missingImage']
 export const scripts = [
+  'waibuMaps.asset:/js/lib/worker-timers.js',
   'waibuMaps.virtual:/maplibre/maplibre-gl.js',
   'waibuMaps:/wmaps.js'
 ]
@@ -79,18 +80,33 @@ const map = {
               ${script.dataInit.join('\n')}
             },
             ${handlers.join(',\n')},
-            async onMapLoad () {
+            async onMapLoad (evt) {
               ${script.mapLoad.join('\n')}
+              this.onMapStyle()
             },
             async onMapStyle () {
               ${script.mapStyle.join('\n')}
             },
+            async onMissingImage (evt) {
+              ${script.missingImage.join('\n')}
+            },
+            onLayerVisible (layerId, shown) {
+              if (!shown) {
+                for (const el of document.querySelectorAll('.popup-layer-' + layerId)) {
+                  el.remove()
+                }
+              }
+              ${script.layerVisible.join('\n')}
+            },
             async run (instance) {
               map = instance
-              wmaps = new WMaps(instance)
+              wmaps = new WaibuMaps(instance)
               let el
               ${script.run.join('\n')}
-              this.map.on('styledata', this.onMapStyle.bind(this))
+              this.map.on('styledataloading', () => {
+                this.map.once('styledata', this.onMapStyle.bind(this))
+              })
+              this.map.on('styleimagemissing', this.onMissingImage.bind(this))
               this.map.on('load', this.onMapLoad.bind(this))
             }
           }
