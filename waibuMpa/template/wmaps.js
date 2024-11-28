@@ -80,11 +80,6 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     })
   }
 
-  getBbox () {
-    const bounds = this.map.getBounds().toArray()
-    return [...bounds[0], ...bounds[1]]
-  }
-
   async loadImages (sources) {
     for (const src of sources) {
       const data = await wmpa.fetchApi(src)
