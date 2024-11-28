@@ -1,7 +1,7 @@
 import initializing from './map/initializing.js'
 import options from './map/options.js'
 
-export const scriptTypes = ['init', 'initializing', 'run', 'handler', 'mapLoad',
+export const scriptTypes = ['init', 'initializing', 'run', 'reactive', 'mapLoad',
   'nonReactive', 'dataInit', 'mapOptions', 'mapStyle', 'layerVisible', 'missingImage']
 export const scripts = [
   'waibuMaps.asset:/js/lib/worker-timers.js',
@@ -34,7 +34,7 @@ const map = {
     $(`<div>${params.html}</div>`).find('script[type^="control"]').each(function () {
       inits.push($(this).prop('innerHTML'))
     })
-    const handlers = [
+    const reactives = [
       'get map () { return map }',
       'get wmaps () { return wmaps }'
     ]
@@ -48,13 +48,13 @@ const map = {
       $(`<div>${params.html}</div>`).find(`script[type="${type}"]`).each(function () {
         if (isString(this.attribs['has-resource'])) canLoadResource = true
         let html = trim($(this).prop('innerHTML'))
-        if (type === 'handler') html = trim(trimEnd(trimStart(html, '{'), '}'))
+        if (type === 'reactive') html = trim(trimEnd(trimStart(html, '{'), '}'))
         script[type].push(html)
       })
       script[type] = uniq(script[type])
     }
     const mapOptions = await options.call(this, params)
-    handlers.push(`async windowLoad () {
+    reactives.push(`async windowLoad () {
       const mapOpts = ${jsonStringify(mapOptions, true)}
       const mapInfo = Alpine.store('mapInfo')
       for (const item of ['center', 'zoom', 'bearing', 'pitch']) {
@@ -64,9 +64,9 @@ const map = {
       await this.run(new maplibregl.Map(mapOpts))
     }`)
     if (canLoadResource) {
-      handlers.push(loadResource)
+      reactives.push(loadResource)
     }
-    handlers.push(...script.handler)
+    reactives.push(...script.reactive)
     script.run.unshift(...inits)
     params.attr['@load.window'] = 'await windowLoad()'
     params.append = `
@@ -79,7 +79,7 @@ const map = {
             init () {
               ${script.dataInit.join('\n')}
             },
-            ${handlers.join(',\n')},
+            ${reactives.join(',\n')},
             async onMapLoad (evt) {
               ${script.mapLoad.join('\n')}
               this.onMapStyle()

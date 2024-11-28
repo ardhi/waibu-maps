@@ -2,3 +2,11 @@
   width: 35px;
   height: 35px;
 }
+
+.maplibregl-popup-content div span {
+  display: inline-block;
+}
+
+.maplibregl-popup-content div span.label {
+  min-width: 80px;
+}

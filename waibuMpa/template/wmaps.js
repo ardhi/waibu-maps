@@ -30,10 +30,17 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
       while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
       }
-
-      if (_.isFunction(handler)) await handler.call(this, { props, coordinates, layerId }, e)
-      else if (_.isString(handler)) this.mapPopup({ layerId, props, html: props[handler], coordinates })
+      let html = _.isString(handler) ? props[handler] : undefined
+      if (_.isFunction(handler)) html = await handler.call(this, { props, coordinates, layerId }, e)
+      this.map._mapPopup = this.mapPopup({ layerId, props, html, coordinates })
     })
+  }
+
+  mapPopup ({ layerId, props, html, coordinates }) {
+    return new maplibregl.Popup({ className: 'popup-layer-' + layerId + ' popup-target-' + props.id })
+      .setLngLat(coordinates)
+      .setHTML(html)
+      .addTo(this.map)
   }
 
   updateClusterMarkers ({ sourceId, clusterKey = 'cluster', clusterIdKey = 'clusterId', handler }) {
@@ -62,13 +69,6 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
       if (!newMarkers[id]) this.markersOnScreen[id].remove()
     }
     this.markersOnScreen = newMarkers
-  }
-
-  mapPopup ({ layerId, props, html, coordinates }) {
-    new maplibregl.Popup({ className: 'popup-layer-' + layerId + ' popup-target-' + props.id })
-      .setLngLat(coordinates)
-      .setHTML(html)
-      .addTo(this.map)
   }
 
   handlePointer (layerId) {
@@ -157,7 +157,11 @@ class WaibuMapsUtil {
 
 const wmapsUtil = new WaibuMapsUtil() // eslint-disable-line no-unused-vars
 
+// patch
 window.setInterval = WorkerTimers.setInterval
 window.clearInterval = WorkerTimers.clearInterval
 window.setTimeout = WorkerTimers.setTimeout
 window.clearTimeout = WorkerTimers.clearTimeout
+console.warn = (item) => {
+  if (!item.includes('could not be loaded. Please make sure you have added the image with')) console.warn(item)
+}

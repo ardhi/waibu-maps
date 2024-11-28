@@ -92,7 +92,7 @@ const layerHtmlCluster = {
         this.updateMarkers()
       })
     </script>`
-    params.html += `\n<script type="handler">{
+    params.html += `\n<script type="reactive">{
       colors: ${jsonStringify(colors, true)},
       filter: ${jsonStringify(filters, true)},
       updateMarkers () {
