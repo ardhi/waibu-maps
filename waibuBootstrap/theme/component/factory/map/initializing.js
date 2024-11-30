@@ -3,13 +3,13 @@ async function initializing (params = {}) {
 
   const group = groupAttrs(params.attr, ['persist', 'control'])
   const initializing = []
-  if (group.persist.mapLayer) {
+  if (group.persist && group.persist.mapLayer) {
     initializing.push(`Alpine.store('mapLayer', {
       basemap: Alpine.$persist('osm-mapnik').as('mapLayerBasemap'),
       overlays: Alpine.$persist([]).as('mapLayerOverlays')
     })`)
   }
-  if (group.persist.mapInfo) {
+  if (group.persist && group.persist.mapInfo) {
     initializing.push(`Alpine.store('mapInfo', {
         center: Alpine.$persist(null).as('mapInfoCenter'),
         zoom: Alpine.$persist(null).as('mapInfoZoom'),
@@ -17,7 +17,7 @@ async function initializing (params = {}) {
         pitch: Alpine.$persist(null).as('mapInfoPitch')
       })`)
   }
-  if (group.persist.mapSetting) {
+  if (group.persist && group.persist.mapSetting) {
     initializing.push(`Alpine.store('mapSetting', {
       degree: Alpine.$persist('DMS').as('mapSettingDegree'),
       measure: Alpine.$persist('nautical').as('mapSettingMeasure'),
@@ -25,7 +25,7 @@ async function initializing (params = {}) {
       noMapRotate: Alpine.$persist(false).as('mapSettingNoMapRotate')
     })`)
   }
-  if (group.persist.mapControl) {
+  if (group.persist && group.persist.mapControl) {
     initializing.push(`Alpine.store('mapControl', {
       attrib: Alpine.$persist(true).as('mapControlAttrib'),
       centerPos: Alpine.$persist(true).as('mapControlCenterPos'),

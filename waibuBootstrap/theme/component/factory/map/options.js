@@ -15,6 +15,7 @@ async function options (params = {}) {
   const { routePath } = this.plugin.app.waibu
   const mapOpts = this.plugin.app.waibuMaps.getConfig().mapOptions
   mapOpts.container = params.attr.id
+  const { $ } = this.component
   for (const key in params.attr) {
     const val = params.attr[key]
     if (val === true) {
@@ -30,10 +31,10 @@ async function options (params = {}) {
     delete mapOpts.style
   } else {
     if (isString(params.attr.basemap)) mapOpts.style = params.attr.basemap
-    else mapOpts.style = 'waibuMaps:/default-map'
+    else mapOpts.style = 'waibuMaps:/default-style.json'
     mapOpts.style = routePath(mapOpts.style)
   }
-  mapOpts.attributionControl = this.$(`<div>${params.html}</div>`).find('script[type="controlAttribution"]').length === 0
+  mapOpts.attributionControl = $(`<div>${params.html}</div>`).find('script[type="controlAttribution"]').length === 0
   return mapOpts
 }
 

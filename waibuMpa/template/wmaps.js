@@ -1,4 +1,4 @@
-/* global maplibregl, geolib, _, wmpa, WorkerTimers */
+/* global maplibregl, geolib, _, wmpa, WorkerTimers, bootstrap */
 
 class WaibuMaps { // eslint-disable-line no-unused-vars
   constructor (map) {
@@ -22,17 +22,51 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     })
   }
 
-  async handleNonClusterClick (layerId, handler = 'name') {
-    this.map.on('click', layerId, async (e) => {
-      const props = e.features[0].properties
-      const coordinates = e.features[0].geometry.coordinates.slice()
+  async extractMapPopup ({ evt, layerId, handler }) {
+    const props = evt.features[0].properties
+    const coordinates = evt.features[0].geometry.coordinates.slice()
 
-      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
-      }
-      let html = _.isString(handler) ? props[handler] : undefined
-      if (_.isFunction(handler)) html = await handler.call(this, { props, coordinates, layerId }, e)
-      this.map._mapPopup = this.mapPopup({ layerId, props, html, coordinates })
+    while (Math.abs(evt.lngLat.lng - coordinates[0]) > 180) {
+      coordinates[0] += evt.lngLat.lng > coordinates[0] ? 360 : -360
+    }
+    let html = _.isString(handler) ? props[handler] : undefined
+    if (_.isFunction(handler)) html = await handler.call(this, { props, coordinates, layerId }, evt)
+
+    return { props, coordinates, html }
+  }
+
+  async handleNonClusterClick (layerId, handler = 'name') {
+    this.map.on('click', layerId, async (evt) => {
+      const { html } = await this.extractMapPopup({ evt, layerId, handler })
+      const id = wmpa.randomId()
+      const body = ['<c:drawer id="' + id + '" t:title="Details" divider>']
+      body.push(html, '</c:drawer>')
+      await wmpa.addComponent(body.join('\n'), 'body')
+      const item = new bootstrap.Offcanvas('#' + id)
+      const itemEl = document.getElementById(id)
+      itemEl.addEventListener('hidden.bs.offcanvas', evt => {
+        itemEl.remove()
+      })
+      item.show()
+    })
+  }
+
+  async handleNonClusterHover (layerId, handler = 'name') {
+    if (!this.map._mapPopupHover) {
+      this.map._mapPopupHover = new maplibregl.Popup({
+        closeButton: false,
+        closeOnClick: false
+      })
+    }
+    this.map.on('mouseenter', layerId, async (evt) => {
+      const { coordinates, html } = await this.extractMapPopup({ evt, layerId, handler })
+      this.map._mapPopupHover
+        .setLngLat(coordinates)
+        .setHTML(html)
+        .addTo(this.map)
+    })
+    this.map.on('mouseleave', layerId, () => {
+      this.map._mapPopupHover.remove()
     })
   }
 
@@ -41,6 +75,21 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
       .setLngLat(coordinates)
       .setHTML(html)
       .addTo(this.map)
+  }
+
+  mapPopupContent ({ props, coordinates, layerId, tpl, schema }) {
+    let html = tpl
+    for (const s in schema) {
+      if (!_.has(props, s)) props[s] = null
+    }
+    for (const p in props) {
+      const opts = { emptyValue: '-' }
+      const [type, subType] = (schema[p] ?? 'auto').split(':')
+      if (subType === 'longitude') opts.longitude = true
+      if (subType === 'latitude') opts.latitude = true
+      html = html.replace('{{rec.' + p + '}}', wmpa.format(props[p], type, wmpa.lang, opts))
+    }
+    return html
   }
 
   updateClusterMarkers ({ sourceId, clusterKey = 'cluster', clusterIdKey = 'clusterId', handler }) {
@@ -162,6 +211,7 @@ window.setInterval = WorkerTimers.setInterval
 window.clearInterval = WorkerTimers.clearInterval
 window.setTimeout = WorkerTimers.setTimeout
 window.clearTimeout = WorkerTimers.clearTimeout
+const _warn = console.warn
 console.warn = (item) => {
-  if (!item.includes('could not be loaded. Please make sure you have added the image with')) console.warn(item)
+  if (!item.includes('could not be loaded. Please make sure you have added the image with')) _warn(item)
 }

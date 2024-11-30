@@ -1,4 +1,4 @@
-import { scripts, css } from './map.js'
+import wmapsBase from '../wmaps-base.js'
 
 export function buildLayers (params) {
   const { isString, map } = this.plugin.app.bajo.lib._
@@ -66,29 +66,36 @@ export function buildSource (params, extra = []) {
   `
 }
 
-const layerGeojson = {
-  scripts,
-  css,
-  handler: async function (params = {}) {
-    const { generateId } = this.plugin.app.bajo
-    const { isString } = this.plugin.app.bajo.lib._
-    const { groupAttrs } = this.plugin.app.waibuMpa
-    params.noTag = true
-    if (!params.attr.src) return
-    params.attr.name = params.attr.name ?? generateId('alpha')
-    const group = groupAttrs(params.attr, ['cluster'])
-    const cluster = []
-    if (group.cluster) {
-      cluster.push('data.cluster = true')
-      if (isString(group.cluster.radius)) cluster.push('data.clusterRadius = ' + Number(group.cluster.radius))
-      if (isString(group.cluster.maxZoom)) cluster.push('data.clusterMaxZoom = ' + Number(group.cluster.maxZoom))
+async function layerGeojson (component) {
+  const WmapsBase = await wmapsBase(component)
+
+  return class WmapsLayerGeojson extends WmapsBase {
+    constructor (options) {
+      super(options)
+      this.params.noTag = true
     }
 
-    params.html = `<script type="mapLoad" has-resource>
-      ${params.attr.srcImages ? (await buildSrcImages.call(this, params)) : buildImage.call(this, params)}
-      ${buildSource.call(this, params, cluster)}
-      ${buildLayers.call(this, params)}
-    </script>`
+    async build () {
+      const { generateId } = this.plugin.app.bajo
+      const { isString } = this.plugin.app.bajo.lib._
+      const { groupAttrs } = this.plugin.app.waibuMpa
+      this.params.noTag = true
+      if (!this.params.attr.src) return
+      this.params.attr.name = this.params.attr.name ?? generateId('alpha')
+      const group = groupAttrs(this.params.attr, ['cluster'])
+      const cluster = []
+      if (group.cluster) {
+        cluster.push('data.cluster = true')
+        if (isString(group.cluster.radius)) cluster.push('data.clusterRadius = ' + Number(group.cluster.radius))
+        if (isString(group.cluster.maxZoom)) cluster.push('data.clusterMaxZoom = ' + Number(group.cluster.maxZoom))
+      }
+
+      this.params.html = `<script type="mapLoad" has-resource>
+        ${this.params.attr.srcImages ? (await buildSrcImages.call(this, this.params)) : buildImage.call(this, this.params)}
+        ${buildSource.call(this, this.params, cluster)}
+        ${buildLayers.call(this, this.params)}
+      </script>`
+    }
   }
 }
 
