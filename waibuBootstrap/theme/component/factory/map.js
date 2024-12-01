@@ -12,8 +12,8 @@ const loadResource = `async loadResource (src) {
   return resp.json()
 }`
 
-async function map (component) {
-  const WmapsBase = await wmapsBase(component)
+async function map () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsMap extends WmapsBase {
     async build () {
@@ -119,7 +119,6 @@ async function map (component) {
       const keys = without(Object.keys(mapOptions), 'style')
       const omitted = ['noBasemap', ...keys]
       this.params.attr = omit(this.params.attr, omitted)
-      console.log(this.params.attr)
     }
   }
 }

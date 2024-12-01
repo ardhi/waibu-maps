@@ -1,7 +1,7 @@
 import wmapsBase from '../wmaps-base.js'
 
-async function template (component) {
-  const WmapsBase = await wmapsBase(component)
+async function template () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsTemplate extends WmapsBase {
   }

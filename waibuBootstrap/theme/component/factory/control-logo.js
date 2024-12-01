@@ -1,7 +1,7 @@
 import wmapsBase from '../wmaps-base.js'
 
-async function controlLogo (component) {
-  const WmapsBase = await wmapsBase(component)
+async function controlLogo () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsControlLogo extends WmapsBase {
     static scripts = [

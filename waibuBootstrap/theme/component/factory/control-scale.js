@@ -2,8 +2,8 @@ import wmapsBase from '../wmaps-base.js'
 
 const storeKey = 'mapControl.scale'
 
-async function controlScale (component) {
-  const WmapsBase = await wmapsBase(component)
+async function controlScale () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsControlScale extends WmapsBase {
     constructor (options) {

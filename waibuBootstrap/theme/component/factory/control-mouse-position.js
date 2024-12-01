@@ -2,8 +2,8 @@ import wmapsBase from '../wmaps-base.js'
 
 const storeKey = 'mapControl.mousePos'
 
-async function controlMousePosition (component) {
-  const WmapsBase = await wmapsBase(component)
+async function controlMousePosition () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsControlMousePosition extends WmapsBase {
     static scripts = [
@@ -23,17 +23,18 @@ async function controlMousePosition (component) {
     }
 
     async build () {
+      const { req } = this.component
       const pos = WmapsBase.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-left'
       const centerTrack = this.params.attr.centerTrack ? 'trackCenter: true,' : ''
       const labelFormatDms = `
         function labelFormatDms ({ lng, lat }) {
-          const opts = { north: '${this.req.t('dirN')}', south: '${this.req.t('dirS')}', east: '${this.req.t('dirE')}', west: '${this.req.t('dirW')}' }
-          return '<span class="maplibregl-ctrl-mouse-position-lat-lng dms">${this.req.t('Lng')}: ' + wmapsUtil.decToDms(lng, _.merge({}, opts, { isLng: true })) + '</span>, <span class="maplibregl-ctrl-mouse-position-lat-lng dms">${this.req.t('Lat')}: ' + wmapsUtil.decToDms(lat, _.merge({}, opts, { isLng: false })) + '</span>'
+          const opts = { north: '${req.t('dirN')}', south: '${req.t('dirS')}', east: '${req.t('dirE')}', west: '${req.t('dirW')}' }
+          return '<span class="maplibregl-ctrl-mouse-position-lat-lng dms">${req.t('Lng')}: ' + wmapsUtil.decToDms(lng, _.merge({}, opts, { isLng: true })) + '</span>, <span class="maplibregl-ctrl-mouse-position-lat-lng dms">${req.t('Lat')}: ' + wmapsUtil.decToDms(lat, _.merge({}, opts, { isLng: false })) + '</span>'
         }
       `
       const labelFormatDd = `
         function labelFormatDd ({ lng, lat }) {
-          return '<span class="maplibregl-ctrl-mouse-position-lat-lng">${this.req.t('Lng')}: ' + lng + '</span>, <span class="maplibregl-ctrl-mouse-position-lat-lng">${this.req.t('Lat')}: ' + lat + '</span>'
+          return '<span class="maplibregl-ctrl-mouse-position-lat-lng">${req.t('Lng')}: ' + lng + '</span>, <span class="maplibregl-ctrl-mouse-position-lat-lng">${req.t('Lat')}: ' + lat + '</span>'
         }
       `
       this.params.html = `<script type="controlMousePosition">

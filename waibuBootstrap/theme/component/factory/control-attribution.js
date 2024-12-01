@@ -2,8 +2,8 @@ import wmapsBase from '../wmaps-base.js'
 
 const storeKey = 'mapControl.attrib'
 
-async function controlAttribution (component) {
-  const WmapsBase = await wmapsBase(component)
+async function controlAttribution () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsControlAttribution extends WmapsBase {
     constructor (options) {

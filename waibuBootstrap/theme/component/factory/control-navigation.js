@@ -2,8 +2,8 @@ import wmapsBase from '../wmaps-base.js'
 
 const storeKey = 'mapControl.nav'
 
-async function controlNavigation (component) {
-  const WmapsBase = await wmapsBase(component)
+async function controlNavigation () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsControlNavigation extends WmapsBase {
     constructor (options) {

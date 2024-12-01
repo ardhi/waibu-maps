@@ -1,5 +1,5 @@
-async function wmapsBase (component) {
-  return class WmapsBase extends component.baseFactory {
+async function wmapsBase () {
+  return class WmapsBase extends this.baseFactory {
     static scripts = [...super.scripts,
       'waibuMaps.asset:/js/lib/worker-timers.js',
       'waibuMaps.virtual:/maplibre/maplibre-gl.js',

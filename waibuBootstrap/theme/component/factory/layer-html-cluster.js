@@ -49,8 +49,8 @@ function createLayerCircle (params, filters) {
   return circle.join('\n')
 }
 
-async function layerHtmlCluster (component) {
-  const WmapsBase = await wmapsBase(component)
+async function layerHtmlCluster () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsLayerHtmlCluster extends WmapsBase {
     static scripts = [

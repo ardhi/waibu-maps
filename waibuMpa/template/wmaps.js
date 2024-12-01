@@ -5,6 +5,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     this.map = map
     this.markers = {}
     this.markersOnScreen = {}
+    this.popups = {}
   }
 
   async handleClusterClick (layerId, clusterId = 'cluster_id') {
@@ -22,22 +23,44 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     })
   }
 
-  async extractMapPopup ({ evt, layerId, handler }) {
-    const props = evt.features[0].properties
-    const coordinates = evt.features[0].geometry.coordinates.slice()
+  async popupHtml ({ props, handler, coordinates, layerId }, evt) {
+    let html = _.isString(handler) ? props[handler] : undefined
+    if (_.isFunction(handler)) html = await handler.call(this, { props, coordinates, layerId }, evt)
+    return html
+  }
 
+  getCoordinates (evt) {
+    const coordinates = evt.features[0].geometry.coordinates.slice()
     while (Math.abs(evt.lngLat.lng - coordinates[0]) > 180) {
       coordinates[0] += evt.lngLat.lng > coordinates[0] ? 360 : -360
     }
-    let html = _.isString(handler) ? props[handler] : undefined
-    if (_.isFunction(handler)) html = await handler.call(this, { props, coordinates, layerId }, evt)
+    return coordinates
+  }
 
+  async extractPopup ({ evt, layerId, handler, props, coordinates }) {
+    props = props ?? evt.features[0].properties
+    coordinates = coordinates ?? this.getCoordinates(evt)
+    const html = await this.popupHtml({ props, handler, coordinates, layerId }, evt)
     return { props, coordinates, html }
+  }
+
+  createPopup (layerId) {
+    if (!this.popups[layerId]) {
+      this.popups[layerId] = new maplibregl.Popup({
+        closeButton: false,
+        closeOnClick: false
+      })
+    }
+    return this.popups[layerId]
   }
 
   async handleNonClusterClick (layerId, handler = 'name') {
     this.map.on('click', layerId, async (evt) => {
-      const { html } = await this.extractMapPopup({ evt, layerId, handler })
+      const popup = this.createPopup(layerId)
+      if (popup.isOpen()) popup.remove()
+      const props = popup._props
+      const coordinates = popup._coordinates
+      const html = await this.popupHtml({ props, coordinates, layerId, handler })
       const id = wmpa.randomId()
       const body = ['<c:drawer id="' + id + '" t:title="Details" divider>']
       body.push(html, '</c:drawer>')
@@ -52,32 +75,29 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
   }
 
   async handleNonClusterHover (layerId, handler = 'name') {
-    if (!this.map._mapPopupHover) {
-      this.map._mapPopupHover = new maplibregl.Popup({
-        closeButton: false,
-        closeOnClick: false
-      })
-    }
     this.map.on('mouseenter', layerId, async (evt) => {
-      const { coordinates, html } = await this.extractMapPopup({ evt, layerId, handler })
-      this.map._mapPopupHover
+      const { coordinates, html, props } = await this.extractPopup({ evt, layerId, handler })
+      const popup = this.createPopup(layerId)
+      popup._props = props
+      popup._coordinates = coordinates
+      popup
         .setLngLat(coordinates)
         .setHTML(html)
         .addTo(this.map)
     })
     this.map.on('mouseleave', layerId, () => {
-      this.map._mapPopupHover.remove()
+      if (this.popups[layerId]) this.popups[layerId].remove()
     })
   }
 
-  mapPopup ({ layerId, props, html, coordinates }) {
+  popup ({ layerId, props, html, coordinates }) {
     return new maplibregl.Popup({ className: 'popup-layer-' + layerId + ' popup-target-' + props.id })
       .setLngLat(coordinates)
       .setHTML(html)
       .addTo(this.map)
   }
 
-  mapPopupContent ({ props, coordinates, layerId, tpl, schema }) {
+  popupFormat ({ props, coordinates, layerId, tpl, schema }) {
     let html = tpl
     for (const s in schema) {
       if (!_.has(props, s)) props[s] = null
@@ -129,20 +149,26 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     })
   }
 
-  async loadImages (sources) {
+  async loadImage (src) {
+    if (_.isString(src)) {
+      const [url, id] = src.split(';')
+      src = { url, id }
+    }
+    if (!src.id) src.id = _.last(src.url.split('?')[0].split('#')[0].split('/')).split('.')[0]
+    if (this.map.listImages().includes(src.id)) return
+    const image = await this.map.loadImage(src.url)
+    this.map.addImage(src.id, image.data)
+  }
+
+  async loadImages (sources, fetch = true) {
     for (const src of sources) {
-      const data = await wmpa.fetchApi(src)
-      if (_.isEmpty(data)) continue
-      for (let d of data) {
-        if (_.isString(d)) {
-          const [url, id] = d.split(';')
-          d = { url, id }
+      if (fetch) {
+        const data = await wmpa.fetchApi(src)
+        if (_.isEmpty(data)) continue
+        for (const d of data) {
+          this.loadImage(d)
         }
-        if (!d.id) d.id = _.last(d.url.split('?')[0].split('#')[0].split('/')).split('.')[0]
-        if (this.map.listImages().includes(d.id)) continue
-        const image = await this.map.loadImage(d.url)
-        this.map.addImage(d.id, image.data)
-      }
+      } else await this.loadImage(src)
     }
   }
 }

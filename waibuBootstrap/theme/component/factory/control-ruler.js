@@ -2,8 +2,8 @@ import wmapsBase from '../wmaps-base.js'
 
 const storeKey = 'mapControl.ruler'
 
-async function controlRuler (component) {
-  const WmapsBase = await wmapsBase(component)
+async function controlRuler () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsControlRuler extends WmapsBase {
     static scripts = [

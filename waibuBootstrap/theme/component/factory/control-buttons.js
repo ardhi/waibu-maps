@@ -1,7 +1,7 @@
 import wmapsBase from '../wmaps-base.js'
 
-async function controlButtons (component) {
-  const WmapsBase = await wmapsBase(component)
+async function controlButtons () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsControlButtons extends WmapsBase {
     static scripts = [
@@ -33,10 +33,10 @@ async function controlButtons (component) {
           attrs[camelCase(k)] = this.attribs[k]
         }
         const opts = { id: attrs.id ?? generateId('alpha') }
-        if (attrs.popup) {
-          opts.fn = attrs.popup
+        if (attrs.dropdown) {
+          opts.fn = attrs.dropdown
           opts.fnParams = opts.id
-          opts.popup = true
+          opts.dropdown = true
         } else if (attrs.openTab) {
           opts.url = attrs.openTab
           opts.tab = true

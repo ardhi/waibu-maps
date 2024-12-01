@@ -1,7 +1,7 @@
 import wmapsBase from '../wmaps-base.js'
 
-async function controlImage (component) {
-  const WmapsBase = await wmapsBase(component)
+async function controlImage () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsControlImage extends WmapsBase {
     static scripts = [

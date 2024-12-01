@@ -2,8 +2,8 @@ import wmapsBase from '../wmaps-base.js'
 
 const storeKey = 'mapControl.fullscreen'
 
-async function controlFullscreen (component) {
-  const WmapsBase = await wmapsBase(component)
+async function controlFullscreen () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsControlFullscreen extends WmapsBase {
     constructor (options) {

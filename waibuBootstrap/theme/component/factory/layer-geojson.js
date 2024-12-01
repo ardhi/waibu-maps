@@ -66,8 +66,8 @@ export function buildSource (params, extra = []) {
   `
 }
 
-async function layerGeojson (component) {
-  const WmapsBase = await wmapsBase(component)
+async function layerGeojson () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsLayerGeojson extends WmapsBase {
     constructor (options) {

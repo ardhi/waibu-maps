@@ -24,7 +24,7 @@ class ControlButtons { // eslint-disable-line no-unused-vars
         icon.classList.add(b.icon)
         btn.appendChild(icon)
       }
-      if (b.popup) {
+      if (b.dropdown) {
         const wrapper = document.createElement('button')
         wrapper.setAttribute('id', b.id)
         this.buildOnClick(wrapper, b)

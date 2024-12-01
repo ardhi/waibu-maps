@@ -2,8 +2,8 @@ import wmapsBase from '../wmaps-base.js'
 
 const storeKey = 'mapControl.centerPos'
 
-async function controlCenterPosition (component) {
-  const WmapsBase = await wmapsBase(component)
+async function controlCenterPosition () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsControlCenterPosition extends WmapsBase {
     static scripts = [

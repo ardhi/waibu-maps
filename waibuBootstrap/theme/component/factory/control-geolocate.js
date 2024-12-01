@@ -2,8 +2,8 @@ import wmapsBase from '../wmaps-base.js'
 
 const storeKey = 'mapControl.geolocate'
 
-async function controlGeolocate (component) {
-  const WmapsBase = await wmapsBase(component)
+async function controlGeolocate () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsControlGeolocate extends WmapsBase {
     constructor (options) {

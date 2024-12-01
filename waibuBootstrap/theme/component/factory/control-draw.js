@@ -1,7 +1,7 @@
 import wmapsBase from '../wmaps-base.js'
 
-async function controlDraw (component) {
-  const WmapsBase = await wmapsBase(component)
+async function controlDraw () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsControlDraw extends WmapsBase {
     static scripts = [

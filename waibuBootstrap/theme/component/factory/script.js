@@ -2,8 +2,8 @@ import wmapsBase from '../wmaps-base.js'
 
 import { scriptTypes } from './map.js'
 
-async function script (component) {
-  const WmapsBase = await wmapsBase(component)
+async function script () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsScript extends WmapsBase {
     constructor (options) {

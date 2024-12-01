@@ -1,7 +1,7 @@
 import wmapsBase from '../wmaps-base.js'
 
-async function controlButtonsItem (component) {
-  const WmapsBase = await wmapsBase(component)
+async function controlButtonsItem () {
+  const WmapsBase = await wmapsBase.call(this)
 
   return class WmapsControlButtonsItem extends WmapsBase {
     constructor (options) {
