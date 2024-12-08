@@ -1,8 +1,9 @@
-/* global maplibregl, geolib, _, wmpa, WorkerTimers, bootstrap */
+/* global maplibregl, geolib, _, wmpa, WorkerTimers */
 
 class WaibuMaps { // eslint-disable-line no-unused-vars
-  constructor (map) {
+  constructor (map, scope) {
     this.map = map
+    this.scope = scope
     this.markers = {}
     this.markersOnScreen = {}
     this.popups = {}
@@ -23,13 +24,13 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     })
   }
 
-  async popupHtml ({ props, handler, coordinates, layerId }, evt) {
+  async createPopupHtml ({ props, handler, coordinates, layerId }, evt) {
     let html = _.isString(handler) ? props[handler] : undefined
     if (_.isFunction(handler)) html = await handler.call(this, { props, coordinates, layerId }, evt)
     return html
   }
 
-  getCoordinates (evt) {
+  getEventCoordinates (evt) {
     const coordinates = evt.features[0].geometry.coordinates.slice()
     while (Math.abs(evt.lngLat.lng - coordinates[0]) > 180) {
       coordinates[0] += evt.lngLat.lng > coordinates[0] ? 360 : -360
@@ -39,8 +40,8 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
 
   async extractPopup ({ evt, layerId, handler, props, coordinates }) {
     props = props ?? evt.features[0].properties
-    coordinates = coordinates ?? this.getCoordinates(evt)
-    const html = await this.popupHtml({ props, handler, coordinates, layerId }, evt)
+    coordinates = coordinates ?? this.getEventCoordinates(evt)
+    const html = await this.createPopupHtml({ props, handler, coordinates, layerId }, evt)
     return { props, coordinates, html }
   }
 
@@ -54,28 +55,9 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     return this.popups[layerId]
   }
 
-  async handleNonClusterClick (layerId, handler = 'name') {
-    this.map.on('click', layerId, async (evt) => {
-      const popup = this.createPopup(layerId)
-      if (popup.isOpen()) popup.remove()
-      const props = popup._props
-      const coordinates = popup._coordinates
-      const html = await this.popupHtml({ props, coordinates, layerId, handler })
-      const id = wmpa.randomId()
-      const body = ['<c:drawer id="' + id + '" t:title="Details" divider>']
-      body.push(html, '</c:drawer>')
-      await wmpa.addComponent(body.join('\n'), 'body')
-      const item = new bootstrap.Offcanvas('#' + id)
-      const itemEl = document.getElementById(id)
-      itemEl.addEventListener('hidden.bs.offcanvas', evt => {
-        itemEl.remove()
-      })
-      item.show()
-    })
-  }
-
-  async handleNonClusterHover (layerId, handler = 'name') {
-    this.map.on('mouseenter', layerId, async (evt) => {
+  async handleNonClusterPopup (layerId, handler = 'name') {
+    if (handler === true) handler = 'name'
+    const callback = async evt => {
       const { coordinates, html, props } = await this.extractPopup({ evt, layerId, handler })
       const popup = this.createPopup(layerId)
       popup._props = props
@@ -84,8 +66,12 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
         .setLngLat(coordinates)
         .setHTML(html)
         .addTo(this.map)
-    })
-    this.map.on('mouseleave', layerId, () => {
+        .addClassName('popup-layer-' + layerId)
+        .addClassName('popup-target-' + props.id)
+    }
+    this.map.on('mouseenter', layerId, callback)
+    this.map.on('click', layerId, callback)
+    this.map.on('click', () => {
       if (this.popups[layerId]) this.popups[layerId].remove()
     })
   }
@@ -107,7 +93,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
       const [type, subType] = (schema[p] ?? 'auto').split(':')
       if (subType === 'longitude') opts.longitude = true
       if (subType === 'latitude') opts.latitude = true
-      html = html.replace('{{rec.' + p + '}}', wmpa.format(props[p], type, wmpa.lang, opts))
+      html = html.replaceAll('{{rec.' + p + '}}', wmpa.format(props[p], type, wmpa.lang, opts))
     }
     return html
   }
@@ -237,7 +223,8 @@ window.setInterval = WorkerTimers.setInterval
 window.clearInterval = WorkerTimers.clearInterval
 window.setTimeout = WorkerTimers.setTimeout
 window.clearTimeout = WorkerTimers.clearTimeout
+
 const _warn = console.warn
-console.warn = (item) => {
-  if (!item.includes('could not be loaded. Please make sure you have added the image with')) _warn(item)
+console.warn = (...items) => {
+  if (!(items[0] ?? '').includes('could not be loaded. Please make sure you have added the image with')) _warn(...items)
 }

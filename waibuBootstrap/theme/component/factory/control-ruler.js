@@ -1,11 +1,10 @@
-import wmapsBase from '../wmaps-base.js'
-
+import control from './control.js'
 const storeKey = 'mapControl.ruler'
 
 async function controlRuler () {
-  const WmapsBase = await wmapsBase.call(this)
+  const WmapsControl = await control.call(this)
 
-  return class WmapsControlRuler extends WmapsBase {
+  return class WmapsControlRuler extends WmapsControl {
     static scripts = [
       ...super.scripts,
       'bajoSpatial.virtual:/geolib/lib/index.js',
@@ -25,11 +24,11 @@ async function controlRuler () {
     async build () {
       const { routePath } = this.plugin.app.waibu
       const { jsonStringify } = this.plugin.app.waibuMpa
-      const pos = WmapsBase.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
+      const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'
       const opts = {
         imageUrl: routePath('waibuMaps.asset:/image/ruler.svg')
       }
-      this.params.html = `<script type="controlRuler">
+      this.block.control.push(`
         const rulerCtrl = new ControlRuler(${jsonStringify(opts, true)})
         this.map.addControl(rulerCtrl${pos ? `, '${pos}'` : ''})
         if (Alpine.store('mapControl')) {
@@ -39,7 +38,8 @@ async function controlRuler () {
           // TODO: disable measuring first
           // el.setAttribute('x-init', "$watch('$store.${storeKey}', val => console.log(rulerCtrl))")
         }
-      </script>`
+      `)
+      this.params.html = this.writeBlock()
     }
   }
 }

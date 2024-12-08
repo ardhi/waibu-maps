@@ -90,11 +90,12 @@ async function layerGeojson () {
         if (isString(group.cluster.maxZoom)) cluster.push('data.clusterMaxZoom = ' + Number(group.cluster.maxZoom))
       }
 
-      this.params.html = `<script type="mapLoad" has-resource>
+      this.block.mapLoad.push(`
         ${this.params.attr.srcImages ? (await buildSrcImages.call(this, this.params)) : buildImage.call(this, this.params)}
         ${buildSource.call(this, this.params, cluster)}
         ${buildLayers.call(this, this.params)}
-      </script>`
+      `)
+      this.params.html = this.writeBlock()
     }
   }
 }

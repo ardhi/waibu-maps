@@ -1,11 +1,10 @@
-import wmapsBase from '../wmaps-base.js'
-
+import control from './control.js'
 const storeKey = 'mapControl.mousePos'
 
 async function controlMousePosition () {
-  const WmapsBase = await wmapsBase.call(this)
+  const WmapsControl = await control.call(this)
 
-  return class WmapsControlMousePosition extends WmapsBase {
+  return class WmapsControlMousePosition extends WmapsControl {
     static scripts = [
       ...super.scripts,
       'bajoSpatial.virtual:/geolib/lib/index.js',
@@ -24,7 +23,7 @@ async function controlMousePosition () {
 
     async build () {
       const { req } = this.component
-      const pos = WmapsBase.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-left'
+      const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-left'
       const centerTrack = this.params.attr.centerTrack ? 'trackCenter: true,' : ''
       const labelFormatDms = `
         function labelFormatDms ({ lng, lat }) {
@@ -37,7 +36,7 @@ async function controlMousePosition () {
           return '<span class="maplibregl-ctrl-mouse-position-lat-lng">${req.t('Lng')}: ' + lng + '</span>, <span class="maplibregl-ctrl-mouse-position-lat-lng">${req.t('Lat')}: ' + lat + '</span>'
         }
       `
-      this.params.html = `<script type="controlMousePosition">
+      this.block.control.push(`
         ${labelFormatDd}
         ${labelFormatDms}
         const format = (Alpine.store('mapSetting') ?? {}).degree ?? '${this.params.attr.format ?? 'DMS'}'
@@ -51,7 +50,8 @@ async function controlMousePosition () {
           el.setAttribute('x-data', '')
           el.setAttribute('x-show', '$store.${storeKey}')
         }
-      </script>`
+      `)
+      this.params.html = this.writeBlock()
     }
   }
 }

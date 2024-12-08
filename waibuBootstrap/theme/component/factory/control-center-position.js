@@ -1,11 +1,10 @@
-import wmapsBase from '../wmaps-base.js'
-
+import control from './control.js'
 const storeKey = 'mapControl.centerPos'
 
 async function controlCenterPosition () {
-  const WmapsBase = await wmapsBase.call(this)
+  const WmapsControl = await control.call(this)
 
-  return class WmapsControlCenterPosition extends WmapsBase {
+  return class WmapsControlCenterPosition extends WmapsControl {
     static scripts = [
       ...super.scripts,
       'waibuMaps.asset:/js/control-center-position.js'

@@ -1,7 +1,7 @@
 async function initializing (params = {}) {
   const { groupAttrs } = this.plugin.app.waibuMpa
 
-  const group = groupAttrs(params.attr, ['persist', 'control'])
+  const group = groupAttrs(params.attr, ['persist'])
   const initializing = []
   if (group.persist && group.persist.mapLayer) {
     initializing.push(`Alpine.store('mapLayer', {
@@ -23,18 +23,6 @@ async function initializing (params = {}) {
       measure: Alpine.$persist('nautical').as('mapSettingMeasure'),
       zoomScrollCenter: Alpine.$persist(false).as('mapSettingZoomScrollCenter'),
       noMapRotate: Alpine.$persist(false).as('mapSettingNoMapRotate')
-    })`)
-  }
-  if (group.persist && group.persist.mapControl) {
-    initializing.push(`Alpine.store('mapControl', {
-      attrib: Alpine.$persist(true).as('mapControlAttrib'),
-      centerPos: Alpine.$persist(true).as('mapControlCenterPos'),
-      fullscreen: Alpine.$persist(true).as('mapControlFullscreen'),
-      mousePos: Alpine.$persist(true).as('mapControlMousePos'),
-      nav: Alpine.$persist(true).as('mapControlNav'),
-      scale: Alpine.$persist(true).as('mapControlScale'),
-      geolocate: Alpine.$persist(true).as('mapControlGeolocate'),
-      ruler: Alpine.$persist(true).as('mapControlRuler'),
     })`)
   }
   return initializing

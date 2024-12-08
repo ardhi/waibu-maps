@@ -1,9 +1,9 @@
-import wmapsBase from '../wmaps-base.js'
+import control from './control.js'
 
 async function controlImage () {
-  const WmapsBase = await wmapsBase.call(this)
+  const WmapsControl = await control.call(this)
 
-  return class WmapsControlImage extends WmapsBase {
+  return class WmapsControlImage extends WmapsControl {
     static scripts = [
       ...super.scripts,
       'waibuMaps.asset:/js/control-image.js'
@@ -23,7 +23,7 @@ async function controlImage () {
       const { routePath } = this.plugin.app.waibu
       const { jsonStringify } = this.plugin.app.waibuMpa
       const { isString, pick } = this.plugin.app.bajo.lib._
-      const pos = WmapsBase.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
+      const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
       const opts = {}
       if (isString(this.params.attr.url)) opts.url = routePath(this.params.attr.url)
       if (isString(this.params.attr.imageUrl)) opts.imageUrl = routePath(this.params.attr.imageUrl)
@@ -32,9 +32,10 @@ async function controlImage () {
       if (isString(this.params.attr.dataBsTarget)) {
         opts.attrib = pick(this.params.attr, ['dataBsTarget', 'dataBsToggle', 'ariaControls'])
       }
-      this.params.html = `<script type="controlImage">
+      this.block.control.push(`
         this.map.addControl(new ControlImage(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
-      </script>`
+      `)
+      this.params.html = this.writeBlock()
     }
   }
 }

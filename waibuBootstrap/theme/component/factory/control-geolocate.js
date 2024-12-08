@@ -1,11 +1,11 @@
-import wmapsBase from '../wmaps-base.js'
+import control from './control.js'
 
 const storeKey = 'mapControl.geolocate'
 
 async function controlGeolocate () {
-  const WmapsBase = await wmapsBase.call(this)
+  const WmapsControl = await control.call(this)
 
-  return class WmapsControlGeolocate extends WmapsBase {
+  return class WmapsControlGeolocate extends WmapsControl {
     constructor (options) {
       super(options)
       this.params.noTag = true
@@ -17,15 +17,16 @@ async function controlGeolocate () {
       const opts = {}
       if (this.params.attr.highAccuracy) set(opts, 'positionOptions.enableHighAccuracy', true)
       if (this.params.attr.trackUserLocation) opts.trackUserLocation = true
-      const pos = WmapsBase.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : undefined
-      this.params.html = `<script type="controlFullscreen">
+      const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'
+      this.block.control.push(`
         this.map.addControl(new maplibregl.GeolocateControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
         if (Alpine.store('mapControl')) {
           el = document.querySelector('#' + this.map._container.id + ' .maplibregl-ctrl-geolocate').closest('.maplibregl-ctrl-group')
           el.setAttribute('x-data', '')
           el.setAttribute('x-show', '$store.${storeKey}')
         }
-      </script>`
+      `)
+      this.params.html = this.writeBlock()
     }
   }
 }

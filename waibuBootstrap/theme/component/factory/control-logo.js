@@ -1,9 +1,9 @@
-import wmapsBase from '../wmaps-base.js'
+import control from './control.js'
 
 async function controlLogo () {
-  const WmapsBase = await wmapsBase.call(this)
+  const WmapsControl = await control.call(this)
 
-  return class WmapsControlLogo extends WmapsBase {
+  return class WmapsControlLogo extends WmapsControl {
     static scripts = [
       ...super.scripts,
       'waibuMaps.asset:/js/control-image.js'
@@ -26,7 +26,7 @@ async function controlLogo () {
       let logo = 'waibu'
       const files = await fastGlob(`${this.plugin.app.main.dir.pkg}/bajo/logo.*`)
       if (files.length > 0) logo = 'main'
-      const pos = WmapsBase.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
+      const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
       const opts = {
         imageUrl: routePath(`waibuMpa:/logo/${logo}`),
         fn: 'wbs.appLauncher',
@@ -34,9 +34,10 @@ async function controlLogo () {
         imageWidth: 48,
         imageHeight: 48
       }
-      this.params.html = `<script type="controlImage">
+      this.block.control.push(`
         this.map.addControl(new ControlImage(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
-      </script>`
+      `)
+      this.params.html = this.writeBlock()
     }
   }
 }

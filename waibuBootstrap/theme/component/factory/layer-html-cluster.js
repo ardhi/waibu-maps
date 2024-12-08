@@ -85,7 +85,7 @@ async function layerHtmlCluster () {
         extra.push(`${key}: ['+', ['case', this.filter.${key}, 1, 0]],`)
       }
       extra.push('}')
-      this.params.html = `<script type="mapLoad" has-resource>
+      this.block.mapLoad.push(`
         ${buildSource.call(this, this.params, extra)}
         this.map.addLayer(
           ${createLayerCircle.call(this, this.params, filters)}
@@ -99,11 +99,11 @@ async function layerHtmlCluster () {
           this.map.on('moveend', () => { this.updateMarkers() })
           this.updateMarkers()
         })
-      </script>`
-      this.params.html += `\n<script type="reactive">{
-        colors: ${jsonStringify(colors, true)},
-        filter: ${jsonStringify(filters, true)},
-        updateMarkers () {
+      `)
+      this.block.reactive.push(
+        `colors: ${jsonStringify(colors, true)}`,
+        `filter: ${jsonStringify(filters, true)}`,
+        `updateMarkers () {
           const filter = Alpine.raw(this.filter)
           const colors = Alpine.raw(this.colors)
           wmaps.updateClusterMarkers({
@@ -114,9 +114,9 @@ async function layerHtmlCluster () {
               return donutChart.create(props, Object.keys(filter), colors)
             }
           })
-        }
-      }</script>
-      `
+        }`
+      )
+      this.params.html = this.writeBlock()
     }
   }
 }

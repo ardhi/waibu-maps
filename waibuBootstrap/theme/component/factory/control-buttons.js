@@ -1,9 +1,9 @@
-import wmapsBase from '../wmaps-base.js'
+import control from './control.js'
 
 async function controlButtons () {
-  const WmapsBase = await wmapsBase.call(this)
+  const WmapsControl = await control.call(this)
 
-  return class WmapsControlButtons extends WmapsBase {
+  return class WmapsControlButtons extends WmapsControl {
     static scripts = [
       ...super.scripts,
       'waibuMaps.asset:/js/control-buttons.js'
@@ -25,7 +25,7 @@ async function controlButtons () {
       const { jsonStringify } = this.plugin.app.waibuMpa
       const { isEmpty, isString, pick, camelCase } = this.plugin.app.bajo.lib._
       const { $ } = this.component
-      const pos = WmapsBase.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
+      const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-right'
       const items = []
       $(`<div>${this.params.html}</div>`).find('div').each(function () {
         const attrs = {}
@@ -54,9 +54,10 @@ async function controlButtons () {
       })
       this.params.html = ''
       if (!isEmpty(items)) {
-        this.params.html = `<script type="controlButtons">
+        this.block.control.push(`
           this.map.addControl(new ControlButtons(${jsonStringify({ items, position: pos }, true)})${pos ? `, '${pos}'` : ''})
-        </script>`
+        `)
+        this.params.html = this.writeBlock()
       }
     }
   }

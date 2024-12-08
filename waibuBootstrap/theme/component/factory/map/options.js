@@ -34,7 +34,10 @@ async function options (params = {}) {
     else mapOpts.style = 'waibuMaps:/default-style.json'
     mapOpts.style = routePath(mapOpts.style)
   }
-  mapOpts.attributionControl = $(`<div>${params.html}</div>`).find('script[type="controlAttribution"]').length === 0
+  mapOpts.attributionControl = true
+  $(`<div>${params.html}</div>`).find('script[block="control"]:contains(\'new maplibregl.AttributionControl\')').each(function () {
+    mapOpts.attributionControl = false
+  })
   return mapOpts
 }
 

@@ -1,9 +1,9 @@
-import wmapsBase from '../wmaps-base.js'
+import control from './control.js'
 
 async function controlDraw () {
-  const WmapsBase = await wmapsBase.call(this)
+  const WmapsControl = await control.call(this)
 
-  return class WmapsControlDraw extends WmapsBase {
+  return class WmapsControlDraw extends WmapsControl {
     static scripts = [
       ...super.scripts,
       'waibuMaps.virtual:/terra-draw/terra-draw.umd.js'
@@ -20,7 +20,7 @@ async function controlDraw () {
       if (['imperial', 'metric', 'nautical'].includes(this.params.attr.unit)) opts.unit = this.params.attr.unit
       if (isString(this.params.attr.maxWidth) && Number(this.params.attr.maxWidth)) opts.maxWidth = Number(this.params.attr.maxWidth)
       // const pos = ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
-      this.params.html = `<script type="controlDraw">
+      this.block.control.push(`<script>
         draw = new terraDraw.TerraDraw({
           adapter: new terraDraw.TerraDrawMapLibreGLAdapter({
             map,
@@ -31,10 +31,11 @@ async function controlDraw () {
         this.draw = draw
         this.draw.start()
         this.draw.setMode('freehand')
-      </script>`
-      this.params.html += `\n<script type="nonReactive">
+      `)
+      this.block.nonReactive(`
         let draw
-      </script>`
+      `)
+      this.params.html = this.writeBlock()
     }
   }
 }

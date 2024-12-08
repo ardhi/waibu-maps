@@ -1,7 +1,5 @@
 import wmapsBase from '../wmaps-base.js'
 
-import { scriptTypes } from './map.js'
-
 async function script () {
   const WmapsBase = await wmapsBase.call(this)
 
@@ -12,10 +10,9 @@ async function script () {
     }
 
     async build () {
-      this.params.attr.type = scriptTypes.includes(this.params.attr.type) ? this.params.attr.type : 'run'
-      this.params.html = `<script type="${this.params.attr.type}">
-        ${this.params.html}
-      </script>`
+      const type = WmapsBase.blockTypes.includes(this.params.attr.type) ? this.params.attr.type : 'run'
+      this.block[type].push(this.params.html)
+      this.params.html = this.writeBlock()
     }
   }
 }
