@@ -1,4 +1,4 @@
-/* global maplibregl, geolib, _, wmpa, WorkerTimers */
+/* global maplibregl, geolib, _, wmpa, WorkerTimers, turf */
 
 class WaibuMaps { // eslint-disable-line no-unused-vars
   constructor (map, scope) {
@@ -31,7 +31,11 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
   }
 
   getEventCoordinates (evt) {
-    const coordinates = evt.features[0].geometry.coordinates.slice()
+    let coordinates = evt.features[0].geometry.coordinates.slice()
+    if (_.isArray(coordinates[0])) {
+      const centroid = turf.centroid(evt.features[0])
+      coordinates = centroid.geometry.coordinates
+    }
     while (Math.abs(evt.lngLat.lng - coordinates[0]) > 180) {
       coordinates[0] += evt.lngLat.lng > coordinates[0] ? 360 : -360
     }
@@ -133,6 +137,25 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     this.map.on('mouseleave', layerId, () => {
       this.map.getCanvas().style.cursor = ''
     })
+  }
+
+  closePopup (layerId) {
+    const popup = this.popups[layerId]
+    if (popup) popup.remove()
+  }
+
+  closePopupsBySourceId (sourceId) {
+    const layers = _.filter(this.map.getStyle().layers, l => l.source === sourceId)
+    for (const l of layers) {
+      this.closePopup(l.id)
+    }
+  }
+
+  closeAllPopups (sourceId) {
+    if (sourceId) return this.closePopupsBySourceId(sourceId)
+    for (const lid in this.popups) {
+      this.closePopup(lid)
+    }
   }
 
   async loadImage (src) {
