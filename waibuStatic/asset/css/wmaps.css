@@ -10,3 +10,12 @@
 .maplibregl-popup-content div span.label {
   min-width: 80px;
 }
+
+.maplibregl-popup-content .btn-sm {
+  padding: 0.1rem 0.3rem;
+  font-size: small;
+}
+
+.maplibregl-popup-content .btn:focus {
+  outline: none !important;
+}

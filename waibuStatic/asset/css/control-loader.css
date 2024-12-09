@@ -1,0 +1,7 @@
+.maplibregl-ctrl-loader {
+  z-index: 1000;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  pointer-events: none;
+}

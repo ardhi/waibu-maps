@@ -51,6 +51,13 @@ async function wmapsBase () {
       }
       return html.join('\n')
     }
+
+    getTemplate (html, type = 'popup') {
+      const { trim } = this.plugin.app.bajo.lib._
+      const { $ } = this.component
+      const tpl = $(`<div>${html}</div>`).find(`wmaps-template[type="${type}"]`).prop('innerHTML')
+      return trim(tpl ?? '')
+    }
   }
 }
 

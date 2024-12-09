@@ -6,7 +6,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     this.scope = scope
     this.markers = {}
     this.markersOnScreen = {}
-    this.popups = {}
+    this.popup = null
   }
 
   async handleClusterClick (layerId, clusterId = 'cluster_id') {
@@ -49,21 +49,21 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     return { props, coordinates, html }
   }
 
-  createPopup (layerId) {
-    if (!this.popups[layerId]) {
-      this.popups[layerId] = new maplibregl.Popup({
+  createPopup () {
+    if (!this.popup) {
+      this.popup = new maplibregl.Popup({
         closeButton: false,
         closeOnClick: false
       })
     }
-    return this.popups[layerId]
+    return this.popup
   }
 
   async handleNonClusterPopup (layerId, handler = 'name') {
     if (handler === true) handler = 'name'
     const callback = async evt => {
       const { coordinates, html, props } = await this.extractPopup({ evt, layerId, handler })
-      const popup = this.createPopup(layerId)
+      const popup = this.createPopup()
       popup._props = props
       popup._coordinates = coordinates
       popup
@@ -76,7 +76,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     this.map.on('mouseenter', layerId, callback)
     this.map.on('click', layerId, callback)
     this.map.on('click', () => {
-      if (this.popups[layerId]) this.popups[layerId].remove()
+      if (this.popup) this.popup.remove()
     })
   }
 
@@ -139,23 +139,8 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     })
   }
 
-  closePopup (layerId) {
-    const popup = this.popups[layerId]
-    if (popup) popup.remove()
-  }
-
-  closePopupsBySourceId (sourceId) {
-    const layers = _.filter(this.map.getStyle().layers, l => l.source === sourceId)
-    for (const l of layers) {
-      this.closePopup(l.id)
-    }
-  }
-
-  closeAllPopups (sourceId) {
-    if (sourceId) return this.closePopupsBySourceId(sourceId)
-    for (const lid in this.popups) {
-      this.closePopup(lid)
-    }
+  closePopup () {
+    if (this.popup) this.popup.remove()
   }
 
   async loadImage (src) {

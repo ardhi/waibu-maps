@@ -77,10 +77,7 @@ async function map () {
               },
               async onKeyup (evt) {
                 if (evt.key === 'Escape') {
-                  for (const p in this.wmaps.popups) {
-                    const popup = this.wmaps.popups[p]
-                    if (popup) popup.remove()
-                  }
+                  if (this.wmaps.popup) this.wmaps.popup.remove()
                 }
                 ${this.block.keyup.join('\n')}
               },
