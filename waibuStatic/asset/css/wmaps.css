@@ -16,6 +16,11 @@
   font-size: small;
 }
 
-.maplibregl-popup-content .btn:focus {
+.maplibregl-popup-content .nav-link {
   outline: none !important;
+  padding: 0.3rem 0.5rem;
+}
+
+.maplibregl-popup-content .nav {
+  padding: 0 0.5rem;
 }
