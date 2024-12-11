@@ -10,6 +10,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
   }
 
   async handleClusterClick (layerId, clusterId = 'cluster_id') {
+    this.handlePointer(layerId)
     this.map.on('click', layerId, async (e) => {
       const features = this.map.queryRenderedFeatures(e.point, {
         layers: [layerId]
@@ -59,9 +60,10 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     return this.popup
   }
 
-  async handleNonClusterPopup (layerId, handler = 'name') {
+  async handleNonClusterClick (layerId, handler = 'name') {
     if (handler === true) handler = 'name'
-    const callback = async evt => {
+    this.handlePointer(layerId)
+    this.map.on('click', layerId, async evt => {
       const { coordinates, html, props } = await this.extractPopup({ evt, layerId, handler })
       const popup = this.createPopup()
       popup._props = props
@@ -72,9 +74,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
         .addTo(this.map)
         .addClassName('popup-layer-' + layerId)
         .addClassName('popup-target-' + props.id)
-    }
-    this.map.on('mouseenter', layerId, callback)
-    this.map.on('click', layerId, callback)
+    })
     this.map.on('click', () => {
       if (this.popup) this.popup.remove()
     })
