@@ -19,9 +19,9 @@ async function controlGeolocate () {
       if (this.params.attr.trackUserLocation) opts.trackUserLocation = true
       const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'
       this.block.control.push(`
-        this.map.addControl(new maplibregl.GeolocateControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
+        map.addControl(new maplibregl.GeolocateControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
         if (Alpine.store('mapControl')) {
-          el = document.querySelector('#' + this.map._container.id + ' .maplibregl-ctrl-geolocate').closest('.maplibregl-ctrl-group')
+          el = document.querySelector('#' + map._container.id + ' .maplibregl-ctrl-geolocate').closest('.maplibregl-ctrl-group')
           el.setAttribute('x-data', '')
           el.setAttribute('x-show', '$store.${storeKey}')
         }

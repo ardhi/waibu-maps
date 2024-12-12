@@ -18,10 +18,6 @@ async function map () {
     constructor (options) {
       super(options)
       this.readBlock()
-      this.block.reactive.unshift(
-        'get map () { return map }',
-        'get wmaps () { return wmaps }'
-      )
     }
 
     async build () {
@@ -77,7 +73,7 @@ async function map () {
               },
               async onKeyup (evt) {
                 if (evt.key === 'Escape') {
-                  if (this.wmaps.popup) this.wmaps.popup.remove()
+                  if (wmaps.popup) wmaps.popup.remove()
                 }
                 ${this.block.keyup.join('\n')}
               },
@@ -87,11 +83,11 @@ async function map () {
                 let el
                 ${this.block.control.join('\n')}
                 ${this.block.run.join('\n')}
-                this.map.on('styledataloading', () => {
-                  this.map.once('styledata', this.onMapStyle.bind(this))
+                map.on('styledataloading', () => {
+                  map.once('styledata', this.onMapStyle.bind(this))
                 })
-                this.map.on('styleimagemissing', this.onMissingImage.bind(this))
-                this.map.on('load', this.onMapLoad.bind(this))
+                map.on('styleimagemissing', this.onMissingImage.bind(this))
+                map.on('load', this.onMapLoad.bind(this))
               }
             }
           })

@@ -18,9 +18,9 @@ async function controlFullscreen () {
       if (isString(this.params.attr.container)) opts.container = this.params.attr.container
       const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'
       this.block.control.push(`
-        this.map.addControl(new maplibregl.FullscreenControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
+        map.addControl(new maplibregl.FullscreenControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
         if (Alpine.store('mapControl')) {
-          el = document.querySelector('#' + this.map._container.id + ' .maplibregl-ctrl-fullscreen').closest('.maplibregl-ctrl-group')
+          el = document.querySelector('#' + map._container.id + ' .maplibregl-ctrl-fullscreen').closest('.maplibregl-ctrl-group')
           el.setAttribute('x-data', '')
           el.setAttribute('x-show', '$store.${storeKey}')
         }

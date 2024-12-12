@@ -72,7 +72,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
         .setLngLat(coordinates)
         .setHTML(html)
         .addTo(this.map)
-        .addClassName('popup-layer-' + layerId)
+        .addClassName('popup-source-' + this.map.getLayer(layerId).source)
         .addClassName('popup-target-' + props.id)
     })
     this.map.on('click', () => {

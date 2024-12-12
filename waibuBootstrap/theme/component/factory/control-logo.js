@@ -35,7 +35,7 @@ async function controlLogo () {
         imageHeight: 48
       }
       this.block.control.push(`
-        this.map.addControl(new ControlImage(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
+        map.addControl(new ControlImage(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
       `)
       this.params.html = this.writeBlock()
     }

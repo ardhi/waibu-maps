@@ -87,17 +87,17 @@ async function layerHtmlCluster () {
       extra.push('}')
       this.block.mapLoad.push(`
         ${buildSource.call(this, this.params, extra)}
-        this.map.addLayer(
+        map.addLayer(
           ${createLayerCircle.call(this, this.params, filters)}
         )
-        this.map.addLayer(
+        map.addLayer(
           ${createLayerLabel.call(this, this.params)}
         )
-        this.map.on('data', e => {
+        map.on('data', e => {
           if (e.sourceId !== '${this.params.attr.name}' || !e.isSourceLoaded) return
-          this.map.on('move', () => { this.updateMarkers() })
-          this.map.on('moveend', () => { this.updateMarkers() })
-          this.updateMarkers()
+          map.on('move', () => { this.updateMarkers() })
+          map.on('moveend', () => { this.updateMarkers() })
+          updateMarkers()
         })
       `)
       this.block.reactive.push(

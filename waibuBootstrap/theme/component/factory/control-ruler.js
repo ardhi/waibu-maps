@@ -30,9 +30,9 @@ async function controlRuler () {
       }
       this.block.control.push(`
         const rulerCtrl = new ControlRuler(${jsonStringify(opts, true)})
-        this.map.addControl(rulerCtrl${pos ? `, '${pos}'` : ''})
+        map.addControl(rulerCtrl${pos ? `, '${pos}'` : ''})
         if (Alpine.store('mapControl')) {
-          el = document.querySelector('#' + this.map._container.id + ' .maplibregl-ctrl-ruler')
+          el = document.querySelector('#' + map._container.id + ' .maplibregl-ctrl-ruler')
           el.setAttribute('x-data', '')
           el.setAttribute('x-show', '$store.${storeKey}')
           // TODO: disable measuring first

@@ -11,7 +11,7 @@ export function buildLayers (params) {
     for (const l of ${jsonStringify(items, true)}) {
       const layer = await this.loadResource(l)
       layer.source = '${params.attr.name}'
-      this.map.addLayer(layer)
+      map.addLayer(layer)
     }
   `
 }
@@ -27,9 +27,9 @@ export function buildImage (params) {
     for (const l of ${jsonStringify(items, true)}) {
       let [item, name] = l.split(';')
       if (!name) name = _.last(l.split('?')[0].split('#')[0].split('/')).split('.')[0]
-      if (this.map.listImages().includes(name)) continue
-      const resp = await this.map.loadImage(l)
-      this.map.addImage(name, resp.data)
+      if (map.listImages().includes(name)) continue
+      const resp = await map.loadImage(l)
+      map.addImage(name, resp.data)
     }
   `
 }
@@ -62,7 +62,7 @@ export function buildSource (params, extra = []) {
     }
     ${params.attr.lineGradient ? 'data.lineMetrics = true' : ''}
     ${extra.join('\n')}
-    this.map.addSource('${params.attr.name}', data)
+    map.addSource('${params.attr.name}', data)
   `
 }
 

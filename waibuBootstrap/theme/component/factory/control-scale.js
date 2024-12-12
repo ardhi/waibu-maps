@@ -20,9 +20,9 @@ async function controlScale () {
       this.block.control.push(`
         const scaleOpts = ${jsonStringify(opts, true)}
         if ((Alpine.store('mapSetting') ?? {}).measure) scaleOpts.unit = Alpine.store('mapSetting').measure
-        this.map.addControl(new maplibregl.ScaleControl(scaleOpts)${pos ? `, '${pos}'` : ''})
+        map.addControl(new maplibregl.ScaleControl(scaleOpts)${pos ? `, '${pos}'` : ''})
         if (Alpine.store('mapControl')) {
-          el = document.querySelector('#' + this.map._container.id + ' .maplibregl-ctrl-scale')
+          el = document.querySelector('#' + map._container.id + ' .maplibregl-ctrl-scale')
           el.setAttribute('x-data', '')
           el.setAttribute('x-show', '$store.${storeKey}')
         }

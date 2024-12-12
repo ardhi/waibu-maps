@@ -33,7 +33,7 @@ async function controlImage () {
         opts.attrib = pick(this.params.attr, ['dataBsTarget', 'dataBsToggle', 'ariaControls'])
       }
       this.block.control.push(`
-        this.map.addControl(new ControlImage(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
+        map.addControl(new ControlImage(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
       `)
       this.params.html = this.writeBlock()
     }
