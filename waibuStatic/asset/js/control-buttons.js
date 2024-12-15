@@ -3,12 +3,16 @@
 class ControlButtons { // eslint-disable-line no-unused-vars
   constructor (options = {}) {
     this.position = options.position ?? 'top-left'
+    this.cls = options.cls ? options.cls.split(' ') : []
     this.items = options.items ?? []
   }
 
-  createControl () {
-    this.container = document.createElement('div')
-    this.container.classList.add('maplibregl-ctrl', 'maplibregl-ctrl-group', 'maplibregl-ctrl-buttons')
+  setScope (scope) {
+    this.scope = scope
+    this.createButtons()
+  }
+
+  createButtons () {
     for (const b of this.items) {
       const btn = document.createElement('button')
       btn.setAttribute('type', 'button')
@@ -21,7 +25,7 @@ class ControlButtons { // eslint-disable-line no-unused-vars
         btn.appendChild(img)
       } else if (b.icon) {
         const icon = document.createElement('i')
-        icon.classList.add(b.icon)
+        icon.classList.add('d-flex', 'justify-content-center', 'align-items-center', ...b.icon.split(' '))
         btn.appendChild(icon)
       }
       if (b.dropdown) {
@@ -47,14 +51,26 @@ class ControlButtons { // eslint-disable-line no-unused-vars
     }
   }
 
+  createControl () {
+    this.container = document.createElement('div')
+    this.container.classList.add('maplibregl-ctrl', 'maplibregl-ctrl-group', 'maplibregl-ctrl-buttons', ...this.cls)
+  }
+
   buildOnClick (btn, opts) {
-    let [ns, method] = opts.fn.split('.')
+    let [ns, method, subMethod] = opts.fn.split('.')
     if (!method) {
       method = ns
       ns = 'window'
     }
-    const params = opts.fnParams ? `'${opts.fnParams}'` : ''
-    btn.setAttribute('onclick', `${ns}['${method}'](${params})`)
+    if (ns === 'scope') {
+      btn.addEventListener('click', evt => {
+        if (subMethod) this.scope[method][subMethod](opts.fnParams)
+        else this.scope[method](opts.fnParams)
+      })
+    } else {
+      const params = opts.fnParams ? `'${opts.fnParams}'` : ''
+      btn.setAttribute('onclick', `${ns}['${method}']${subMethod ? `['${subMethod}'` : ''}(${params})`)
+    }
   }
 
   onAdd (map) {

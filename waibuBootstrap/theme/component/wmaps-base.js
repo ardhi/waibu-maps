@@ -12,7 +12,7 @@ async function wmapsBase () {
     ]
 
     static blockTypes = ['init', 'initializing', 'run', 'reactive', 'mapLoad', 'control',
-      'nonReactive', 'dataInit', 'mapOptions', 'mapStyle', 'layerVisible', 'missingImage',
+      'nonReactive', 'dataInit', 'mapOptions', 'mapStyle', 'layerVisibility', 'missingImage',
       'keyup']
 
     constructor (options) {

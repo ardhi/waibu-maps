@@ -55,7 +55,9 @@ async function controlButtons () {
       this.params.html = ''
       if (!isEmpty(items)) {
         this.block.control.push(`
-          map.addControl(new ControlButtons(${jsonStringify({ items, position: pos }, true)})${pos ? `, '${pos}'` : ''})
+          var ctl = new ControlButtons(${jsonStringify({ items, position: pos }, true)})
+          map.addControl(ctl${pos ? `, '${pos}'` : ''})
+          ctl.setScope(this)
         `)
         this.params.html = this.writeBlock()
       }

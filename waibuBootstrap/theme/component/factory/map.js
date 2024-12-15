@@ -1,6 +1,5 @@
 import wmapsBase from '../wmaps-base.js'
 
-import initializing from './map/initializing.js'
 import options from './map/options.js'
 
 /*
@@ -18,6 +17,10 @@ async function map () {
     constructor (options) {
       super(options)
       this.readBlock()
+      this.block.reactive.unshift(
+        'get map () { return map }',
+        'get wmaps () { return wmaps }'
+      )
     }
 
     async build () {
@@ -30,7 +33,6 @@ async function map () {
       this.params.tag = 'div'
       this.params.attr['x-data'] = this.params.attr.id
       this.params.attr['@keyup'] = 'onKeyup'
-      const defInitializing = await initializing.call(this, this.params)
       const mapOptions = await options.call(this, this.params)
       this.block.reactive.push(`async windowLoad () {
         const mapOpts = ${jsonStringify(mapOptions, true)}
@@ -63,13 +65,13 @@ async function map () {
               async onMissingImage (evt) {
                 ${this.block.missingImage.join('\n')}
               },
-              onLayerVisible (layerId, shown) {
+              onLayerVisibility (layerId, shown) {
                 if (!shown) {
                   for (const el of document.querySelectorAll('.popup-layer-' + layerId)) {
                     el.remove()
                   }
                 }
-                ${this.block.layerVisible.join('\n')}
+                ${this.block.layerVisibility.join('\n')}
               },
               async onKeyup (evt) {
                 if (evt.key === 'Escape') {
@@ -94,7 +96,12 @@ async function map () {
           ${this.block.init.join('\n')}
         })
         document.addEventListener('alpine:initializing', () => {
-          ${defInitializing.join('\n')}
+          Alpine.store('mapSetting', {
+            degree: Alpine.$persist('DMS').as('mapSettingDegree'),
+            measure: Alpine.$persist('nautical').as('mapSettingMeasure'),
+            zoomScrollCenter: Alpine.$persist(false).as('mapSettingZoomScrollCenter'),
+            noMapRotate: Alpine.$persist(false).as('mapSettingNoMapRotate')
+          })
           ${this.block.initializing.join('\n')}
         })
       </script>`
