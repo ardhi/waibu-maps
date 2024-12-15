@@ -42,11 +42,10 @@ async function controlButtons () {
           opts.tab = true
         } else if (attrs.openUrl) {
           opts.url = attrs.openTab
-        } else { // open modal
-          opts.url = routePath(attrs.url)
-          if (isString(attrs.dataBsTarget)) {
-            opts.attrib = pick(attrs, ['dataBsTarget', 'dataBsToggle', 'ariaControls'])
-          }
+        } else if (isString(attrs.dataBsTarget)) {
+          opts.attrib = pick(attrs, ['dataBsTarget', 'dataBsToggle', 'ariaControls'])
+        } else if (attrs.fn) {
+          opts.fn = attrs.fn
         }
         if (isString(attrs.imageUrl)) opts.imageUrl = routePath(attrs.imageUrl)
         opts.icon = $(this).find('i').prop('class')
