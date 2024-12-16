@@ -48,6 +48,13 @@ class ControlButtons { // eslint-disable-line no-unused-vars
         else if (b.url) btn.setAttribute('onclick', 'location.href=\'' + b.url + '\'')
         this.container.appendChild(btn)
       }
+      if (b.minZoom) {
+        if (this.map.getZoom() < b.minZoom) btn.setAttribute('disabled', '')
+        this.map.on('zoomend', () => {
+          if (this.map.getZoom() < b.minZoom) btn.setAttribute('disabled', '')
+          else btn.removeAttribute('disabled')
+        })
+      }
     }
   }
 

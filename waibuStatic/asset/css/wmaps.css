@@ -1,3 +1,42 @@
+[data-bs-theme=dark] .maplibregl-ctrl-group,
+[data-bs-theme=dark] .maplibregl-ctrl-attrib,
+[data-bs-theme=dark] .maplibregl-ctrl-scale,
+[data-bs-theme=dark] .maplibregl-popup-content,
+[data-bs-theme=dark] .maplibregl-ctrl-mouse-position {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme=dark] .maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+[data-bs-theme=dark] .maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
+[data-bs-theme=dark] .maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip {
+  border-top-color: var(--bs-body-bg);
+}
+[data-bs-theme=dark] .maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: var(--bs-body-bg);
+}
+[data-bs-theme=dark] .maplibregl-popup-anchor-right .maplibregl-popup-tip  {
+  border-left-color: var(--bs-body-bg);
+}
+[data-bs-theme=dark] .maplibregl-popup-anchor-top .maplibregl-popup-tip,
+[data-bs-theme=dark] .maplibregl-popup-anchor-top-right .maplibregl-popup-tip,
+[data-bs-theme=dark] .maplibregl-popup-anchor-top-left .maplibregl-popup-tip {
+  border-bottom-color: var(--bs-body-bg);
+}
+
+[data-bs-theme=dark] .maplibregl-ctrl-attrib a {
+  color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1))
+}
+
+[data-bs-theme=dark] .maplibregl-ctrl button .maplibregl-ctrl-icon,
+[data-bs-theme=dark] .maplibregl-ctrl-attrib-button {
+  filter: invert(100%);
+}
+
+[data-bs-theme=dark] .maplibregl-ctrl-group button+button {
+  border-top: 1px solid #5c5c5c;
+}
+
 .maplibregl-ctrl-group button {
   width: 35px;
   height: 35px;

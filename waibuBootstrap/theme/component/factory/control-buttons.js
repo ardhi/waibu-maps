@@ -33,6 +33,7 @@ async function controlButtons () {
           attrs[camelCase(k)] = this.attribs[k]
         }
         const opts = { id: attrs.id ?? generateId('alpha') }
+        if (attrs.minZoom) opts.minZoom = Number(attrs.minZoom) || 0
         if (attrs.dropdown) {
           opts.fn = attrs.dropdown
           opts.fnParams = opts.id
