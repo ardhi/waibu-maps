@@ -52,11 +52,15 @@ async function wmapsBase () {
       return html.join('\n')
     }
 
-    getTemplate (html, type = 'popup') {
-      const { trim } = this.plugin.app.bajo.lib._
+    getTemplate (html, type, defEmpty = '') {
+      const { trim, isEmpty } = this.plugin.app.bajo.lib._
       const { $ } = this.component
-      const tpl = $(`<div>${html}</div>`).find(`wmaps-template[type="${type}"]`).prop('innerHTML')
-      return trim(tpl ?? '')
+      let tpl = trim($(`<div>${html}</div>`).find(`wmaps-template[type="${type}"]`).prop('innerHTML'))
+      if (isEmpty(tpl)) {
+        if (defEmpty === 'popup') tpl = '<div class="px-3 py-2">{%= name %}</div>'
+        else tpl = defEmpty
+      }
+      return tpl
     }
   }
 }

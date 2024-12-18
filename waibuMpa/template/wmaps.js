@@ -87,21 +87,6 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
       .addTo(this.map)
   }
 
-  popupFormat ({ props, coordinates, layerId, tpl, schema }) {
-    let html = tpl
-    for (const s in schema) {
-      if (!_.has(props, s)) props[s] = null
-    }
-    for (const p in props) {
-      const opts = { emptyValue: '-' }
-      const [type, subType] = (schema[p] ?? 'auto').split(':')
-      if (subType === 'longitude') opts.longitude = true
-      if (subType === 'latitude') opts.latitude = true
-      html = html.replaceAll('{{rec.' + p + '}}', wmpa.format(props[p], type, wmpa.lang, opts))
-    }
-    return html
-  }
-
   updateClusterMarkers ({ sourceId, clusterKey = 'cluster', clusterIdKey = 'clusterId', handler }) {
     if (!handler) return
     const newMarkers = {}
