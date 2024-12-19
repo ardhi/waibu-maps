@@ -39,7 +39,7 @@ async function controlMousePosition () {
       this.block.control.push(`
         ${labelFormatDd}
         ${labelFormatDms}
-        const format = (Alpine.store('mapSetting') ?? {}).degree ?? '${this.params.attr.format ?? 'DMS'}'
+        const format = (Alpine.store('map') ?? {}).degree ?? '${this.params.attr.format ?? 'DMS'}'
         const cmpOpts = {
           ${centerTrack}
           labelFormat: format === 'DD' ? labelFormatDd : labelFormatDms

@@ -36,10 +36,6 @@ async function map () {
       const mapOptions = await options.call(this, this.params)
       this.block.reactive.push(`async windowLoad () {
         const mapOpts = ${jsonStringify(mapOptions, true)}
-        const mapInfo = Alpine.store('mapInfo')
-        for (const item of ['center', 'zoom', 'bearing', 'pitch']) {
-        if (_.get(mapInfo, item)) mapOpts[item] = _.get(mapInfo, item)
-        }
         ${this.block.mapOptions.join('\n')}
         await this.run(new maplibregl.Map(mapOpts))
       }`)
@@ -96,11 +92,11 @@ async function map () {
           ${this.block.init.join('\n')}
         })
         document.addEventListener('alpine:initializing', () => {
-          Alpine.store('mapSetting', {
-            degree: Alpine.$persist('DMS').as('mapSettingDegree'),
-            measure: Alpine.$persist('nautical').as('mapSettingMeasure'),
-            zoomScrollCenter: Alpine.$persist(false).as('mapSettingZoomScrollCenter'),
-            noMapRotate: Alpine.$persist(false).as('mapSettingNoMapRotate')
+          Alpine.store('map', {
+            degree: Alpine.$persist('DMS').as('mapDegree'),
+            measure: Alpine.$persist('nautical').as('mapMeasure'),
+            zoomScrollCenter: Alpine.$persist(false).as('mapZoomScrollCenter'),
+            noMapRotate: Alpine.$persist(false).as('mapNoMapRotate')
           })
           ${this.block.initializing.join('\n')}
         })

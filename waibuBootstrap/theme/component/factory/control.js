@@ -16,7 +16,7 @@ async function control () {
       $(`<div>${this.params.html}</div>`).find('.childmap').each(function () {
         html.push($(this).prop('outerHTML'))
       })
-      this.readBlock('control')
+      this.readBlock()
       // persisting
       if (this.params.attr.persist) {
         this.block.initializing.push(`Alpine.store('mapControl', {
@@ -28,6 +28,11 @@ async function control () {
           scale: Alpine.$persist(true).as('mapControlScale'),
           geolocate: Alpine.$persist(true).as('mapControlGeolocate'),
           ruler: Alpine.$persist(true).as('mapControlRuler'),
+          search: Alpine.$persist(true).as('mapControlSearch'),
+          searchFeed: Alpine.$persist(null).as('mapControlSearchFeed'),
+          searchSelect: null,
+          searchValue: null,
+          searchBusy: false
         })`)
       }
       this.params.html = this.writeBlock()

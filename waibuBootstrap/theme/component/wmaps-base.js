@@ -23,13 +23,14 @@ async function wmapsBase () {
       }
     }
 
-    readBlock (block) {
-      const { trim } = this.plugin.app.bajo.lib._
+    readBlock (blocks = []) {
+      const { isString, trim } = this.plugin.app.bajo.lib._
       const { $ } = this.component
       const me = this
+      if (isString(blocks)) blocks = [blocks]
       $(`<div>${this.params.html}</div>`).find('script').each(function () {
         const type = this.attribs.block ?? 'run'
-        if (block && type !== block) return undefined
+        if (blocks.length > 0 && !blocks.includes(type)) return undefined
         if (WmapsBase.blockTypes.includes(type)) {
           let html = trim($(this).prop('innerHTML'))
           if (type === 'reactive') {

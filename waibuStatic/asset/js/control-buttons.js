@@ -47,6 +47,8 @@ class ControlButtons { // eslint-disable-line no-unused-vars
         else if (b.url && b.newTab) btn.setAttribute('onclick', 'window.open(\'' + b.url + '\', \'_blank\')')
         else if (b.url) btn.setAttribute('onclick', 'location.href=\'' + b.url + '\'')
         this.container.appendChild(btn)
+      } else {
+        this.container.appendChild(btn)
       }
       if (b.minZoom) {
         if (this.map.getZoom() < b.minZoom) btn.setAttribute('disabled', '')

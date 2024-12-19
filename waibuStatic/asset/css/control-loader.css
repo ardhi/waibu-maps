@@ -2,6 +2,6 @@
   z-index: 1000;
   position: absolute;
   width: 100%;
-  top: 0;
+  top: 0px;
   pointer-events: none;
 }

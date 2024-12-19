@@ -19,7 +19,7 @@ async function controlScale () {
       const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-left'
       this.block.control.push(`
         const scaleOpts = ${jsonStringify(opts, true)}
-        if ((Alpine.store('mapSetting') ?? {}).measure) scaleOpts.unit = Alpine.store('mapSetting').measure
+        if ((Alpine.store('map') ?? {}).measure) scaleOpts.unit = Alpine.store('map').measure
         map.addControl(new maplibregl.ScaleControl(scaleOpts)${pos ? `, '${pos}'` : ''})
         if (Alpine.store('mapControl')) {
           el = document.querySelector('#' + map._container.id + ' .maplibregl-ctrl-scale')
