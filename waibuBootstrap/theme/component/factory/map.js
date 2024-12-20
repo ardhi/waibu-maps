@@ -17,10 +17,6 @@ async function map () {
     constructor (options) {
       super(options)
       this.readBlock()
-      this.block.reactive.unshift(
-        'get map () { return map }',
-        'get wmaps () { return wmaps }'
-      )
     }
 
     async build () {
@@ -34,11 +30,19 @@ async function map () {
       this.params.attr['x-data'] = this.params.attr.id
       this.params.attr['@keyup'] = 'onKeyup'
       const mapOptions = await options.call(this, this.params)
-      this.block.reactive.push(`async windowLoad () {
-        const mapOpts = ${jsonStringify(mapOptions, true)}
-        ${this.block.mapOptions.join('\n')}
-        await this.run(new maplibregl.Map(mapOpts))
-      }`)
+      this.block.reactive.push(`
+        mapId: '${this.params.attr.id}'
+      `, `
+        get map () { return map }
+      `, `
+        get wmaps () { return wmaps }
+      `, `
+        async windowLoad () {
+          const mapOpts = ${jsonStringify(mapOptions, true)}
+          ${this.block.mapOptions.join('\n')}
+          await this.run(new maplibregl.Map(mapOpts))
+        }
+      `)
       this.params.attr['@load.window'] = 'await windowLoad()'
       this.params.append = `<script>
         document.addEventListener('alpine:init', () => {

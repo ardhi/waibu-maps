@@ -19,21 +19,19 @@ async function control () {
       this.readBlock()
       // persisting
       if (this.params.attr.persist) {
-        this.block.initializing.push(`Alpine.store('mapControl', {
-          attrib: Alpine.$persist(true).as('mapControlAttrib'),
-          centerPos: Alpine.$persist(true).as('mapControlCenterPos'),
-          fullscreen: Alpine.$persist(true).as('mapControlFullscreen'),
-          mousePos: Alpine.$persist(true).as('mapControlMousePos'),
-          nav: Alpine.$persist(true).as('mapControlNav'),
-          scale: Alpine.$persist(true).as('mapControlScale'),
-          geolocate: Alpine.$persist(true).as('mapControlGeolocate'),
-          ruler: Alpine.$persist(true).as('mapControlRuler'),
-          search: Alpine.$persist(true).as('mapControlSearch'),
-          searchFeed: Alpine.$persist(null).as('mapControlSearchFeed'),
-          searchSelect: null,
-          searchValue: null,
-          searchBusy: false
-        })`)
+        this.block.initializing.push(`
+          Alpine.store('mapControl', {
+            attrib: Alpine.$persist(true).as('mapControlAttrib'),
+            centerPos: Alpine.$persist(true).as('mapControlCenterPos'),
+            fullscreen: Alpine.$persist(true).as('mapControlFullscreen'),
+            mousePos: Alpine.$persist(true).as('mapControlMousePos'),
+            nav: Alpine.$persist(true).as('mapControlNav'),
+            scale: Alpine.$persist(true).as('mapControlScale'),
+            geolocate: Alpine.$persist(true).as('mapControlGeolocate'),
+            ruler: Alpine.$persist(true).as('mapControlRuler'),
+            search: Alpine.$persist(true).as('mapControlSearch')
+          })
+        `)
       }
       this.params.html = this.writeBlock()
       if (html.length > 0) this.params.html += '\n' + html.join('\n')
