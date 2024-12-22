@@ -22,10 +22,11 @@ async function controlButtons () {
     async build () {
       const { generateId } = this.plugin.app.bajo
       const { routePath } = this.plugin.app.waibu
-      const { jsonStringify } = this.plugin.app.waibuMpa
+      const { jsonStringify, attrToArray } = this.plugin.app.waibuMpa
       const { isEmpty, isString, pick, camelCase } = this.plugin.app.bajo.lib._
       const { $ } = this.component
       const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-right'
+      const classes = attrToArray(this.params.attr.classes)
       const items = []
       $(`<div>${this.params.html}</div>`).find('div').each(function () {
         const attrs = {}
@@ -55,9 +56,7 @@ async function controlButtons () {
       this.params.html = ''
       if (!isEmpty(items)) {
         this.block.control.push(`
-          var ctl = new ControlButtons(${jsonStringify({ items, position: pos }, true)})
-          map.addControl(ctl${pos ? `, '${pos}'` : ''})
-          ctl.setScope(this)
+          map.addControl(new ControlButtons(_.merge(${jsonStringify({ classes, items, position: pos }, true)}, { scopeId: Alpine.store('map').id }))${pos ? `, '${pos}'` : ''})
         `)
         this.params.html = this.writeBlock()
       }

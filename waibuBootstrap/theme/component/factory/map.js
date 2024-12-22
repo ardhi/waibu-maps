@@ -31,12 +31,6 @@ async function map () {
       this.params.attr['@keyup'] = 'onKeyup'
       const mapOptions = await options.call(this, this.params)
       this.block.reactive.push(`
-        mapId: '${this.params.attr.id}'
-      `, `
-        get map () { return map }
-      `, `
-        get wmaps () { return wmaps }
-      `, `
         async windowLoad () {
           const mapOpts = ${jsonStringify(mapOptions, true)}
           ${this.block.mapOptions.join('\n')}
@@ -97,6 +91,7 @@ async function map () {
         })
         document.addEventListener('alpine:initializing', () => {
           Alpine.store('map', {
+            id: '${this.params.attr.id}',
             degree: Alpine.$persist('DMS').as('mapDegree'),
             measure: Alpine.$persist('nautical').as('mapMeasure'),
             zoomScrollCenter: Alpine.$persist(false).as('mapZoomScrollCenter'),

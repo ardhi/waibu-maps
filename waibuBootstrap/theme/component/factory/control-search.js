@@ -62,7 +62,7 @@ async function controlSearch () {
       `)
       this.block.control.push(`
           var ctl = new ControlButtons({
-            cls: 'maplibregl-ctrl-search',
+            classes: ['maplibregl-ctrl-search'],
             items: [{
               icon: '${icon}',
               attrib: {
@@ -74,7 +74,6 @@ async function controlSearch () {
             position: '${pos}'
           })
           map.addControl(ctl${pos ? `, '${pos}'` : ''})
-          ctl.setScope(this)
           if (Alpine.store('mapControl')) {
             el = document.querySelector('#' + map._container.id + ' .maplibregl-ctrl-search')
             el.setAttribute('x-data', '')

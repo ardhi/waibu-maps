@@ -1,15 +1,11 @@
-/* global _ */
+/* global _, wmpa */
 
 class ControlButtons { // eslint-disable-line no-unused-vars
   constructor (options = {}) {
     this.position = options.position ?? 'top-left'
-    this.cls = options.cls ? options.cls.split(' ') : []
+    this.classes = options.classes ?? []
     this.items = options.items ?? []
-  }
-
-  setScope (scope) {
-    this.scope = scope
-    this.createButtons()
+    this.scopeId = options.scopeId
   }
 
   createButtons () {
@@ -29,18 +25,7 @@ class ControlButtons { // eslint-disable-line no-unused-vars
         btn.appendChild(icon)
       }
       if (b.dropdown) {
-        const wrapper = document.createElement('button')
-        wrapper.setAttribute('id', b.id)
-        this.buildOnClick(wrapper, b)
-        wrapper.classList.add('dropdown')
-        const pos = this.position.split('-')[1] === 'right' ? 'start' : 'end'
-        wrapper.classList.add('drop' + pos)
-        btn.setAttribute('data-bs-toggle', 'dropdown')
-        btn.setAttribute('data-bs-auto-close', 'outside')
-        const menu = document.createElement('div')
-        menu.classList.add('dropdown-menu')
-        wrapper.appendChild(btn)
-        wrapper.appendChild(menu)
+        const wrapper = this.createDropdown(btn, b)
         this.container.appendChild(wrapper)
       } else if (!_.get(b, 'attrib.dataBsTarget')) {
         if (b.fn) this.buildOnClick(btn, b)
@@ -60,9 +45,26 @@ class ControlButtons { // eslint-disable-line no-unused-vars
     }
   }
 
+  createDropdown (btn, b) {
+    const wrapper = document.createElement('button')
+    wrapper.setAttribute('id', b.id)
+    this.buildOnClick(wrapper, b)
+    wrapper.classList.add('dropdown')
+    const pos = this.position.split('-')[1] === 'right' ? 'start' : 'end'
+    wrapper.classList.add('drop' + pos)
+    btn.setAttribute('data-bs-toggle', 'dropdown')
+    btn.setAttribute('data-bs-auto-close', 'outside')
+    const menu = document.createElement('div')
+    menu.classList.add('dropdown-menu')
+    wrapper.appendChild(btn)
+    wrapper.appendChild(menu)
+    return wrapper
+  }
+
   createControl () {
     this.container = document.createElement('div')
-    this.container.classList.add('maplibregl-ctrl', 'maplibregl-ctrl-group', 'maplibregl-ctrl-buttons', ...this.cls)
+    this.container.classList.add('maplibregl-ctrl', 'maplibregl-ctrl-group', 'maplibregl-ctrl-buttons', ...this.classes)
+    this.createButtons()
   }
 
   buildOnClick (btn, opts) {
@@ -73,8 +75,9 @@ class ControlButtons { // eslint-disable-line no-unused-vars
     }
     if (ns === 'scope') {
       btn.addEventListener('click', evt => {
-        if (subMethod) this.scope[method][subMethod](opts.fnParams)
-        else this.scope[method](opts.fnParams)
+        if (!(this.scopeId && wmpa)) return
+        const fn = wmpa.alpineScopeMethod('#' + this.scopeId, method)
+        if (fn) fn(opts.fnParams)
       })
     } else {
       const params = opts.fnParams ? `'${opts.fnParams}'` : ''
