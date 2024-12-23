@@ -37,6 +37,17 @@
   border-top: 1px solid #5c5c5c;
 }
 
+.maplibregl-ctrl-group button.btn {
+  background-color: var(--bs-btn-bg);
+  width: auto;
+  height: auto;
+  padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
+}
+
+.maplibregl-ctrl-group button.btn:hover {
+  background-color: var(--bs-btn-hover-bg);
+}
+
 .maplibregl-popup {
   max-width: 300px !important;
 }

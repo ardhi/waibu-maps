@@ -3,7 +3,6 @@
 class ControlButtons { // eslint-disable-line no-unused-vars
   constructor (options = {}) {
     this.position = options.position ?? 'top-left'
-    this.classes = options.classes ?? []
     this.items = options.items ?? []
     this.scopeId = options.scopeId
   }
@@ -12,6 +11,7 @@ class ControlButtons { // eslint-disable-line no-unused-vars
     for (const b of this.items) {
       const btn = document.createElement('button')
       btn.setAttribute('type', 'button')
+      if (b.class) btn.classList.add(...b.class.split(' '))
       for (const attr in b.attrib ?? {}) {
         btn.setAttribute(_.kebabCase(attr), b.attrib[attr])
       }
@@ -63,7 +63,7 @@ class ControlButtons { // eslint-disable-line no-unused-vars
 
   createControl () {
     this.container = document.createElement('div')
-    this.container.classList.add('maplibregl-ctrl', 'maplibregl-ctrl-group', 'maplibregl-ctrl-buttons', ...this.classes)
+    this.container.classList.add('maplibregl-ctrl', 'maplibregl-ctrl-group', 'maplibregl-ctrl-buttons')
     this.createButtons()
   }
 
