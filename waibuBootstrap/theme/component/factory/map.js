@@ -90,13 +90,19 @@ async function map () {
           ${this.block.init.join('\n')}
         })
         document.addEventListener('alpine:initializing', () => {
-          Alpine.store('map', {
+          const props = {
             id: '${this.params.attr.id}',
             degree: Alpine.$persist('DMS').as('mapDegree'),
             measure: Alpine.$persist('nautical').as('mapMeasure'),
             zoomScrollCenter: Alpine.$persist(false).as('mapZoomScrollCenter'),
-            noMapRotate: Alpine.$persist(false).as('mapNoMapRotate')
-          })
+            noMapRotate: Alpine.$persist(false).as('mapNoMapRotate'),
+            controls: Alpine.$persist(${jsonStringify(WmapsBase.controls)}).as('mapControls')
+          }
+          for (const ctrl of ${jsonStringify(WmapsBase.controls, true)}) {
+            const name = 'ctrl' + wmpa.pascalCase(ctrl)
+            props[name] = Alpine.$persist(true).as('map' + _.upperFirst(name))
+          }
+          Alpine.store('map', props)
           ${this.block.initializing.join('\n')}
         })
       </script>`

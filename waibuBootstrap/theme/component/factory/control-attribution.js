@@ -1,7 +1,5 @@
 import control from './control.js'
 
-const storeKey = 'mapControl.attrib'
-
 async function controlAttribution () {
   const WmapsControl = await control.call(this)
 
@@ -18,14 +16,10 @@ async function controlAttribution () {
         compact: !this.params.attr.noCompact
       }
       if (isString(this.params.attr.text)) opts.customAttribution = this.params.attr.text
-      const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'
+      opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'
+      opts.classSelector = 'maplibregl-ctrl-attrib'
       this.block.control.push(`
-        map.addControl(new maplibregl.AttributionControl(${jsonStringify(opts, true)})${pos ? `, '${pos}'` : ''})
-        if (Alpine.store('mapControl')) {
-          el = document.querySelector('#' + map._container.id + ' .maplibregl-ctrl-attrib')
-          el.setAttribute('x-data', '')
-          el.setAttribute('x-show', '$store.${storeKey}')
-        }
+        await wmaps.createControlNative('AttributionControl', ${jsonStringify(opts, true)})
       `)
       this.params.html = this.writeBlock()
     }

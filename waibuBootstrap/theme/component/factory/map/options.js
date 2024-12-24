@@ -35,7 +35,7 @@ async function options (params = {}) {
     mapOpts.style = routePath(mapOpts.style)
   }
   mapOpts.attributionControl = true
-  $(`<div>${params.html}</div>`).find('script[block="control"]:contains(\'new maplibregl.AttributionControl\')').each(function () {
+  $(`<div>${params.html}</div>`).find('script[block="control"]:contains(\'AttributionControl\')').each(function () {
     mapOpts.attributionControl = false
   })
   return mapOpts

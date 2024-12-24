@@ -15,6 +15,8 @@ async function wmapsBase () {
       'nonReactive', 'dataInit', 'mapOptions', 'mapStyle', 'layerVisibility', 'missingImage',
       'keyup']
 
+    static controls = ['search', 'navigation-control', 'crlr', 'scale-control', 'attribution-control', 'fullscreen-control', 'geolocate-control', 'czbp']
+
     constructor (options) {
       super(options)
       this.block = {}

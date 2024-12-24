@@ -150,6 +150,35 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
       } else await this.loadImage(src)
     }
   }
+
+  async createControl (options = {}) {
+    const ctrl = new WaibuMapsControl(options)
+    ctrl.scope = this.scope
+    if (options.builder) {
+      const fn = options.builder.bind(ctrl)
+      ctrl.panel = await fn()
+    }
+    this.map.addControl(ctrl)
+    return ctrl
+  }
+
+  async createControlNative (className, options = {}) {
+    const name = wmpa.pascalCase(className)
+    const ctrl = new maplibregl[name](options)
+    let type = options.classSelector
+    if (!type) {
+      const types = _.kebabCase(className).split('-')
+      types.pop()
+      type = 'maplibregl-ctrl-' + types.join('-')
+    }
+    this.map.addControl(ctrl, options.position)
+    let el = document.querySelector('#' + this.map._container.id + ' .' + type)
+    if (el) {
+      if (options.classGroup) el = el.closest('.maplibregl-ctrl-group')
+      el.setAttribute('x-data', '')
+      el.setAttribute('x-show', '$store.map.ctrl' + name)
+    }
+  }
 }
 
 class WaibuMapsUtil {
@@ -206,6 +235,43 @@ class WaibuMapsUtil {
       _.merge(result, this.defStyle, { sources, layers })
     }
     return result
+  }
+}
+
+class WaibuMapsControl { // eslint-disable-line no-unused-vars
+  constructor (options = {}) {
+    this.position = options.position ?? 'top-right'
+    this.class = options.class
+  }
+
+  createControl () {
+    this.container = document.createElement('div')
+    this.container['x-data'] = true
+    this.container.classList.add('maplibregl-ctrl', 'maplibregl-ctrl-wmaps')
+    if (this.class) {
+      const classes = _.without(this.class.split(' '), '', null, undefined)
+      if (classes.length > 0) {
+        this.container.classList.add(...classes)
+        this.container.setAttribute('x-show', 'Alpine.store(\'map\')[\'ctrl\' + wmpa.pascalCase(\'' + classes[0] + '\')]') // first class will be used as control switch class
+      }
+    }
+    if (this.panel) this.container.appendChild(this.panel)
+  }
+
+  onAdd (map) {
+    this.map = map
+    this.createControl()
+    return this.container
+  }
+
+  onRemove () {
+    this.container.parentNode.removeChild(this.container)
+    this.map = undefined
+    this.scope = undefined
+  }
+
+  getDefaultPosition () {
+    return this.position
   }
 }
 

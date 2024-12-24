@@ -2,6 +2,7 @@
 [data-bs-theme=dark] .maplibregl-ctrl-attrib,
 [data-bs-theme=dark] .maplibregl-ctrl-scale,
 [data-bs-theme=dark] .maplibregl-popup-content,
+[data-bs-theme=dark] .maplibregl-ctrl-widget,
 [data-bs-theme=dark] .maplibregl-ctrl-mouse-position {
   background-color: var(--bs-body-bg);
   color: var(--bs-body-color);
@@ -35,6 +36,17 @@
 
 [data-bs-theme=dark] .maplibregl-ctrl-group button+button {
   border-top: 1px solid #5c5c5c;
+}
+
+.maplibregl-ctrl-widget {
+  background-color: #fff;
+  border-radius: 12px;
+  box-sizing: content-box;
+  color: #000;
+  margin: 10px;
+  min-height: 20px;
+  padding: 2px 8px 2px 8px;
+  position: relative;
 }
 
 .maplibregl-ctrl-group button.btn {

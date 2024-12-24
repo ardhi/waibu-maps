@@ -4,5 +4,15 @@
   "dirE": "T",
   "dirW": "B",
   "dirN": "U",
-  "dirS": "S"
+  "dirS": "S",
+  "mapControl": {
+    "search": "Search",
+    "navigation-control": "Navigation",
+    "crlr": "Measurement",
+    "scale-control": "Map Scale",
+    "attribution-control": "Attribution",
+    "fullscreen-control": "Fullscreen",
+    "geolocate-control": "Geolocate",
+    "czbp": "Zoom/Bearing/Pitch"
+  }
 }

@@ -74,7 +74,7 @@ async function controlSearch () {
             position: '${pos}'
           })
           map.addControl(ctl${pos ? `, '${pos}'` : ''})
-          if (Alpine.store('mapControl')) {
+          if (this.$store.mapControl) {
             el = document.querySelector('#' + map._container.id + ' .maplibregl-ctrl-search')
             el.setAttribute('x-data', '')
             el.setAttribute('x-show', '$store.${storeKey}')

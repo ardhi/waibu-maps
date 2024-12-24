@@ -39,13 +39,13 @@ async function controlMousePosition () {
       this.block.control.push(`
         ${labelFormatDd}
         ${labelFormatDms}
-        const format = (Alpine.store('map') ?? {}).degree ?? '${this.params.attr.format ?? 'DMS'}'
+        const format = (this.$store.map ?? {}).degree ?? '${this.params.attr.format ?? 'DMS'}'
         const cmpOpts = {
           ${centerTrack}
           labelFormat: format === 'DD' ? labelFormatDd : labelFormatDms
         }
         map.addControl(new ControlMousePosition(cmpOpts)${pos ? `, '${pos}'` : ''})
-        if (Alpine.store('mapControl')) {
+        if (this.$store.mapControl) {
           el = document.querySelector('#' + map._container.id + ' .maplibregl-ctrl-mouse-position')
           el.setAttribute('x-data', '')
           el.setAttribute('x-show', '$store.${storeKey}')

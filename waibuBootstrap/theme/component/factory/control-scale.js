@@ -1,5 +1,4 @@
 import control from './control.js'
-const storeKey = 'mapControl.scale'
 
 async function controlScale () {
   const WmapsControl = await control.call(this)
@@ -16,16 +15,9 @@ async function controlScale () {
       const opts = {}
       if (['imperial', 'metric', 'nautical'].includes(this.params.attr.unit)) opts.unit = this.params.attr.unit
       if (isString(this.params.attr.maxWidth) && Number(this.params.attr.maxWidth)) opts.maxWidth = Number(this.params.attr.maxWidth)
-      const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-left'
+      opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-left'
       this.block.control.push(`
-        const scaleOpts = ${jsonStringify(opts, true)}
-        if ((Alpine.store('map') ?? {}).measure) scaleOpts.unit = Alpine.store('map').measure
-        map.addControl(new maplibregl.ScaleControl(scaleOpts)${pos ? `, '${pos}'` : ''})
-        if (Alpine.store('mapControl')) {
-          el = document.querySelector('#' + map._container.id + ' .maplibregl-ctrl-scale')
-          el.setAttribute('x-data', '')
-          el.setAttribute('x-show', '$store.${storeKey}')
-        }
+        await wmaps.createControlNative('ScaleControl', ${jsonStringify(opts, true)})
       `)
       this.params.html = this.writeBlock()
     }
