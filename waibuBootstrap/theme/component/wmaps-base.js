@@ -55,15 +55,19 @@ async function wmapsBase () {
       return html.join('\n')
     }
 
-    getTemplate (html, type, defEmpty = '') {
+    async getTemplate (html, type, defEmpty = '') {
       const { trim, isEmpty } = this.plugin.app.bajo.lib._
+      const { importPkg } = this.plugin.app.bajo
+      const minifier = await importPkg('waibuMpa:html-minifier-terser')
       const { $ } = this.component
       let tpl = trim($(`<div>${html}</div>`).find(`wmaps-template[type="${type}"]`).prop('innerHTML'))
       if (isEmpty(tpl)) {
         if (defEmpty === 'popup') tpl = '<div class="px-3 py-2">{%= name %}</div>'
         else tpl = defEmpty
       }
-      return tpl
+      return await minifier.minify(tpl, {
+        collapseWhitespace: true
+      })
     }
   }
 }

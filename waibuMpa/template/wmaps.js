@@ -1,4 +1,4 @@
-/* global maplibregl, geolib, _, wmpa, WorkerTimers, turf */
+/* global maplibregl, geolib, _, wmpa, WorkerTimers, turf, Alpine */
 
 class WaibuMaps { // eslint-disable-line no-unused-vars
   constructor (map, scope) {
@@ -155,8 +155,8 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     const ctrl = new WaibuMapsControl(options)
     ctrl.scope = this.scope
     if (options.builder) {
-      const fn = options.builder.bind(ctrl)
-      ctrl.panel = await fn()
+      const fn = options.builder.bind(ctrl.scope)
+      ctrl.panels = await fn()
     }
     this.map.addControl(ctrl)
     return ctrl
@@ -252,10 +252,20 @@ class WaibuMapsControl { // eslint-disable-line no-unused-vars
       const classes = _.without(this.class.split(' '), '', null, undefined)
       if (classes.length > 0) {
         this.container.classList.add(...classes)
-        this.container.setAttribute('x-show', 'Alpine.store(\'map\')[\'ctrl\' + wmpa.pascalCase(\'' + classes[0] + '\')]') // first class will be used as control switch class
+        const ctrlName = 'ctrl' + wmpa.pascalCase(classes[0])
+        if (_.has(Alpine.store('map'), ctrlName)) {
+          this.container.setAttribute('x-show', 'Alpine.store(\'map\')[\'' + ctrlName + '\']') // first class will be used as control switch class
+        }
       }
     }
-    if (this.panel) this.container.appendChild(this.panel)
+    if (this.panels) {
+      if (!_.isArray(this.panels)) this.panels = [this.panels]
+      if (this.panels.length > 0) {
+        for (const panel of this.panels) {
+          this.container.appendChild(panel)
+        }
+      }
+    }
   }
 
   onAdd (map) {

@@ -38,6 +38,10 @@
   border-top: 1px solid #5c5c5c;
 }
 
+.maplibregl-ctrl-group.cgr button i {
+  font-size: 16pt;
+}
+
 .maplibregl-ctrl-widget {
   background-color: #fff;
   border-radius: 12px;
@@ -47,6 +51,14 @@
   min-height: 20px;
   padding: 2px 8px 2px 8px;
   position: relative;
+}
+
+.maplibregl-ctrl-loader {
+  z-index: 1000;
+  position: absolute;
+  width: 100%;
+  top: 0px;
+  pointer-events: none;
 }
 
 .maplibregl-ctrl-group button.btn {

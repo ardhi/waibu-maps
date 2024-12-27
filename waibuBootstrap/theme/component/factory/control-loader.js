@@ -4,11 +4,6 @@ async function controlLoader () {
   const WmapsControl = await control.call(this)
 
   return class WmapsControlLoader extends WmapsControl {
-    static css = [
-      ...super.css,
-      'waibuMaps.asset:/css/control-loader.css'
-    ]
-
     constructor (options) {
       super(options)
       this.params.noTag = true
