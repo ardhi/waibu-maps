@@ -1,6 +1,15 @@
 import control from './control.js'
 const prefix = 'cgr'
 
+const menuTpl = `
+<c:div dim="height:100" flex="align-items:center justify-content:center" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+  <c:icon oname="{%= icon %}" @click="{%= click %}" />
+</c:div>
+<c:div class="dropdown-menu">
+  {%= html %}
+</c:div>
+`
+
 async function controlGroup () {
   const WmapsControl = await control.call(this)
 
@@ -12,53 +21,42 @@ async function controlGroup () {
 
     async build () {
       const { generateId } = this.plugin.app.bajo
-      const { importPkg } = this.plugin.app.bajo
-      const { jsonStringify } = this.plugin.app.waibuMpa
-      const { isString, isEmpty, trim } = this.plugin.app.bajo.lib._
-      const minifier = await importPkg('waibuMpa:html-minifier-terser')
+      const { jsonStringify, minify } = this.plugin.app.waibuMpa
+      const { isString, trim } = this.plugin.app.bajo.lib._
       const { $ } = this.component
+      let menu = await this.component.buildSentence(menuTpl)
+      menu = await minify(menu)
       const id = isString(this.params.attr.id) ? this.params.attr.id : generateId('alpha')
       const opts = {}
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
       opts.class = prefix + ' maplibregl-ctrl-group'
       const items = []
-      const params = {}
+      const params = []
       $(`<div>${this.params.html}</div>`).find('button[class^="control-group-"]').each(function () {
-        if ($(this).find('.var')) {
-          const key = this.attribs.class.split(' ')[1]
-          params[key] = params[key] ?? { id: [], icon: [], html: [], cmp: [], tpl: null, wrapper: [] }
-          params[key].cmp.push($(this).find('.var .cmp').text())
-          params[key].icon.push($(this).find('.var .icon').text())
-          params[key].html.push($(this).find('.var .html').prop('innerHTML'))
-          params[key].tpl = $(this).find('.var .tpl').prop('innerHTML')
-          params[key].id.push($(this).prop('id'))
-          params[key].wrapper.push($(this).html('{%= cmp %}').prop('outerHTML'))
+        const vars = $(this).find('.var').length
+        if (vars > 0) {
+          params.push({
+            icon: $(this).find('.var .icon').text() ?? '',
+            html: $(this).find('.var .html').prop('innerHTML') ?? '',
+            wrapper: $(this).html('{%= cmp %}').prop('outerHTML') ?? ''
+          })
         } else {
           const item = trim($(this).removeAttr('octag').prop('outerHTML'))
           items.push(item)
         }
       })
-      for (const idx in params) {
-        params[idx].tpl = await minifier.minify(params[idx].tpl, {
-          collapseWhitespace: true
-        })
+      for (const param of params) {
         for (const type of ['html', 'wrapper']) {
-          for (const i in params[idx][type]) {
-            if (isEmpty(params[idx][type][i])) continue
-            params[idx][type][i] = await minifier.minify(params[idx][type][i], {
-              collapseWhitespace: true
-            })
-          }
+          param[type] = await minify(param[type])
         }
       }
       for (const idx in items) {
-        items[idx] = await minifier.minify(items[idx], {
-          collapseWhitespace: true
-        })
+        items[idx] = await minify(items[idx])
       }
-      // if (_.isFunction(this[items[idx]])) items[idx] = await this[items[idx]]()
-
+      this.readBlock()
       this.block.reactive.push(`
+        ${prefix}MenuTpl: _.template('${menu}')
+      `, `
         async ${prefix}Trigger (evt) {
           const el = evt.target.closest('button')
           if (!el) return
@@ -70,26 +68,20 @@ async function controlGroup () {
       `, `
         async ${prefix}Builder (params) {
           const items = []
-          for (const type in params) {
-            const fn = _.template(params[type].tpl)
-            for (const idx in params[type].html) {
-              let wrapper = params[type].wrapper[idx]
-              const id = params[type].id[idx]
-              const cmp = params[type].cmp[idx]
-              const args = {
-                click: '',
-                icon: params[type].icon[idx],
-                html: params[type].html[idx]
-              }
-              if (!_.isEmpty(cmp)) {
-                args.html = ''
-                args.click = '${prefix}Trigger'
-              }
-              const wfn = _.template(wrapper)
-              const inner = fn(args)
-              const outer = wfn({ cmp: inner })
-              items.push(wmpa.createComponentFromHtml(outer))
+          for (const param of params) {
+            const args = {
+              click: '',
+              icon: param.icon,
+              html: param.html
             }
+            if (param.wrapper.includes('component=')) {
+              args.html = ''
+              args.click = '${prefix}Trigger'
+            }
+            const wfn = _.template(param.wrapper)
+            const inner = this.${prefix}MenuTpl(args)
+            const outer = wfn({ cmp: inner })
+            items.push(wmpa.createComponentFromHtml(outer))
           }
           return items
         }
