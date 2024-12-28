@@ -1,21 +1,10 @@
 import control from './control.js'
-const storeKey = 'mapControl.search'
-const prefix = 'ctrlsearch'
+const prefix = 'csrc'
 
 async function controlSearch () {
   const WmapsControl = await control.call(this)
 
   return class WmapsControlSearch extends WmapsControl {
-    static scripts = [
-      ...super.scripts,
-      'waibuMaps.asset:/js/control-buttons.js'
-    ]
-
-    static css = [
-      ...super.css,
-      'waibuMaps.asset:/css/control-buttons.css'
-    ]
-
     constructor (options) {
       super(options)
       this.params.noTag = true
@@ -24,9 +13,14 @@ async function controlSearch () {
     async build () {
       const { generateId } = this.plugin.app.bajo
       const { isString } = this.plugin.app.bajo.lib._
-      const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-right'
+      const { jsonStringify } = this.plugin.app.waibuMpa
       const id = isString(this.params.attr.id) ? this.params.attr.id : generateId('alpha')
-      const icon = this.component.iconset.resolve('search')
+      const opts = {}
+      opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
+      opts.class = prefix + ' maplibregl-ctrl-group'
+      this.block.control.push(`
+        await wmaps.createControl(_.merge(${jsonStringify(opts, true)}, { builder: this.${prefix}Builder }))
+      `)
       this.block.dataInit.push(`
         this.$watch('$store.mapSearch.value', async val => {
           const html = await ${this.params.attr.method}(val, this.$store.mapSearch.feed)
@@ -48,6 +42,14 @@ async function controlSearch () {
         await this.${prefix}Populate()
       `)
       this.block.reactive.push(`
+        async ${prefix}Builder (params) {
+          const body = [
+            '<c:button dim="height:100" flex="align-items:center justify-content:center" open="${id}">',
+            '<c:icon name="search" />',
+            '</c:button>'
+          ]
+          return [await wmpa.createComponent(body)]
+        },
         async ${prefix}Populate () {
           const feeds = await ${this.params.attr.feed}()
           if (feeds.length > 0) {
@@ -59,26 +61,6 @@ async function controlSearch () {
             wmpa.replaceWithComponentHtml(html, '#${id} .result div', 'div')
           }
         }
-      `)
-      this.block.control.push(`
-          var ctl = new ControlButtons({
-            classes: ['maplibregl-ctrl-search'],
-            items: [{
-              icon: '${icon}',
-              attrib: {
-                dataBsTarget: '#${id}',
-                dataBsToggle: 'modal',
-                ariaControls: '${id}'
-              }
-            }],
-            position: '${pos}'
-          })
-          map.addControl(ctl${pos ? `, '${pos}'` : ''})
-          if (this.$store.mapControl) {
-            el = document.querySelector('#' + map._container.id + ' .maplibregl-ctrl-search')
-            el.setAttribute('x-data', '')
-            el.setAttribute('x-show', '$store.${storeKey}')
-          }
       `)
       const ui = await this.component.buildSentence(`
         <div class="childmap maplibregl-ctrl-search">

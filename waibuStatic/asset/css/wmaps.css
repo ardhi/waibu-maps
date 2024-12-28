@@ -38,10 +38,6 @@
   border-top: 1px solid #5c5c5c;
 }
 
-.maplibregl-ctrl-group.cgr button i {
-  font-size: 16pt;
-}
-
 .maplibregl-ctrl-widget {
   background-color: #fff;
   border-radius: 12px;
@@ -81,9 +77,19 @@
 }
 
 .maplibregl-ctrl-group button {
-  width: 35px;
-  height: 35px;
+  width: 35px !important;
+  height: 35px !important;
 }
+
+.maplibregl-ctrl-group button i {
+  font-size: 16pt;
+}
+
+.maplibregl-ctrl-group button.accordion-button {
+  width: 100% !important;
+  height: auto !important;
+}
+
 
 .maplibregl-popup-content div span {
   display: inline-block;

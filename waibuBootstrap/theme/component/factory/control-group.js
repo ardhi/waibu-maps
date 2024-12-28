@@ -11,11 +11,13 @@ async function controlGroup () {
     }
 
     async build () {
+      const { generateId } = this.plugin.app.bajo
       const { importPkg } = this.plugin.app.bajo
       const { jsonStringify } = this.plugin.app.waibuMpa
-      const { isEmpty, trim } = this.plugin.app.bajo.lib._
+      const { isString, isEmpty, trim } = this.plugin.app.bajo.lib._
       const minifier = await importPkg('waibuMpa:html-minifier-terser')
       const { $ } = this.component
+      const id = isString(this.params.attr.id) ? this.params.attr.id : generateId('alpha')
       const opts = {}
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
       opts.class = prefix + ' maplibregl-ctrl-group'
@@ -57,8 +59,6 @@ async function controlGroup () {
       // if (_.isFunction(this[items[idx]])) items[idx] = await this[items[idx]]()
 
       this.block.reactive.push(`
-        ${prefix}Params: ${jsonStringify(params, true)}
-      `, `
         async ${prefix}Trigger (evt) {
           const el = evt.target.closest('button')
           if (!el) return
@@ -68,9 +68,8 @@ async function controlGroup () {
           await wmpa.addComponent('<c:' + el.getAttribute('component') + '/>', menu)
         }
       `, `
-        async ${prefix}Builder () {
+        async ${prefix}Builder (params) {
           const items = []
-          const params = this.${prefix}Params
           for (const type in params) {
             const fn = _.template(params[type].tpl)
             for (const idx in params[type].html) {
@@ -95,9 +94,13 @@ async function controlGroup () {
           return items
         }
       `)
-      this.block.control.push(`
-        await wmaps.createControl(_.merge(${jsonStringify(opts, true)}, { builder: this.${prefix}Builder }))
-      `)
+      this.block.control.push({
+        id,
+        group: true,
+        content: `
+          await wmaps.createControl(_.merge(${jsonStringify(opts, true)}, { builder: this.${prefix}Builder, params: ${jsonStringify(params, true)} }))
+        `
+      })
 
       this.params.html = this.writeBlock()
     }

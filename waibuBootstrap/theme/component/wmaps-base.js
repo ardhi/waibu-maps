@@ -34,23 +34,25 @@ async function wmapsBase () {
         const type = this.attribs.block ?? 'run'
         if (blocks.length > 0 && !blocks.includes(type)) return undefined
         if (WmapsBase.blockTypes.includes(type)) {
-          let html = trim($(this).prop('innerHTML'))
-          if (type === 'reactive') {
-            html = html.slice(1)
-            html = html.slice(0, html.length - 1)
-          }
+          const html = trim($(this).prop('innerHTML'))
           if (!me.block[type].includes(html)) me.block[type].push(html)
         }
       })
     }
 
     writeBlock () {
+      const { isString, omit } = this.plugin.app.bajo.lib._
+      const { attribsStringify } = this.plugin.app.waibuMpa
       const html = []
       for (const key in this.block) {
-        let items = this.block[key]
+        const items = this.block[key]
         if (items.length === 0) continue
-        if (key === 'reactive') items = ['{', items.join(',\n'), '}']
-        html.push(`<script block="${key}">${items.join('\n')}</script>`)
+        for (let item of items) {
+          if (isString(item)) item = { content: item }
+          item.block = key
+          const attrs = attribsStringify(omit(item, ['content']))
+          html.push(`<script ${attrs}>${item.content}</script>`)
+        }
       }
       return html.join('\n')
     }

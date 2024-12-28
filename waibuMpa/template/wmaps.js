@@ -156,7 +156,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     ctrl.scope = this.scope
     if (options.builder) {
       const fn = options.builder.bind(ctrl.scope)
-      ctrl.panels = await fn()
+      ctrl.panels = await fn(options.params)
     }
     this.map.addControl(ctrl)
     return ctrl
