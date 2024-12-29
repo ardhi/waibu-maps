@@ -159,6 +159,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
       ctrl.panels = await fn(options.params)
     }
     this.map.addControl(ctrl)
+    if (options.firstCall) options.firstCall.call(ctrl.scope)
     return ctrl
   }
 

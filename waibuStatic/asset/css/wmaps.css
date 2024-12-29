@@ -76,17 +76,16 @@
   margin: 0px 10px 10px !important;
 }
 
-.maplibregl-ctrl-group button {
+.maplibregl-ctrl-group > button {
   width: 35px !important;
   height: 35px !important;
 }
 
-.maplibregl-ctrl-group button i {
+.maplibregl-ctrl-group > button i {
   font-size: 16pt;
 }
 
 .maplibregl-ctrl-group button.accordion-button {
-  width: 100% !important;
   height: auto !important;
 }
 
@@ -111,4 +110,13 @@
 
 .maplibregl-popup-content .nav {
   padding: 0 0.5rem;
+}
+
+.maplibregl-ctrl-group.czbp table td,
+.maplibregl-ctrl-group.cmp table td {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.maplibregl-ctrl-group.cmp table td {
+  min-width:113px;
 }

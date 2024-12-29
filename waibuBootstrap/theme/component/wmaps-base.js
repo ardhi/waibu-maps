@@ -15,7 +15,8 @@ async function wmapsBase () {
       'nonReactive', 'dataInit', 'mapOptions', 'mapStyle', 'layerVisibility', 'missingImage',
       'keyup']
 
-    static controls = ['search', 'navigation-control', 'crlr', 'scale-control', 'attribution-control', 'fullscreen-control', 'geolocate-control', 'czbp']
+    static controls = ['csrc', 'navigation-control', 'crlr', 'scale-control', 'attribution-control',
+      'fullscreen-control', 'geolocate-control', 'czbp', 'cmp']
 
     constructor (options) {
       super(options)
@@ -59,17 +60,14 @@ async function wmapsBase () {
 
     async getTemplate (html, type, defEmpty = '') {
       const { trim, isEmpty } = this.plugin.app.bajo.lib._
-      const { importPkg } = this.plugin.app.bajo
-      const minifier = await importPkg('waibuMpa:html-minifier-terser')
+      const { minify } = this.plugin.app.waibuMpa
       const { $ } = this.component
       let tpl = trim($(`<div>${html}</div>`).find(`wmaps-template[type="${type}"]`).prop('innerHTML'))
       if (isEmpty(tpl)) {
         if (defEmpty === 'popup') tpl = '<div class="px-3 py-2">{%= name %}</div>'
         else tpl = defEmpty
       }
-      return await minifier.minify(tpl, {
-        collapseWhitespace: true
-      })
+      return await minify(tpl)
     }
   }
 }

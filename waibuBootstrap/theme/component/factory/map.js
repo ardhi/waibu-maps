@@ -76,7 +76,12 @@ async function map () {
               async run (instance) {
                 map = instance
                 wmaps = new WaibuMaps(instance, this)
-                let el
+                map.on('moveend', evt => {
+                  Alpine.store('map').center = evt.target.getCenter().toArray()
+                  Alpine.store('map').zoom = evt.target.getZoom()
+                  Alpine.store('map').bearing = evt.target.getBearing()
+                  Alpine.store('map').pitch = evt.target.getPitch()
+                })
                 ${this.block.control.join('\n')}
                 ${this.block.run.join('\n')}
                 map.on('styledataloading', () => {
@@ -96,7 +101,10 @@ async function map () {
             measure: Alpine.$persist('nautical').as('mapMeasure'),
             zoomScrollCenter: Alpine.$persist(false).as('mapZoomScrollCenter'),
             noMapRotate: Alpine.$persist(false).as('mapNoMapRotate'),
-            controls: Alpine.$persist(${jsonStringify(WmapsBase.controls)}).as('mapControls')
+            center: Alpine.$persist(null).as('mapCenter'),
+            zoom: Alpine.$persist(null).as('mapZoom'),
+            bearing: Alpine.$persist(null).as('mapBearing'),
+            pitch: Alpine.$persist(null).as('mapPitch')
           }
           for (const ctrl of ${jsonStringify(WmapsBase.controls, true)}) {
             const name = 'ctrl' + wmpa.pascalCase(ctrl)

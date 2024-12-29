@@ -6,13 +6,14 @@
   "dirN": "U",
   "dirS": "S",
   "mapControl": {
-    "search": "Search",
+    "csrc": "Search",
     "navigation-control": "Navigation",
     "crlr": "Measurement",
     "scale-control": "Map Scale",
     "attribution-control": "Attribution",
     "fullscreen-control": "Fullscreen",
     "geolocate-control": "Geolocate",
-    "czbp": "Zoom/Bearing/Pitch"
+    "czbp": "Zoom/Bearing/Pitch",
+    "cmp": "Mouse Position"
   }
 }

@@ -1,11 +1,11 @@
 import control from './control.js'
 
-const prefix = 'czbp'
+const prefix = 'cmp'
 
-async function controlZbp () {
+async function controlMousePos () {
   const WmapsControl = await control.call(this)
 
-  return class WmapsControlZbp extends WmapsControl {
+  return class WmapsControlMousePos extends WmapsControl {
     constructor (options) {
       super(options)
       this.params.noTag = true
@@ -14,37 +14,43 @@ async function controlZbp () {
     async build () {
       const { generateId } = this.plugin.app.bajo
       const { jsonStringify, minify } = this.plugin.app.waibuMpa
-      const { omit } = this.plugin.app.bajo.lib._
+      const { has, omit } = this.plugin.app.bajo.lib._
       const options = omit(this.params.attr, ['octag', 'class', 'style', 'content'])
       options.class = prefix + ' maplibregl-ctrl-group'
       const id = generateId('alpha')
       const tpl = await minify(await this.component.buildSentence(`
         <c:table size="sm" text="align:center" no-border margin="all-0">
-          <c:tr font="size:5">
-            <td>{%= zoom %}</td>
-            <td>{%= bearing %}°</td>
-            <td>{%= pitch %}°</td>
+          <c:tr text="align:end">
+            <td>{%= lng %}</td>
+            <td>{%= lat %}</td>
           </c:tr>
           <c:tr style="font-size:smaller">
-            <c:td t:content="Zoom" />
-            <c:td t:content="Bearing" />
-            <c:td t:content="Pitch" />
+            <c:td t:content="Longitude" />
+            <c:td t:content="Latitude" />
           </c:tr>
         </c:table>
       `))
       this.block.dataInit.push(`
-        this.$watch('$store.map.zoom, $store.map.bearing, $store.map.pitch', this.${prefix}Update.bind(this))
+        this.$watch('$store.map.center', val => {
+          if (!this.${prefix}TrackCenter) return
+          this.${prefix}Pos = [...val]
+        })
+        this.$watch('${prefix}Pos', this.${prefix}Update.bind(this))
       `)
       this.block.reactive.push(`
         ${prefix}Tpl: _.template('${tpl}')
       `, `
+        ${prefix}Pos: [0, 0]
+      `, `
+        ${prefix}TrackCenter: ${has(this.params.attr, 'trackCenter') ? 'true' : 'false'}
+      `, `
         ${prefix}Update () {
           const el = document.querySelector('#${id}')
           if (!el) return
+          const [lng, lat] = this.${prefix}Pos
           el.innerHTML = this.${prefix}Tpl({
-            zoom: wmpa.format(this.$store.map.zoom, 'float'),
-            bearing: wmpa.format(this.$store.map.bearing, 'float'),
-            pitch: wmpa.format(this.$store.map.pitch, 'float')
+            lng: wmpa.format(lng, 'float', { longitude: true }),
+            lat: wmpa.format(lat, 'float', { latitude: true })
           })
         }
       `, `
@@ -52,6 +58,14 @@ async function controlZbp () {
           const body = '<c:div id="${id}" padding="x-2 top-1"/>'
           return await wmpa.createComponent(body)
         }
+      `)
+      this.block.run.push(`
+        map.on('mousemove', evt => {
+          if (this.${prefix}TrackCenter) return
+          const coord = evt.lngLat.wrap()
+          this.${prefix}Pos = [coord.lng, coord.lat]
+        })
+        if (this.${prefix}TrackCenter) this.${prefix}Pos = [...this.$store.map.center]
       `)
 
       this.block.control.push(`
@@ -63,4 +77,4 @@ async function controlZbp () {
   }
 }
 
-export default controlZbp
+export default controlMousePos
