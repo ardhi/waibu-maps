@@ -16,19 +16,17 @@ async function controlMousePos () {
       const { jsonStringify, minify } = this.plugin.app.waibuMpa
       const { has, omit } = this.plugin.app.bajo.lib._
       const options = omit(this.params.attr, ['octag', 'class', 'style', 'content'])
-      options.class = prefix + ' maplibregl-ctrl-group'
+      options.class = prefix + ' maplibregl-ctrl-group widget'
       const id = generateId('alpha')
       const tpl = await minify(await this.component.buildSentence(`
-        <c:table size="sm" text="align:center" no-border margin="all-0">
-          <c:tr text="align:end">
-            <td>{%= lng %}</td>
-            <td>{%= lat %}</td>
-          </c:tr>
-          <c:tr style="font-size:smaller">
-            <c:td t:content="Longitude" />
-            <c:td t:content="Latitude" />
-          </c:tr>
-        </c:table>
+        <c:grid-row>
+          <c:grid-col col="6">{%= lng %}</c:grid-col>
+          <c:grid-col col="6">{%= lat %}</c:grid-col>
+        </c:grid-row>
+        <c:grid-row style="font-size:smaller">
+          <c:grid-col col="6" t:content="Longitude" />
+          <c:grid-col col="6" t:content="Latitude" />
+        </c:grid-row>
       `))
       this.block.dataInit.push(`
         this.$watch('$store.map.center', val => {
@@ -55,7 +53,7 @@ async function controlMousePos () {
         }
       `, `
         async ${prefix}Builder () {
-          const body = '<c:div id="${id}" padding="x-2 top-1"/>'
+          const body = '<c:div id="${id}" margin="x-2 top-1" text="align:center nowrap"/>'
           return await wmpa.createComponent(body)
         }
       `)

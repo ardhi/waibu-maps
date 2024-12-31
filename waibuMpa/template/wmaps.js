@@ -176,6 +176,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     let el = document.querySelector('#' + this.map._container.id + ' .' + type)
     if (el) {
       if (options.classGroup) el = el.closest('.maplibregl-ctrl-group')
+      el.setAttribute('oncontextmenu', 'return false')
       el.setAttribute('x-data', '')
       el.setAttribute('x-show', '$store.map.ctrl' + name)
     }
@@ -247,7 +248,7 @@ class WaibuMapsControl { // eslint-disable-line no-unused-vars
 
   createControl () {
     this.container = document.createElement('div')
-    this.container['x-data'] = true
+    // this.container.setAttribute('oncontextmenu', 'return false')
     this.container.classList.add('maplibregl-ctrl', 'maplibregl-ctrl-wmaps')
     if (this.class) {
       const classes = _.without(this.class.split(' '), '', null, undefined)

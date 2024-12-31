@@ -38,15 +38,12 @@
   border-top: 1px solid #5c5c5c;
 }
 
-.maplibregl-ctrl-widget {
-  background-color: #fff;
-  border-radius: 12px;
-  box-sizing: content-box;
-  color: #000;
-  margin: 10px;
-  min-height: 20px;
-  padding: 2px 8px 2px 8px;
-  position: relative;
+[data-bs-theme=dark] .maplibregl-ctrl-wmaps.widget {
+  background-color: rgba(33, 37, 41, 0.8) !important;
+}
+
+.maplibregl-ctrl-wmaps.widget {
+  background-color: rgba(255, 255, 255, 0.75) !important;
 }
 
 .maplibregl-ctrl-loader {
@@ -89,6 +86,12 @@
   height: auto !important;
 }
 
+.maplibregl-ctrl-group .accordion-header button {
+  width: 100%;
+  display: flex;
+}
+
+
 
 .maplibregl-popup-content div span {
   display: inline-block;
@@ -112,11 +115,6 @@
   padding: 0 0.5rem;
 }
 
-.maplibregl-ctrl-group.czbp table td,
-.maplibregl-ctrl-group.cmp table td {
-  padding-top: 0px;
-  padding-bottom: 0px;
-}
-.maplibregl-ctrl-group.cmp table td {
-  min-width:113px;
+.maplibregl-ctrl-group.cmp {
+  width:240px;
 }

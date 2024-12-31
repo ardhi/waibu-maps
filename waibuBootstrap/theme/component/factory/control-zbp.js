@@ -16,21 +16,19 @@ async function controlZbp () {
       const { jsonStringify, minify } = this.plugin.app.waibuMpa
       const { omit } = this.plugin.app.bajo.lib._
       const options = omit(this.params.attr, ['octag', 'class', 'style', 'content'])
-      options.class = prefix + ' maplibregl-ctrl-group'
+      options.class = prefix + ' maplibregl-ctrl-group widget'
       const id = generateId('alpha')
       const tpl = await minify(await this.component.buildSentence(`
-        <c:table size="sm" text="align:center" no-border margin="all-0">
-          <c:tr font="size:5">
-            <td>{%= zoom %}</td>
-            <td>{%= bearing %}°</td>
-            <td>{%= pitch %}°</td>
-          </c:tr>
-          <c:tr style="font-size:smaller">
-            <c:td t:content="Zoom" />
-            <c:td t:content="Bearing" />
-            <c:td t:content="Pitch" />
-          </c:tr>
-        </c:table>
+        <c:grid-row font="size:5">
+          <c:grid-col col="4">{%= zoom %}</c:grid-col>
+          <c:grid-col col="4">{%= bearing %}</c:grid-col>
+          <c:grid-col col="4">{%= pitch %}</c:grid-col>
+        </c:grid-row>
+        <c:grid-row style="font-size:smaller">
+          <c:grid-col col="4" t:content="Zoom" />
+          <c:grid-col col="4" t:content="Bearing" />
+          <c:grid-col col="4" t:content="Pitch" />
+        </c:grid-row>
       `))
       this.block.dataInit.push(`
         this.$watch('$store.map.zoom, $store.map.bearing, $store.map.pitch', this.${prefix}Update.bind(this))
@@ -42,14 +40,14 @@ async function controlZbp () {
           const el = document.querySelector('#${id}')
           if (!el) return
           el.innerHTML = this.${prefix}Tpl({
-            zoom: wmpa.format(this.$store.map.zoom, 'float'),
-            bearing: wmpa.format(this.$store.map.bearing, 'float'),
-            pitch: wmpa.format(this.$store.map.pitch, 'float')
+            zoom: wmpa.format(this.$store.map.zoom, 'integer'),
+            bearing: wmpa.format(this.$store.map.bearing, 'integer'),
+            pitch: wmpa.format(this.$store.map.pitch, 'integer')
           })
         }
       `, `
         async ${prefix}Builder () {
-          const body = '<c:div id="${id}" padding="x-2 top-1"/>'
+          const body = '<c:div id="${id}" margin="x-2 top-1" text="align:center" />'
           return await wmpa.createComponent(body)
         }
       `)

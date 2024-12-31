@@ -1,3 +1,5 @@
+import path from 'path'
+
 async function wmapsBase () {
   return class WmapsBase extends this.baseFactory {
     static scripts = [...super.scripts,
@@ -68,6 +70,22 @@ async function wmapsBase () {
         else tpl = defEmpty
       }
       return await minify(tpl)
+    }
+
+    loadTemplate (name) {
+      const [, type] = name.split(':')[0].split('.')
+      const mpa = this.plugin.app.waibuMpa
+      const { camelCase } = this.plugin.app.bajo.lib._
+      const { fs } = this.plugin.app.bajo.lib
+      const opts = {
+        partial: true,
+        ext: path.extname(name) ?? '.html',
+        req: this.component.req,
+        reply: this.component.reply
+      }
+      const resp = mpa[camelCase(`resolve ${type}`)](name, opts)
+      const content = fs.readFileSync(resp.file, 'utf8')
+      return content.replaceAll("'", "\\'")
     }
   }
 }
