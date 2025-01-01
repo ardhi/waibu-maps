@@ -1,15 +1,6 @@
 import control from './control.js'
 const prefix = 'cgr'
 
-const menuTpl = `
-<c:div dim="height:100" flex="align-items:center justify-content:center" data-bs-toggle="dropdown" data-bs-auto-close="outside">
-  <c:icon oname="{%= icon %}" @click="{%= click %}" />
-</c:div>
-<c:div class="dropdown-menu">
-  {%= html %}
-</c:div>
-`
-
 async function controlGroup () {
   const WmapsControl = await control.call(this)
 
@@ -24,8 +15,7 @@ async function controlGroup () {
       const { jsonStringify, minify } = this.plugin.app.waibuMpa
       const { isString, trim } = this.plugin.app.bajo.lib._
       const { $ } = this.component
-      let menu = await this.component.buildSentence(menuTpl)
-      menu = await minify(menu)
+      const tpl = await this.component.buildSentence(this.loadTemplate('waibuMaps.partial:/menu.html'), {}, { minify: true })
       const id = isString(this.params.attr.id) ? this.params.attr.id : generateId('alpha')
       const opts = {}
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
@@ -36,6 +26,7 @@ async function controlGroup () {
         const vars = $(this).find('.var').length
         if (vars > 0) {
           params.push({
+            image: $(this).find('.var .image').text() ?? '',
             icon: $(this).find('.var .icon').text() ?? '',
             html: $(this).find('.var .html').prop('innerHTML') ?? '',
             wrapper: $(this).html('{%= cmp %}').prop('outerHTML') ?? ''
@@ -55,7 +46,7 @@ async function controlGroup () {
       }
       this.readBlock()
       this.block.reactive.push(`
-        ${prefix}MenuTpl: _.template('${menu}')
+        ${prefix}MenuTpl: _.template('${tpl}')
       `, `
         async ${prefix}Trigger (evt) {
           const el = evt.target.closest('button')
@@ -71,6 +62,7 @@ async function controlGroup () {
           for (const param of params) {
             const args = {
               click: '',
+              image: param.image,
               icon: param.icon,
               html: param.html
             }

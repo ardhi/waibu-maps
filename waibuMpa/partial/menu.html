@@ -1,0 +1,10 @@
+<c:div dim="height:100" flex="align-items:center justify-content:center" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+  {% if (image !== '') { %}
+  <c:img src="{%= image %}" />
+  {% } else { %}
+  <c:icon oname="{%= icon %}" @click="{%= click %}" />
+  {% } %}
+</c:div>
+<c:div class="dropdown-menu">
+  {%= html %}
+</c:div>

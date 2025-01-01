@@ -13,15 +13,28 @@ async function controlGroupMenu () {
 
     async build () {
       const { $ } = this.component
+      const { fastGlob } = this.plugin.app.bajo.lib
+      const { isString } = this.plugin.app.bajo.lib._
+      const { routePath } = this.plugin.app.waibu
       let icon
+      let image = ''
       const items = []
       $(`<div>${this.params.html}</div>`).children().each(function () {
         if (this.name === 'i') icon = $(this).prop('class')
         else items.push($(this).prop('outerHTML'))
       })
+      if (isString(this.params.attr.image)) {
+        if (this.params.attr.image === 'logo') {
+          let logo = 'waibu'
+          const files = await fastGlob(`${this.plugin.app.main.dir.pkg}/bajo/logo.*`)
+          if (files.length > 0) logo = 'main'
+          image = routePath(`waibuMpa:/logo/${logo}`)
+        } else image = routePath(this.params.attr.image)
+      }
       this.params.html = `
         <div class="var">
           <div class="icon">${icon}</div>
+          <div class="image">${image}</div>
           <div class="html">${items.join('\n')}</div>
         </div>
       `
