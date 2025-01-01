@@ -15,7 +15,7 @@ async function wmapsBase () {
 
     static blockTypes = ['init', 'initializing', 'run', 'reactive', 'mapLoad', 'control',
       'nonReactive', 'dataInit', 'mapOptions', 'mapStyle', 'layerVisibility', 'missingImage',
-      'keyup']
+      'keyup', 'mapExtend']
 
     static controls = ['csrc', 'navigation-control', 'crlr', 'scale-control', 'attribution-control',
       'fullscreen-control', 'geolocate-control', 'czbp', 'cmp']

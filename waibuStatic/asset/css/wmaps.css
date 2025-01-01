@@ -46,6 +46,10 @@
   background-color: rgba(255, 255, 255, 0.75) !important;
 }
 
+.maplibregl-ctrl-wmaps.widget .smaller {
+  font-size: smaller;
+}
+
 .maplibregl-ctrl-loader {
   z-index: 1000;
   position: absolute;
@@ -91,7 +95,9 @@
   display: flex;
 }
 
-
+.maplibregl-ctrl-group .accordion-body {
+  font-size: smaller;
+}
 
 .maplibregl-popup-content div span {
   display: inline-block;

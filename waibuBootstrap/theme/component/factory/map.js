@@ -82,6 +82,7 @@ async function map () {
                   Alpine.store('map').bearing = evt.target.getBearing()
                   Alpine.store('map').pitch = evt.target.getPitch()
                 })
+                ${this.block.mapExtend.join('\n')}
                 ${this.block.control.join('\n')}
                 ${this.block.run.join('\n')}
                 map.on('styledataloading', () => {
