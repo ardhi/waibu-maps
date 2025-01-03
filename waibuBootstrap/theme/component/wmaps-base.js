@@ -1,5 +1,3 @@
-import path from 'path'
-
 async function wmapsBase () {
   return class WmapsBase extends this.baseFactory {
     static scripts = [...super.scripts,
@@ -13,54 +11,19 @@ async function wmapsBase () {
       'waibuMaps.asset:/css/wmaps.css'
     ]
 
-    static blockTypes = ['init', 'initializing', 'run', 'reactive', 'mapLoad', 'control',
-      'nonReactive', 'dataInit', 'mapOptions', 'mapStyle', 'layerVisibility', 'missingImage',
-      'keyup', 'mapExtend']
+    constructor (options) {
+      super(options)
+      this.blockTypes = [...this.blockTypes,
+        'mapLoad', 'control', 'mapOptions', 'mapStyle', 'layerVisibility', 'missingImage',
+        'mapExtend'
+      ]
+      this.init()
+    }
 
     static controls = ['csrc', 'navigation-control', 'crlr', 'scale-control', 'attribution-control',
       'fullscreen-control', 'geolocate-control', 'czbp', 'cmp']
 
-    constructor (options) {
-      super(options)
-      this.block = {}
-      for (const block of WmapsBase.blockTypes) {
-        this.block[block] = this.block[block] ?? []
-      }
-    }
-
-    readBlock (blocks = []) {
-      const { isString, trim } = this.plugin.app.bajo.lib._
-      const { $ } = this.component
-      const me = this
-      if (isString(blocks)) blocks = [blocks]
-      $(`<div>${this.params.html}</div>`).find('script').each(function () {
-        const type = this.attribs.block ?? 'run'
-        if (blocks.length > 0 && !blocks.includes(type)) return undefined
-        if (WmapsBase.blockTypes.includes(type)) {
-          const html = trim($(this).prop('innerHTML'))
-          if (!me.block[type].includes(html)) me.block[type].push(html)
-        }
-      })
-    }
-
-    writeBlock () {
-      const { isString, omit } = this.plugin.app.bajo.lib._
-      const { attribsStringify } = this.plugin.app.waibuMpa
-      const html = []
-      for (const key in this.block) {
-        const items = this.block[key]
-        if (items.length === 0) continue
-        for (let item of items) {
-          if (isString(item)) item = { content: item }
-          item.block = key
-          const attrs = attribsStringify(omit(item, ['content']))
-          html.push(`<script ${attrs}>${item.content}</script>`)
-        }
-      }
-      return html.join('\n')
-    }
-
-    async getTemplate (html, type, defEmpty = '') {
+    async getWmapsTemplate (html, type, defEmpty = '') {
       const { trim, isEmpty } = this.plugin.app.bajo.lib._
       const { minify } = this.plugin.app.waibuMpa
       const { $ } = this.component
@@ -70,22 +33,6 @@ async function wmapsBase () {
         else tpl = defEmpty
       }
       return await minify(tpl)
-    }
-
-    loadTemplate (name) {
-      const [, type] = name.split(':')[0].split('.')
-      const mpa = this.plugin.app.waibuMpa
-      const { camelCase } = this.plugin.app.bajo.lib._
-      const { fs } = this.plugin.app.bajo.lib
-      const opts = {
-        partial: true,
-        ext: path.extname(name) ?? '.html',
-        req: this.component.req,
-        reply: this.component.reply
-      }
-      const resp = mpa[camelCase(`resolve ${type}`)](name, opts)
-      const content = fs.readFileSync(resp.file, 'utf8')
-      return content.replaceAll("'", "\\'")
     }
   }
 }

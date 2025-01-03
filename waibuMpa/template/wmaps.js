@@ -155,8 +155,13 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     const ctrl = new WaibuMapsControl(options)
     ctrl.scope = this.scope
     if (options.builder) {
-      const fn = options.builder.bind(ctrl.scope)
-      ctrl.panels = await fn(options.params)
+      if (_.isArray(options.builder)) ctrl.panels = options.builder
+      else if (_.isString(options.builder)) {
+        ctrl.panels = await wmpa.createComponent(options.builder)
+      } else {
+        const fn = options.builder.bind(ctrl.scope)
+        ctrl.panels = await fn(options.params)
+      }
     }
     this.map.addControl(ctrl)
     if (options.firstCall) options.firstCall.call(ctrl.scope)

@@ -39,11 +39,11 @@
 }
 
 [data-bs-theme=dark] .maplibregl-ctrl-wmaps.widget {
-  background-color: rgba(33, 37, 41, 0.8) !important;
+  background-color: rgba(33, 37, 41, 0.85) !important;
 }
 
 .maplibregl-ctrl-wmaps.widget {
-  background-color: rgba(255, 255, 255, 0.75) !important;
+  background-color: rgba(255, 255, 255, 0.85) !important;
 }
 
 .maplibregl-ctrl-wmaps.widget .smaller {
@@ -95,7 +95,7 @@
   display: flex;
 }
 
-.maplibregl-ctrl-group .accordion-body {
+.maplibregl-ctrl-group .dropdown-menu > div {
   font-size: smaller;
 }
 
