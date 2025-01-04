@@ -220,6 +220,14 @@ class WaibuMapsUtil {
     else return result + ' ' + (decimal >= 0 ? opts.north : opts.south)
   }
 
+  getSourceId (id, ext) {
+    return 's-' + _.kebabCase(id) + (_.isEmpty(ext) ? '' : ('-' + ext))
+  }
+
+  getLayerId (id, ext = '') {
+    return 'l-' + _.kebabCase(id) + (_.isEmpty(ext) ? '' : ('-' + ext))
+  }
+
   srcAsStyle (src) {
     if ((_.isPlainObject(src) && src.version && src.sources)) return src
     const result = {}
@@ -236,9 +244,10 @@ class WaibuMapsUtil {
       if (src.type === 'VECTOR') return src.url
       if (!['RASTER'].includes(src.type)) throw new Error('Invalid source type')
       const sources = {}
-      const code = _.camelCase(src.code)
-      sources[code] = _.merge({}, this.defSources, { name: src.name, provider: src.provider, tiles: [src.url], attribution: src.attribution, minzoom: src.minZoom ?? 1, maxzoom: src.maxZoom ?? 19 })
-      const layers = [_.merge({}, this.defLayer, { id: code, source: code })]
+      const sourceId = this.getSourceId(src.code)
+      const layerId = this.getLayerId(src.code)
+      sources[sourceId] = _.merge({}, this.defSources, { name: src.name, provider: src.provider, tiles: [src.url], attribution: src.attribution, minzoom: src.minZoom ?? 1, maxzoom: src.maxZoom ?? 19 })
+      const layers = [_.merge({}, this.defLayer, { id: layerId, source: sourceId })]
       _.merge(result, this.defStyle, { sources, layers })
     }
     return result

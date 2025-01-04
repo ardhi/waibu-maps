@@ -11,8 +11,8 @@ async function controlNavigation () {
 
     async build () {
       const { jsonStringify } = this.plugin.app.waibuMpa
-      const opts = {}
-      if (this.params.attr.noCompass) opts.showCompass = false
+      const opts = { showCompass: false }
+      if (this.params.attr.compass) opts.showCompass = true
       if (this.params.attr.noZoom) opts.showZoom = false
       if (this.params.attr.visualizePitch) opts.visualizePitch = true
       opts.classSelector = 'maplibregl-ctrl-zoom-in'

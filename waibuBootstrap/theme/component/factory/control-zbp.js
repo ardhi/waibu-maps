@@ -26,8 +26,8 @@ async function controlZbp () {
         </c:grid-row>
         <c:grid-row style="font-size:smaller">
           <c:grid-col col="4" t:content="Zoom" />
-          <c:grid-col col="4" t:content="Bearing" />
-          <c:grid-col col="4" t:content="Pitch" />
+          <c:grid-col style="cursor:pointer" @click="reset" col="4" t:content="Bearing" />
+          <c:grid-col style="cursor:pointer" @click="reset" col="4" t:content="Pitch" />
         </c:grid-row>
       `))
       this.block.dataInit.push(`
@@ -47,7 +47,13 @@ async function controlZbp () {
         }
       `, `
         async ${prefix}Builder () {
-          const body = '<c:div id="${id}" margin="x-2 top-1" text="align:center" />'
+          const body = ['<c:div id="${id}" margin="x-2 top-1" text="align:center" ',
+            'x-data="{',
+            ' reset () {',
+            '   wmpa.alpineScopeMethod(\\'getMap.flyTo\\')({ bearing: 0, pitch: 0 }) ',
+            ' }',
+            '}" />'
+          ]
           return await wmpa.createComponent(body)
         }
       `)
