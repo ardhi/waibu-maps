@@ -95,6 +95,10 @@
   display: flex;
 }
 
+.maplibregl-ctrl-group .accordion-body .form-check-label {
+  white-space: nowrap;;
+}
+
 .maplibregl-ctrl-group .dropdown-menu > div {
   font-size: smaller;
 }

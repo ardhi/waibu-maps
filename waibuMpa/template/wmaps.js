@@ -26,8 +26,9 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
   }
 
   async createPopupHtml ({ props, handler, coordinates, layerId }, evt) {
-    let html = _.isString(handler) ? props[handler] : undefined
+    let html = _.isString(handler) ? handler : undefined
     if (_.isFunction(handler)) html = await handler.call(this, { props, coordinates, layerId }, evt)
+    if (!html) html = props.name ?? props.title ?? props.description ?? ''
     return html
   }
 
@@ -72,8 +73,8 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
         .setLngLat(coordinates)
         .setHTML(html)
         .addTo(this.map)
-        .addClassName('popup-source-' + this.map.getLayer(layerId).source)
-        .addClassName('popup-target-' + props.id)
+        .addClassName('popup-layer-' + layerId)
+        .addClassName('popup-target-' + props.id + '-' + props.feed)
     })
     this.map.on('click', () => {
       if (this.popup) this.popup.remove()

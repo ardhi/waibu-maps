@@ -15,7 +15,7 @@ async function controlGroup () {
       const { jsonStringify, minify } = this.plugin.app.waibuMpa
       const { isString, trim } = this.plugin.app.bajo.lib._
       const { $ } = this.component
-      const tpl = await this.component.buildSentence(this.loadTemplate('waibuMaps.partial:/menu.html'), {}, { minify: true })
+      const tpl = await this.component.buildSentence(this.loadTemplate('waibuMaps.partial:/menu.html', { escape: true }), {}, { minify: true })
       const id = isString(this.params.attr.id) ? this.params.attr.id : generateId('alpha')
       const opts = {}
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'

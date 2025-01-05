@@ -61,8 +61,9 @@ async function map () {
               },
               onLayerVisibility (layerId, shown) {
                 if (!shown) {
-                  for (const el of document.querySelectorAll('.popup-layer-' + layerId)) {
-                    el.remove()
+                  if (wmaps.popup) {
+                    const el = wmaps.popup.getElement()
+                    if (el && el.classList.contains('popup-layer-' + layerId)) wmaps.popup.remove()
                   }
                 }
                 ${this.block.layerVisibility.join('\n')}
