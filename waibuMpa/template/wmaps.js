@@ -229,6 +229,10 @@ class WaibuMapsUtil {
     return 'l-' + _.kebabCase(id) + (_.isEmpty(ext) ? '' : ('-' + ext))
   }
 
+  getSourceLayerIds (id, ext) {
+    return [this.getSourceId(id, ext), this.getLayerId(id, ext)]
+  }
+
   srcAsStyle (src) {
     if ((_.isPlainObject(src) && src.version && src.sources)) return src
     const result = {}
