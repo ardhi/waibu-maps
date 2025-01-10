@@ -47,6 +47,14 @@ async function map () {
             return {
               init () {
                 ${this.block.dataInit.join('\n')}
+                this.$watch('$store.wmpa.reqAborted', val => {
+                  if (!val) return
+                  const text = _.get(wmpa, 'fetchingApi.' + val + '.status')
+                  if (text.startsWith('abort:')) {
+                    const [, msg] = text.split(':')
+                    wbs.notify(msg, { type: 'warning' }).then()
+                  }
+                })
               },
               ${this.block.reactive.join(',\n')},
               async onMapLoad (evt) {

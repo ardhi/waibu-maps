@@ -23,11 +23,17 @@ async function controlSearch () {
       `)
       this.block.dataInit.push(`
         this.$watch('$store.mapSearch.value', async val => {
+          if (_.isEmpty(val)) return wbs.notify('You need to enter a search phrase first', { type: 'danger' })
           const html = await ${this.params.attr.method}(val, this.$store.mapSearch.feed)
-          this.$store.mapSearch.recent = html
+          this.$store.mapSearch.recent = html ?? ''
           this.$store.mapSearch.busy = false
         })
         this.$watch('$store.mapSearch.recent', async val => {
+          val = val ?? ''
+          if (val === 'flying' && this.$store.mapSearch.feed === 'latLng:latLng') {
+            wbs.closeModal('${id}')
+            this.$store.mapSearch.recent = ''
+          }
           wmpa.replaceWithComponentHtml(val, '#${id} .result div', 'div')
         })
         this.$watch('$store.mapSearch.feed', async val => {
@@ -35,7 +41,7 @@ async function controlSearch () {
         })
         this.$watch('$store.mapSearch.busy', async val => {
           const el = document.querySelector('#${id} .input-group .dropdown-toggle')
-          el.disabled = val
+          el.disabled = !!val
         })
       `)
       this.block.mapLoad.push(`
@@ -51,20 +57,23 @@ async function controlSearch () {
           return [await wmpa.createComponent(body)]
         },
         async ${prefix}Populate () {
-          const feeds = await ${this.params.attr.feed}()
-          if (feeds.length > 0) {
-            this.$store.mapSearch.feeds = feeds
-            const body = feeds.map(feed => '<c:dropdown-item :class="$store.mapSearch.feed === $el.getAttribute(\\'data-code-feedid\\') ? \\'active\\' : \\'\\'" data-code-feedid="' + feed.code + ':' + feed.feed.id + '" content="' + feed.feed.label + '" @click="$store.mapSearch.feed = \\'' + feed.code + ':' + feed.feed.id + '\\'"/>')
-            await wmpa.addComponent(body, '#${id} .input-group .dropdown-menu', 'div')
-            if (!this.$store.mapSearch.feed) this.$store.mapSearch.feed = feeds[0].code + ':' + feeds[0].feed.id
-            const html = this.$store.mapSearch.recent ?? ''
-            wmpa.replaceWithComponentHtml(html, '#${id} .result div', 'div')
-          }
+          const feeds = await ${this.params.attr.feed}() ?? []
+          feeds.unshift({ code: 'latLng', name: 'Goto Latitude/Longitude', feed: { id: 'latLng', label: 'Latitude/Longitude' } })
+          this.$store.mapSearch.feeds = feeds
+          const body = feeds.map(feed => '<c:dropdown-item :class="$store.mapSearch.feed === $el.getAttribute(\\'data-code-feedid\\') ? \\'active\\' : \\'\\'" data-code-feedid="' + feed.code + ':' + feed.feed.id + '" content="' + feed.feed.label + '" @click="$store.mapSearch.feed = \\'' + feed.code + ':' + feed.feed.id + '\\'"/>')
+          await wmpa.addComponent(body, '#${id} .input-group .dropdown-menu', 'div')
+          if (!this.$store.mapSearch.feed) this.$store.mapSearch.feed = feeds[0].code + ':' + feeds[0].feed.id
+          const html = this.$store.mapSearch.recent ?? ''
+          wmpa.replaceWithComponentHtml(html, '#${id} .result div', 'div')
         }
       `)
       const ui = await this.component.buildSentence(`
         <div class="childmap maplibregl-ctrl-search">
           <c:modal id="${id}" size="lg" no-header x-data="{
+            get feedCode () {
+              const [code, feedId] = (this.$store.mapSearch.feed ?? '').split(':')
+              return code
+            },
             get feedName () {
               const [code, feedId] = (this.$store.mapSearch.feed ?? '').split(':')
               const item = _.find(this.$store.mapSearch.feeds, f => f.code === code && f.feed.id === feedId)
@@ -72,32 +81,68 @@ async function controlSearch () {
             },
             search () {
               this.$store.mapSearch.value = this.$refs.input.value
-              this.$store.mapSearch.busy = true
+            },
+            clearHistory () {
+              wmpa.replaceWithComponentHtml('', '#${id} .result div', 'div')
+            },
+            abort () {
+              const endpoint = this.$store.mapSearch.busy
+              const status = _.get(wmpa, 'fetchingApi.' + endpoint + '.status')
+              const controller = _.get(wmpa, 'fetchingApi.' + endpoint + '.abortCtrl')
+              if (!endpoint || status !== 'fetching') return
+              controller.abort()
+            },
+            resetValue () {
+              const el = document.querySelector('#${id} input[type=search]')
+              el.value = ''
             },
             select (id) {
               this.$store.mapSearch.select = id
               const instance = wbs.getInstance('Modal', '${id}')
               instance.hide()
             }
-          }">
+          }" x-init="$watch('$store.mapSearch.feed', resetValue)">
             <c:form-input x-ref="input" type="search" dim="width:max" @keyup.enter="search()" :disabled="$store.mapSearch.busy">
-              <c:form-input-addon prepend>
-                <c:icon name="search" x-show="!$store.mapSearch.busy"/>
-                <c:spinner size="sm" x-show="$store.mapSearch.busy" text="color:primary" />
-              </c:form-input-addon>
               <c:form-input-addon prepend>
                 <c:dropdown>
                 </c:dropdown>
               </c:form-input-addon>
+              <c:form-input-addon prepend>
+                <c:span x-show="feedCode === 'latLng'"><c:icon name="arrowEnd"/></c:span>
+                <c:span x-show="feedCode !== 'latLng' && !$store.mapSearch.busy"><c:icon name="search"/></c:span>
+                <c:spinner size="sm" x-show="feedCode !== 'latLng' && $store.mapSearch.busy" text="color:primary" />
+              </c:form-input-addon>
+              <c:form-input-addon append>
+                <c:btn @click="abort" x-show="$store.mapSearch.busy" t:content="Abort" />
+              </c:form-input-addon>
             </c:form-input>
-            <c:div margin="top-2"><c:t>Search in:</c:t> <c:span font="weight:bold" x-html="feedName" /></c:div>
+            <c:div margin="top-2" flex="justify-content:between">
+              <div>
+                <template x-if="feedCode !== 'latLng'"><span><c:t>Search in:</c:t> <strong><span x-html="feedName" /></strong></span></template>
+                <template x-if="feedCode === 'latLng'"><span><c:t>Goto:</c:t> <strong><span><c:t>Latitude/Longitude</c:t></span></strong></span></template>
+              </div>
+              <c:btn x-show="feedCode !== 'latLng'" size="sm" color="link" t:content="Clear History" @click="clearHistory()" />
+            </c:div>
             <c:div margin="top-3" class="result"><div></div></c:div>
           </c:modal>
         </div>
       `)
+      this.block.dataInit.push(`
+        this.$watch('$store.mapSearch.select', async val => {
+          if (_.isEmpty(val)) return
+          const [source, feedId] = (this.$store.mapSearch.feed ?? '').split(':')
+          const feed = _.find(this.$store.mapSearch.feeds, item => {
+            return item.code === source && item.feed.id === feedId
+          })
+          this.$store.mapSearch.select = null
+          const scope = wmpa.alpineScope()
+          const fn = scope[feed.feed.prefix + 'FindTarget']
+          if (fn) await fn.call(scope, val, feedId)
+        })
+      `)
       this.block.initializing.push(`
         Alpine.store('mapSearch', {
-          feed: Alpine.$persist(null).as('mapSearchFeed'),
+          feed: Alpine.$persist('latLng:latLng').as('mapSearchFeed'),
           recent: Alpine.$persist('').as('mapSearchRecent'),
           feeds: [],
           select: null,
