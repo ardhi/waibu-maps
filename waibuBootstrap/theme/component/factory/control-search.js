@@ -69,7 +69,7 @@ async function controlSearch () {
       `)
       const ui = await this.component.buildSentence(`
         <div class="childmap maplibregl-ctrl-search">
-          <c:modal id="${id}" size="lg" no-header x-data="{
+          <c:modal id="${id}" size="lg" no-header no-center x-data="{
             get feedCode () {
               const [code, feedId] = (this.$store.mapSearch.feed ?? '').split(':')
               return code

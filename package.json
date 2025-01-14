@@ -1,6 +1,6 @@
 {
   "name": "waibu-maps",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Maps for Waibu MPA",
   "main": "index.js",
   "scripts": {

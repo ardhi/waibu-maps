@@ -63,7 +63,7 @@ async function controlMousePos () {
           const coord = evt.lngLat.wrap()
           this.${prefix}Pos = [coord.lng, coord.lat]
         })
-        if (this.${prefix}TrackCenter) this.${prefix}Pos = [...this.$store.map.center]
+        if (this.${prefix}TrackCenter && this.$store.map.center) this.${prefix}Pos = [...this.$store.map.center]
       `)
 
       this.block.control.push(`
