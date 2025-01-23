@@ -1,4 +1,5 @@
 import control from './control.js'
+import path from 'path'
 const prefix = 'clogo'
 
 async function controlLogo () {
@@ -11,7 +12,7 @@ async function controlLogo () {
     }
 
     async build () {
-      const { fastGlob } = this.plugin.app.bajo.lib
+      const { fs, fastGlob } = this.plugin.app.bajo.lib
       const { routePath } = this.plugin.app.waibu
       const { jsonStringify, groupAttrs, attribsStringify } = this.plugin.app.waibuMpa
       const opts = { class: prefix }
@@ -19,9 +20,16 @@ async function controlLogo () {
       const group = groupAttrs(this.params.attr, ['img'])
       const img = group.img ?? {}
       let logo = 'waibu'
+      let logoAlt
       const files = await fastGlob(`${this.plugin.app.main.dir.pkg}/bajo/logo.*`)
-      if (files.length > 0) logo = 'main'
+      if (files.length > 0) {
+        const dir = path.dirname(files[0])
+        const ext = path.extname(files[0])
+        logoAlt = fs.existsSync(`${dir}/logo-alt${ext}`)
+        logo = 'main'
+      }
       img.src = routePath(`waibuMpa:/logo/${logo}`)
+      if (logoAlt) img.srcHover = routePath(`waibuMpa:/logo/${logo}?type=alt`)
       let animate = '@mouseenter="$el.style.opacity = 1" @mouseleave="$el.style.opacity = 0.3" '
       if (this.params.attr.noAnimate) {
         animate = ''
