@@ -5,6 +5,5 @@
   "mapOptions": {
     "center": [106.8229, -6.1944],
     "zoom": 7
-  },
-  "dependencies": ["bajo-spatial"]
+  }
 }
