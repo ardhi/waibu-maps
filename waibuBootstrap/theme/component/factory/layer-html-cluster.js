@@ -63,7 +63,7 @@ async function layerHtmlCluster () {
       this.params.noTag = true
     }
 
-    async build () {
+    build = async () => {
       const { generateId } = this.plugin.app.bajo
       const { attrToArray, jsonStringify } = this.plugin.app.waibuMpa
       const { fetch, routePath } = this.plugin.app.waibu

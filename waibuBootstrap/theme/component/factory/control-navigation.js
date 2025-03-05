@@ -9,7 +9,7 @@ async function controlNavigation () {
       this.params.noTag = true
     }
 
-    async build () {
+    build = async () => {
       const { jsonStringify } = this.plugin.app.waibuMpa
       const opts = { showCompass: false }
       if (this.params.attr.compass) opts.showCompass = true

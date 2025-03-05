@@ -21,7 +21,7 @@ async function controlRuler () {
       this.params.noTag = true
     }
 
-    async build () {
+    build = async () => {
       const { routePath } = this.plugin.app.waibu
       const { jsonStringify } = this.plugin.app.waibuMpa
       const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'

@@ -19,7 +19,7 @@ async function controlButtons () {
       this.params.noTag = true
     }
 
-    async build () {
+    build = async () => {
       const { generateId } = this.plugin.app.bajo
       const { routePath } = this.plugin.app.waibu
       const { jsonStringify } = this.plugin.app.waibuMpa

@@ -10,7 +10,7 @@ async function controlImage () {
       this.params.noTag = true
     }
 
-    async build () {
+    build = async () => {
       const { routePath } = this.plugin.app.waibu
       const { jsonStringify, groupAttrs, attribsStringify } = this.plugin.app.waibuMpa
       const { isString, isEmpty } = this.plugin.app.bajo.lib._

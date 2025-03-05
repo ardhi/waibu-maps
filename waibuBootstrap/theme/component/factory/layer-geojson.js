@@ -75,7 +75,7 @@ async function layerGeojson () {
       this.params.noTag = true
     }
 
-    async build () {
+    build = async () => {
       const { generateId } = this.plugin.app.bajo
       const { isString } = this.plugin.app.bajo.lib._
       const { groupAttrs } = this.plugin.app.waibuMpa

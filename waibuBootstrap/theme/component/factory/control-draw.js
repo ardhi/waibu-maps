@@ -14,7 +14,7 @@ async function controlDraw () {
       this.params.noTag = true
     }
 
-    async build () {
+    build = async () => {
       const { isString } = this.plugin.app.bajo.lib._
       const opts = {}
       if (['imperial', 'metric', 'nautical'].includes(this.params.attr.unit)) opts.unit = this.params.attr.unit

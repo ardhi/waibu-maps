@@ -9,7 +9,7 @@ async function controlLoader () {
       this.params.noTag = true
     }
 
-    async build () {
+    build = async () => {
       const { groupAttrs, attribsStringify } = this.plugin.app.waibuMpa
       const group = groupAttrs(this.params.attr, ['progress'])
       const attr = group.progress ?? {}

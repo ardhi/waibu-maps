@@ -10,7 +10,7 @@ async function control () {
       this.params.noTag = true
     }
 
-    async build () {
+    build = async () => {
       const { $ } = this.component
       const html = []
       $(`<div>${this.params.html}</div>`).find('.childmap').each(function () {

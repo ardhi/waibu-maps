@@ -19,7 +19,7 @@ async function map () {
       this.readBlock()
     }
 
-    async build () {
+    build = async () => {
       const { generateId } = this.plugin.app.bajo
       const { without, omit, isString } = this.plugin.app.bajo.lib._
       const { jsonStringify } = this.plugin.app.waibuMpa

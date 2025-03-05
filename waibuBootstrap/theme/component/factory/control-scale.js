@@ -9,7 +9,7 @@ async function controlScale () {
       this.params.noTag = true
     }
 
-    async build () {
+    build = async () => {
       const { jsonStringify } = this.plugin.app.waibuMpa
       const { isString } = this.plugin.app.bajo.lib._
       const opts = {}

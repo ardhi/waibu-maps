@@ -9,7 +9,7 @@ async function controlGeolocate () {
       this.params.noTag = true
     }
 
-    async build () {
+    build = async () => {
       const { jsonStringify } = this.plugin.app.waibuMpa
       const { set } = this.plugin.app.bajo.lib._
       const opts = {}

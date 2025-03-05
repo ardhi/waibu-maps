@@ -10,7 +10,7 @@ async function controlGroup () {
       this.params.noTag = true
     }
 
-    async build () {
+    build = async () => {
       const { generateId } = this.plugin.app.bajo
       const { jsonStringify, minify } = this.plugin.app.waibuMpa
       const { isString, trim } = this.plugin.app.bajo.lib._

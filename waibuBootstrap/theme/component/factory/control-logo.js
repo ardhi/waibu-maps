@@ -11,7 +11,7 @@ async function controlLogo () {
       this.params.noTag = true
     }
 
-    async build () {
+    build = async () => {
       const { fs, fastGlob } = this.plugin.app.bajo.lib
       const { routePath } = this.plugin.app.waibu
       const { jsonStringify, groupAttrs, attribsStringify } = this.plugin.app.waibuMpa

@@ -9,7 +9,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     this.popup = null
   }
 
-  async handleClusterClick (layerId, clusterId = 'cluster_id') {
+  handleClusterClick = async (layerId, clusterId = 'cluster_id') => {
     this.handlePointer(layerId)
     this.map.on('click', layerId, async (e) => {
       const features = this.map.queryRenderedFeatures(e.point, {
@@ -25,14 +25,14 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     })
   }
 
-  async createPopupHtml ({ props, handler, coordinates, layerId }, evt) {
+  createPopupHtml = async ({ props, handler, coordinates, layerId }, evt) => {
     let html = _.isString(handler) ? handler : undefined
     if (_.isFunction(handler)) html = await handler.call(this, { props, coordinates, layerId }, evt)
     if (!html) html = props.name ?? props.title ?? props.description ?? ''
     return html
   }
 
-  getEventCoordinates (evt) {
+  getEventCoordinates = (evt) => {
     let coordinates = evt.features[0].geometry.coordinates.slice()
     if (_.isArray(coordinates[0])) {
       const centroid = turf.centroid(evt.features[0])
@@ -44,14 +44,14 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     return coordinates
   }
 
-  async extractPopup ({ evt, layerId, handler, props, coordinates }) {
+  extractPopup = async ({ evt, layerId, handler, props, coordinates }) => {
     props = props ?? evt.features[0].properties
     coordinates = coordinates ?? this.getEventCoordinates(evt)
     const html = await this.createPopupHtml({ props, handler, coordinates, layerId }, evt)
     return { props, coordinates, html }
   }
 
-  createPopup () {
+  createPopup = () => {
     if (!this.popup) {
       this.popup = new maplibregl.Popup({
         closeButton: false,
@@ -61,7 +61,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     return this.popup
   }
 
-  async handleNonClusterClick (layerId, handler = 'name') {
+  handleNonClusterClick = async (layerId, handler = 'name') => {
     if (handler === true) handler = 'name'
     this.handlePointer(layerId)
     this.map.on('click', layerId, async evt => {
@@ -81,14 +81,14 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     })
   }
 
-  popup ({ layerId, props, html, coordinates }) {
+  popup = ({ layerId, props, html, coordinates }) => {
     return new maplibregl.Popup({ className: 'popup-layer-' + layerId + ' popup-target-' + props.id })
       .setLngLat(coordinates)
       .setHTML(html)
       .addTo(this.map)
   }
 
-  updateClusterMarkers ({ sourceId, clusterKey = 'cluster', clusterIdKey = 'clusterId', handler }) {
+  updateClusterMarkers = ({ sourceId, clusterKey = 'cluster', clusterIdKey = 'clusterId', handler }) => {
     if (!handler) return
     const newMarkers = {}
     const features = this.map.querySourceFeatures(sourceId)
@@ -116,7 +116,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     this.markersOnScreen = newMarkers
   }
 
-  handlePointer (layerId) {
+  handlePointer = (layerId) => {
     this.map.on('mouseenter', layerId, () => {
       this.map.getCanvas().style.cursor = 'pointer'
     })
@@ -125,11 +125,11 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     })
   }
 
-  closePopup () {
+  closePopup = () => {
     if (this.popup) this.popup.remove()
   }
 
-  async loadImage (src) {
+  loadImage = async (src) => {
     if (_.isString(src)) {
       const [url, id] = src.split(';')
       src = { url, id }
@@ -140,7 +140,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     this.map.addImage(src.id, image.data)
   }
 
-  async loadImages (sources, fetch = true) {
+  loadImages = async (sources, fetch = true) => {
     for (const src of sources) {
       if (fetch) {
         const data = await wmpa.fetchApi(src)
@@ -152,7 +152,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     }
   }
 
-  async createControl (options = {}) {
+  createControl = async (options = {}) => {
     const ctrl = new WaibuMapsControl(options)
     ctrl.scope = this.scope
     if (options.builder) {
@@ -169,7 +169,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     return ctrl
   }
 
-  async createControlNative (className, options = {}) {
+  createControlNative = async (className, options = {}) => {
     const name = wmpa.pascalCase(className)
     const ctrl = new maplibregl[name](options)
     let type = options.classSelector
@@ -210,7 +210,7 @@ class WaibuMapsUtil {
     }
   }
 
-  decToDms (decimal, opts = {}) {
+  decToDms = (decimal, opts = {}) => {
     if (opts === true || opts === false) opts = { isLng: opts }
     opts.north = opts.north ?? 'N'
     opts.south = opts.south ?? 'S'
@@ -221,19 +221,19 @@ class WaibuMapsUtil {
     else return result + ' ' + (decimal >= 0 ? opts.north : opts.south)
   }
 
-  getSourceId (id, ext) {
+  getSourceId = (id, ext) => {
     return 's-' + _.kebabCase(id) + (_.isEmpty(ext) ? '' : ('-' + ext))
   }
 
-  getLayerId (id, ext = '') {
+  getLayerId = (id, ext = '') => {
     return 'l-' + _.kebabCase(id) + (_.isEmpty(ext) ? '' : ('-' + ext))
   }
 
-  getSourceLayerIds (id, ext) {
+  getSourceLayerIds = (id, ext) => {
     return [this.getSourceId(id, ext), this.getLayerId(id, ext)]
   }
 
-  srcAsStyle (src) {
+  srcAsStyle = (src) => {
     if ((_.isPlainObject(src) && src.version && src.sources)) return src
     const result = {}
     if (_.isString(src)) {
@@ -265,7 +265,7 @@ class WaibuMapsControl { // eslint-disable-line no-unused-vars
     this.class = options.class
   }
 
-  createControl () {
+  createControl = () => {
     this.container = document.createElement('div')
     // this.container.setAttribute('oncontextmenu', 'return false')
     this.container.classList.add('maplibregl-ctrl', 'maplibregl-ctrl-wmaps')
@@ -289,19 +289,19 @@ class WaibuMapsControl { // eslint-disable-line no-unused-vars
     }
   }
 
-  onAdd (map) {
+  onAdd = (map) => {
     this.map = map
     this.createControl()
     return this.container
   }
 
-  onRemove () {
+  onRemove = () => {
     this.container.parentNode.removeChild(this.container)
     this.map = undefined
     this.scope = undefined
   }
 
-  getDefaultPosition () {
+  getDefaultPosition = () => {
     return this.position
   }
 }

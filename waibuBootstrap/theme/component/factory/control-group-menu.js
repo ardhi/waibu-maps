@@ -11,7 +11,7 @@ async function controlGroupMenu () {
       this.params.attr.class.push('dropdown', 'dropstart')
     }
 
-    async build () {
+    build = async () => {
       const { $ } = this.component
       const { fastGlob } = this.plugin.app.bajo.lib
       const { isString } = this.plugin.app.bajo.lib._
