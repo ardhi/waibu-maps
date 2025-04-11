@@ -3,6 +3,7 @@
   "dirW": "W",
   "dirN": "N",
   "dirS": "S",
+  "maps": "Maps",
   "mapControl": {
     "csrc": "Search",
     "navigation-control": "Navigation",

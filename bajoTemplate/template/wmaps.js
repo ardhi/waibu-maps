@@ -233,7 +233,7 @@ class WaibuMapsUtil {
     return [this.getSourceId(id, ext), this.getLayerId(id, ext)]
   }
 
-  srcAsStyle = (src) => {
+  srcAsStyle = (src = {}) => {
     if ((_.isPlainObject(src) && src.version && src.sources)) return src
     const result = {}
     if (_.isString(src)) {

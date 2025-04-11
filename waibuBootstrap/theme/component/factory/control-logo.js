@@ -9,6 +9,7 @@ async function controlLogo () {
     constructor (options) {
       super(options)
       this.params.noTag = true
+      this.params.attr.menu = this.params.attr.menu ?? 'homes'
     }
 
     build = async () => {
@@ -19,9 +20,10 @@ async function controlLogo () {
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
       const group = groupAttrs(this.params.attr, ['img'])
       const img = group.img ?? {}
+      img.opacity = parseFloat(img.opacity) || 0.3
       let logo = 'waibu'
       let logoAlt
-      const files = await fastGlob(`${this.plugin.app.main.dir.pkg}/bajo/logo.*`)
+      const files = await fastGlob(`${this.plugin.app.main.dir.pkg}/plugin/logo.*`)
       if (files.length > 0) {
         const dir = path.dirname(files[0])
         const ext = path.extname(files[0])
@@ -30,16 +32,16 @@ async function controlLogo () {
       }
       img.src = routePath(`waibuMpa:/logo/${logo}`)
       if (logoAlt) img.srcHover = routePath(`waibuMpa:/logo/${logo}?type=alt`)
-      let animate = '@mouseenter="$el.style.opacity = 1" @mouseleave="$el.style.opacity = 0.3" '
+      let animate = `@mouseenter="$el.style.opacity = 1" @mouseleave="$el.style.opacity = ${img.opacity}" `
       if (this.params.attr.noAnimate) {
         animate = ''
       } else {
         img.style = img.style ?? {}
-        img.style.opacity = 0.3
+        img.style.opacity = img.opacity
       }
       this.block.reactive.push(`
         async ${prefix}Builder () {
-          const body = ['<c:a href="#" @click="wbs.appLauncher(\\'user - fullscreen darkmode language\\')">']
+          const body = ['<c:a href="#" @click="wbs.appLauncher(\\'fullscreen darkmode language\\', \\'${this.params.attr.menu}\\')">']
           body.push('<c:img ${attribsStringify(img)} ${animate} />')
           body.push('</c:a>')
           return await wmpa.createComponent(body)

@@ -5,6 +5,7 @@
   "dirW": "B",
   "dirN": "U",
   "dirS": "S",
+  "maps": "Peta",
   "mapControl": {
     "csrc": "Search",
     "navigation-control": "Navigation",

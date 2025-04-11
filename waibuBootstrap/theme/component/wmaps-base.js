@@ -3,7 +3,7 @@ async function wmapsBase () {
     static scripts = [...super.scripts,
       'waibuMaps.asset:/js/lib/worker-timers.js',
       'waibuMaps.virtual:/maplibre/maplibre-gl.js',
-      'waibuMaps:/wmaps.js'
+      '$waibuMaps:/wmaps.js'
     ]
 
     static css = [...super.css,
