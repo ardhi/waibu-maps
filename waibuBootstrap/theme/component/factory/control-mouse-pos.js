@@ -46,9 +46,11 @@ async function controlMousePos () {
           const el = document.querySelector('#${id}')
           if (!el) return
           const [lng, lat] = this.${prefix}Pos
+          const longitude = this.$store.map.degree === 'DMS'
+          const latitude = this.$store.map.degree === 'DMS'
           el.innerHTML = this.${prefix}Tpl({
-            lng: wmpa.format(lng, 'float', { longitude: true }),
-            lat: wmpa.format(lat, 'float', { latitude: true })
+            lng: wmpa.format(lng, 'float', { float: { maximumFractionDigits: 5 }, longitude }),
+            lat: wmpa.format(lat, 'float', { float: { maximumFractionDigits: 5 }, latitude })
           })
         }
       `, `
