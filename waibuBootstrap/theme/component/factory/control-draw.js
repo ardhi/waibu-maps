@@ -6,7 +6,12 @@ async function controlDraw () {
   return class WmapsControlDraw extends WmapsControl {
     static scripts = [
       ...super.scripts,
-      'waibuMaps.virtual:/terra-draw/terra-draw.umd.js'
+      'waibuMaps.virtual:/draw-ctrl/maplibre-gl-terradraw.umd.js'
+    ]
+
+    static css = [
+      ...super.css,
+      'waibuMaps.virtual:/draw-ctrl/maplibre-gl-terradraw.css'
     ]
 
     constructor (options) {
@@ -15,24 +20,20 @@ async function controlDraw () {
     }
 
     build = async () => {
-      const { isString } = this.plugin.app.bajo.lib._
+      const { jsonStringify, attrToArray } = this.plugin.app.waibuMpa
       const opts = {}
       if (['imperial', 'metric', 'nautical'].includes(this.params.attr.unit)) opts.unit = this.params.attr.unit
-      if (isString(this.params.attr.maxWidth) && Number(this.params.attr.maxWidth)) opts.maxWidth = Number(this.params.attr.maxWidth)
-      // const pos = ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
-      this.block.control.push(`<script>
-        draw = new terraDraw.TerraDraw({
-          adapter: new terraDraw.TerraDrawMapLibreGLAdapter({
-            map,
-            lib: maplibregl
-          }),
-          modes: [new terraDraw.TerraDrawFreehandMode()]
+      const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
+      let modes = ['point', 'linestring', 'polygon', 'rectangle', 'circle', 'freehand', 'angled-rectangle', 'sensor', 'sector', 'select', 'delete-selection', 'delete', 'render', 'download']
+      if (this.params.attr.modes) modes = attrToArray(this.params.attr.modes)
+      this.block.control.push(`
+        draw = new MaplibreTerradrawControl.MaplibreTerradrawControl({
+          modes: ${jsonStringify(modes, true)},
+          open: true,
         })
-        this.draw = draw
-        this.draw.start()
-        this.draw.setMode('freehand')
+        map.addControl(draw, '${pos}')
       `)
-      this.block.nonReactive(`
+      this.block.nonReactive.push(`
         let draw
       `)
       this.params.html = this.writeBlock()

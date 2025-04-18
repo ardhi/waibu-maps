@@ -2,6 +2,7 @@ async function wmapsBase () {
   return class WmapsBase extends this.baseFactory {
     static scripts = [...super.scripts,
       'waibuMaps.asset:/js/lib/worker-timers.js',
+      'bajoSpatial.virtual:/geolib/lib/index.js',
       'waibuMaps.virtual:/maplibre/maplibre-gl.js',
       '$waibuMaps:/wmaps.js'
     ]
@@ -21,7 +22,7 @@ async function wmapsBase () {
     }
 
     static controls = ['csrc', 'navigation-control', 'crlr', 'scale-control', 'attribution-control',
-      'fullscreen-control', 'geolocate-control', 'czbp', 'cmp']
+      'fullscreen-control', 'geolocate-control', 'czbp', 'cmp', 'globe-control']
 
     async getWmapsTemplate (html, type, defEmpty = '') {
       const { trim, isEmpty } = this.plugin.app.bajo.lib._

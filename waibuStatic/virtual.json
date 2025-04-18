@@ -2,6 +2,6 @@
   "prefix": "maplibre",
   "root": "maplibre-gl:/dist"
 }, {
-  "prefix": "terra-draw",
-  "root": "terra-draw:/dist"
+  "prefix": "draw-ctrl",
+  "root": "@watergis/maplibre-gl-terradraw:/dist"
 }]

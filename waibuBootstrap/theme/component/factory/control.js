@@ -26,6 +26,7 @@ async function control () {
             fullscreen: Alpine.$persist(true).as('mapControlFullscreen'),
             mousePos: Alpine.$persist(true).as('mapControlMousePos'),
             nav: Alpine.$persist(true).as('mapControlNav'),
+            globe: Alpine.$persist(true).as('mapControlGlobe'),
             scale: Alpine.$persist(true).as('mapControlScale'),
             geolocate: Alpine.$persist(true).as('mapControlGeolocate'),
             ruler: Alpine.$persist(true).as('mapControlRuler'),

@@ -26,6 +26,7 @@ async function map () {
       const { $ } = this.component
 
       this.params.attr.id = 'map' + (isString(this.params.attr.id) ? this.params.attr.id : generateId('alpha'))
+      this.params.attr.class.push('wmaps')
       this.params.tag = 'div'
       this.params.attr['x-data'] = this.params.attr.id
       this.params.attr['@keyup'] = 'onKeyup'

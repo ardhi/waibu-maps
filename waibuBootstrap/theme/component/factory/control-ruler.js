@@ -7,7 +7,6 @@ async function controlRuler () {
   return class WmapsControlRuler extends WmapsControl {
     static scripts = [
       ...super.scripts,
-      'bajoSpatial.virtual:/geolib/lib/index.js',
       'waibuMaps.asset:/js/control-ruler.js'
     ]
 

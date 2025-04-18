@@ -12,6 +12,7 @@
     "attribution-control": "Attribution",
     "fullscreen-control": "Fullscreen",
     "geolocate-control": "Geolocate",
+    "globe-control": "Globe",
     "czbp": "Zoom/Bearing/Pitch",
     "cmp": "Mouse Position"
   }
