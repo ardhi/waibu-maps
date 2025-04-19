@@ -31,6 +31,7 @@ async function map () {
       this.params.attr['x-data'] = this.params.attr.id
       this.params.attr['@keyup'] = 'onKeyup'
       const mapOptions = await options.call(this, this.params)
+      const projection = this.params.attr.projection ?? 'mercator'
       this.block.reactive.push(`
         async windowLoad () {
           const mapOpts = ${jsonStringify(mapOptions, true)}
@@ -44,6 +45,7 @@ async function map () {
           Alpine.data('${this.params.attr.id}', () => {
             let map
             let wmaps
+            let projection = { type: '${projection}' }
             ${this.block.nonReactive.join('\n')}
             return {
               init () {
@@ -63,6 +65,7 @@ async function map () {
                 this.onMapStyle()
               },
               async onMapStyle () {
+                map.setProjection(projection)
                 ${this.block.mapStyle.join('\n')}
               },
               async onMissingImage (evt) {
@@ -85,6 +88,7 @@ async function map () {
               },
               async run (instance) {
                 map = instance
+                wmapsUtil.setMap(map, projection)
                 wmaps = new WaibuMaps(instance, this)
                 map.on('moveend', evt => {
                   Alpine.store('map').center = evt.target.getCenter().toArray()

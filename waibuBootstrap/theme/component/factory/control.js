@@ -23,12 +23,12 @@ async function control () {
           Alpine.store('mapControl', {
             attrib: Alpine.$persist(true).as('mapControlAttrib'),
             centerPos: Alpine.$persist(true).as('mapControlCenterPos'),
-            fullscreen: Alpine.$persist(true).as('mapControlFullscreen'),
-            mousePos: Alpine.$persist(true).as('mapControlMousePos'),
+            fullscreen: Alpine.$persist(false).as('mapControlFullscreen'),
+            mousePos: Alpine.$persist(false).as('mapControlMousePos'),
             nav: Alpine.$persist(true).as('mapControlNav'),
-            globe: Alpine.$persist(true).as('mapControlGlobe'),
-            scale: Alpine.$persist(true).as('mapControlScale'),
-            geolocate: Alpine.$persist(true).as('mapControlGeolocate'),
+            // globe: Alpine.$persist(true).as('mapControlGlobe'),
+            scale: Alpine.$persist(false).as('mapControlScale'),
+            geolocate: Alpine.$persist(false).as('mapControlGeolocate'),
             ruler: Alpine.$persist(true).as('mapControlRuler'),
             search: Alpine.$persist(true).as('mapControlSearch')
           })

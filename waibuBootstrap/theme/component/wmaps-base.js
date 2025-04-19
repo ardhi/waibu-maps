@@ -22,7 +22,8 @@ async function wmapsBase () {
     }
 
     static controls = ['csrc', 'navigation-control', 'crlr', 'scale-control', 'attribution-control',
-      'fullscreen-control', 'geolocate-control', 'czbp', 'cmp', 'globe-control']
+      // 'fullscreen-control', 'geolocate-control', 'czbp', 'cmp', 'globe-control']
+      'fullscreen-control', 'geolocate-control', 'czbp', 'cmp']
 
     async getWmapsTemplate (html, type, defEmpty = '') {
       const { trim, isEmpty } = this.plugin.app.bajo.lib._

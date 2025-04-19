@@ -1,7 +1,7 @@
 /* global maplibregl, geolib, _, wmpa, WorkerTimers, turf, Alpine */
 
 class WaibuMaps { // eslint-disable-line no-unused-vars
-  constructor (map, scope) {
+  constructor (map, scope, opts = {}) {
     this.map = map
     this.scope = scope
     this.markers = {}
@@ -208,6 +208,11 @@ class WaibuMapsUtil {
       sources: {},
       layers: []
     }
+  }
+
+  setMap = (map, projection) => {
+    this.map = map
+    if (projection) this.defStyle.projection = projection
   }
 
   decToDms = (decimal, opts = {}) => {
