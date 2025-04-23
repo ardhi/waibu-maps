@@ -10,7 +10,7 @@ async function script () {
     }
 
     build = async () => {
-      const type = WmapsBase.blockTypes.includes(this.params.attr.type) ? this.params.attr.type : 'run'
+      const type = this.blockTypes.includes(this.params.attr.type) ? this.params.attr.type : 'run'
       this.block[type].push(this.params.html)
       this.params.html = this.writeBlock()
     }

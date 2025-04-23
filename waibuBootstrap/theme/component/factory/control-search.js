@@ -23,7 +23,7 @@ async function controlSearch () {
       `)
       this.block.dataInit.push(`
         this.$watch('$store.mapSearch.value', async val => {
-          if (_.isEmpty(val)) return wbs.notify('You need to enter a search phrase first', { type: 'danger' })
+          if (_.isEmpty(val)) return wbs.notify('enterPhrase', { type: 'danger' })
           const html = await ${this.params.attr.method}(val, this.$store.mapSearch.feed)
           this.$store.mapSearch.recent = html ?? ''
           this.$store.mapSearch.busy = false
@@ -58,9 +58,9 @@ async function controlSearch () {
         },
         async ${prefix}Populate () {
           const feeds = await ${this.params.attr.feed}() ?? []
-          feeds.unshift({ code: 'latLng', name: 'Goto Latitude/Longitude', feed: { id: 'latLng', label: 'Latitude/Longitude' } })
+          feeds.unshift({ code: 'latLng', name: 'gotoLatLng', feed: { id: 'latLng', label: 'latLng' } })
           this.$store.mapSearch.feeds = feeds
-          const body = feeds.map(feed => '<c:dropdown-item :class="$store.mapSearch.feed === $el.getAttribute(\\'data-code-feedid\\') ? \\'active\\' : \\'\\'" data-code-feedid="' + feed.code + ':' + feed.feed.id + '" content="' + feed.feed.label + '" @click="$store.mapSearch.feed = \\'' + feed.code + ':' + feed.feed.id + '\\'"/>')
+          const body = feeds.map(feed => '<c:dropdown-item :class="$store.mapSearch.feed === $el.getAttribute(\\'data-code-feedid\\') ? \\'active\\' : \\'\\'" data-code-feedid="' + feed.code + ':' + feed.feed.id + '" t:content="' + feed.feed.label + '" @click="$store.mapSearch.feed = \\'' + feed.code + ':' + feed.feed.id + '\\'"/>')
           await wmpa.addComponent(body, '#${id} .input-group .dropdown-menu', 'div')
           if (!this.$store.mapSearch.feed) this.$store.mapSearch.feed = feeds[0].code + ':' + feeds[0].feed.id
           const html = this.$store.mapSearch.recent ?? ''
@@ -118,10 +118,10 @@ async function controlSearch () {
             </c:form-input>
             <c:div margin="top-2" flex="justify-content:between">
               <div>
-                <template x-if="feedCode !== 'latLng'"><span><c:t>Search in:</c:t> <strong><span x-html="feedName" /></strong></span></template>
-                <template x-if="feedCode === 'latLng'"><span><c:t>Goto:</c:t> <strong><span><c:t>Latitude/Longitude</c:t></span></strong></span></template>
+                <template x-if="feedCode !== 'latLng'"><span><c:t>searchIn</c:t>: <strong><span x-html="feedName" /></strong></span></template>
+                <template x-if="feedCode === 'latLng'"><span><c:t>goto</c:t>: <strong><span><c:t>latLng</c:t></span></strong></span></template>
               </div>
-              <c:btn x-show="feedCode !== 'latLng'" size="sm" color="link" t:content="Clear History" @click="clearHistory()" />
+              <c:btn x-show="feedCode !== 'latLng'" size="sm" color="link" t:content="clearHistory" @click="clearHistory()" />
             </c:div>
             <c:div margin="top-3" class="result"><div></div></c:div>
           </c:modal>

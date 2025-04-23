@@ -6,16 +6,22 @@
   "dirN": "U",
   "dirS": "S",
   "maps": "Peta",
+  "latLng": "Lintang/Bujur",
+  "gotoLatLng": "Ke lintang/bujur",
+  "goto": "Pergi ke",
+  "searchIn": "Cari di",
+  "clearHistory": "Hapus Jejak",
+  "enterPhrase": "Anda harus memasukkan frase pencarian terlebih dahulu",
   "mapControl": {
-    "csrc": "Search",
-    "navigation-control": "Navigation",
-    "crlr": "Measurement",
-    "scale-control": "Map Scale",
-    "attribution-control": "Attribution",
-    "fullscreen-control": "Fullscreen",
-    "geolocate-control": "Geolocate",
+    "csrc": "Cari",
+    "navigation-control": "Navigasi",
+    "crlr": "Pengukuran",
+    "scale-control": "Skala Peta",
+    "attribution-control": "Atribusi",
+    "fullscreen-control": "Layar Penuh",
+    "geolocate-control": "Geolokasi",
     "globe-control": "Bola Dunia",
     "czbp": "Zoom/Bearing/Pitch",
-    "cmp": "Mouse Position"
+    "cmp": "Posisi Tetikus"
   }
 }

@@ -4,6 +4,12 @@
   "dirN": "N",
   "dirS": "S",
   "maps": "Maps",
+  "latLng": "latitude/Longitude",
+  "gotoLatLng": "Goto latitude/longitude",
+  "goto": "Goto",
+  "searchIn": "Search in",
+  "clearHistory": "Clear History",
+  "enterPhrase": "You need to enter a search phrase first",
   "mapControl": {
     "csrc": "Search",
     "navigation-control": "Navigation",

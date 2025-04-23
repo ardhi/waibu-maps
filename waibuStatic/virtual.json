@@ -1,7 +1,4 @@
 [{
   "prefix": "maplibre",
   "root": "maplibre-gl:/dist"
-}, {
-  "prefix": "draw-ctrl",
-  "root": "@watergis/maplibre-gl-terradraw:/dist"
 }]
