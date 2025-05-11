@@ -28,14 +28,14 @@ async function controlMousePos () {
           <c:grid-col col="6" t:content="Latitude" />
         </c:grid-row>
       `))
-      this.block.dataInit.push(`
+      this.addBlock('dataInit', `
         this.$watch('$store.map.center', val => {
           if (!this.${prefix}TrackCenter) return
           this.${prefix}Pos = [...val]
         })
         this.$watch('${prefix}Pos', this.${prefix}Update.bind(this))
       `)
-      this.block.reactive.push(`
+      this.addBlock('reactive', [`
         ${prefix}Tpl: _.template('${tpl}')
       `, `
         ${prefix}Pos: [0, 0]
@@ -58,8 +58,8 @@ async function controlMousePos () {
           const body = '<c:div id="${id}" margin="x-2 top-1" text="align:center nowrap"/>'
           return await wmpa.createComponent(body)
         }
-      `)
-      this.block.run.push(`
+      `])
+      this.addBlock('run', `
         map.on('mousemove', evt => {
           if (this.${prefix}TrackCenter) return
           const coord = evt.lngLat.wrap()
@@ -68,7 +68,7 @@ async function controlMousePos () {
         if (this.${prefix}TrackCenter && this.$store.map.center) this.${prefix}Pos = [...this.$store.map.center]
       `)
 
-      this.block.control.push(`
+      this.addBlock('control', `
         await wmaps.createControl(_.merge(${jsonStringify(options, true)}, { builder: this.${prefix}Builder, firstCall: this.${prefix}Update }))
       `)
 

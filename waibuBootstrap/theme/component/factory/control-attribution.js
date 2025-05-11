@@ -18,7 +18,7 @@ async function controlAttribution () {
       if (isString(this.params.attr.text)) opts.customAttribution = this.params.attr.text
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'
       opts.classSelector = 'maplibregl-ctrl-attrib'
-      this.block.control.push(`
+      this.addBlock('control', `
         await wmaps.createControlNative('AttributionControl', ${jsonStringify(opts, true)})
       `)
       this.params.html = this.writeBlock()

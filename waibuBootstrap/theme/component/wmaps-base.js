@@ -12,15 +12,6 @@ async function wmapsBase () {
       'waibuMaps.asset:/css/wmaps.css'
     ]
 
-    constructor (options) {
-      super(options)
-      this.blockTypes = [...this.blockTypes,
-        'mapLoad', 'control', 'mapOptions', 'mapStyle', 'layerVisibility', 'missingImage',
-        'mapExtend'
-      ]
-      this.init()
-    }
-
     static controls = ['csrc', 'navigation-control', 'crlr', 'scale-control', 'attribution-control',
       // 'fullscreen-control', 'geolocate-control', 'czbp', 'cmp', 'globe-control']
       'fullscreen-control', 'geolocate-control', 'czbp', 'cmp']

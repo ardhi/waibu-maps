@@ -19,7 +19,7 @@ async function control () {
       this.readBlock()
       // persisting
       if (this.params.attr.persist) {
-        this.block.initializing.push(`
+        this.component.addScriptBlock('alpineInitializing', `
           Alpine.store('mapControl', {
             attrib: Alpine.$persist(true).as('mapControlAttrib'),
             centerPos: Alpine.$persist(true).as('mapControlCenterPos'),

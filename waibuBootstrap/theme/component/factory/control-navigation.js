@@ -18,7 +18,7 @@ async function controlNavigation () {
       opts.classSelector = 'maplibregl-ctrl-zoom-in'
       opts.classGroup = true
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'
-      this.block.control.push(`
+      this.addBlock('control', `
         await wmaps.createControlNative('NavigationControl', ${jsonStringify(opts, true)})
       `)
       this.params.html = this.writeBlock()

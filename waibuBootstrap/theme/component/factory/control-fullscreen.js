@@ -15,7 +15,7 @@ async function controlFullscreen () {
       const opts = {}
       if (isString(this.params.attr.container)) opts.container = this.params.attr.container
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'
-      this.block.control.push(`
+      this.addBlock('control', `
         await wmaps.createControlNative('FullscreenControl', ${jsonStringify(opts, true)})
       `)
       this.params.html = this.writeBlock()

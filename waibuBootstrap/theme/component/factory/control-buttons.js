@@ -55,7 +55,7 @@ async function controlButtons () {
       })
       this.params.html = ''
       if (!isEmpty(items)) {
-        this.block.control.push(`
+        this.addBlock('control', `
           map.addControl(new ControlButtons(_.merge(${jsonStringify({ items, position: pos }, true)}, { scopeId: this.$store.map.id }))${pos ? `, '${pos}'` : ''})
         `)
         this.params.html = this.writeBlock()

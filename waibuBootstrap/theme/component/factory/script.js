@@ -10,8 +10,8 @@ async function script () {
     }
 
     build = async () => {
-      const type = this.blockTypes.includes(this.params.attr.type) ? this.params.attr.type : 'run'
-      this.block[type].push(this.params.html)
+      const type = this.params.attr.type ?? 'run'
+      this.addBlock(type, this.params.html)
       this.params.html = this.writeBlock()
     }
   }

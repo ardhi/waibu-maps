@@ -18,10 +18,10 @@ async function controlSearch () {
       const opts = {}
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
       opts.class = prefix + ' maplibregl-ctrl-group'
-      this.block.control.push(`
+      this.addBlock('control', `
         await wmaps.createControl(_.merge(${jsonStringify(opts, true)}, { builder: this.${prefix}Builder }))
       `)
-      this.block.dataInit.push(`
+      this.addBlock('dataInit', `
         this.$watch('$store.mapSearch.value', async val => {
           if (_.isEmpty(val)) return wbs.notify('enterPhrase', { type: 'danger' })
           const html = await ${this.params.attr.method}(val, this.$store.mapSearch.feed)
@@ -44,10 +44,10 @@ async function controlSearch () {
           el.disabled = !!val
         })
       `)
-      this.block.mapLoad.push(`
+      this.addBlock('mapLoad', `
         await this.${prefix}Populate()
       `)
-      this.block.reactive.push(`
+      this.addBlock('reactive', `
         async ${prefix}Builder (params) {
           const body = [
             '<c:button dim="height:100" flex="align-items:center justify-content:center" open="${id}">',
@@ -127,7 +127,7 @@ async function controlSearch () {
           </c:modal>
         </div>
       `)
-      this.block.dataInit.push(`
+      this.addBlock('dataInit', `
         this.$watch('$store.mapSearch.select', async val => {
           if (_.isEmpty(val)) return
           const [source, feedId] = (this.$store.mapSearch.feed ?? '').split(':')
@@ -140,7 +140,7 @@ async function controlSearch () {
           if (fn) await fn.call(scope, val, feedId)
         })
       `)
-      this.block.initializing.push(`
+      this.component.addScriptBlock('alpineInitializing', `
         Alpine.store('mapSearch', {
           feed: Alpine.$persist('latLng:latLng').as('mapSearchFeed'),
           recent: Alpine.$persist('').as('mapSearchRecent'),

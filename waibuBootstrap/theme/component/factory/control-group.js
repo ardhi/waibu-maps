@@ -45,7 +45,7 @@ async function controlGroup () {
         items[idx] = await minify(items[idx])
       }
       this.readBlock()
-      this.block.reactive.push(`
+      this.addBlock('reactive', [`
         ${prefix}MenuTpl: _.template('${tpl}')
       `, `
         async ${prefix}Trigger (evt) {
@@ -77,8 +77,8 @@ async function controlGroup () {
           }
           return items
         }
-      `)
-      this.block.control.push({
+      `])
+      this.addBlock('control', {
         id,
         group: true,
         content: `

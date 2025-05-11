@@ -30,10 +30,10 @@ async function controlZbp () {
           <c:grid-col style="cursor:pointer" @click="reset" col="4" t:content="Pitch" />
         </c:grid-row>
       `))
-      this.block.dataInit.push(`
+      this.addBlock('dataInit', `
         this.$watch('$store.map.zoom, $store.map.bearing, $store.map.pitch', this.${prefix}Update.bind(this))
       `)
-      this.block.reactive.push(`
+      this.addBlock('reactive', [`
         ${prefix}Tpl: _.template('${tpl}')
       `, `
         ${prefix}Update () {
@@ -56,9 +56,9 @@ async function controlZbp () {
           ]
           return await wmpa.createComponent(body)
         }
-      `)
+      `])
 
-      this.block.control.push(`
+      this.addBlock('control', `
         await wmaps.createControl(_.merge(${jsonStringify(options, true)}, { builder: this.${prefix}Builder, firstCall: this.${prefix}Update }))
       `)
 

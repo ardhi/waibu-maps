@@ -16,7 +16,7 @@ async function controlGeolocate () {
       if (this.params.attr.highAccuracy) set(opts, 'positionOptions.enableHighAccuracy', true)
       if (this.params.attr.trackUserLocation) opts.trackUserLocation = true
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'
-      this.block.control.push(`
+      this.addBlock('control', `
         await wmaps.createControlNative('GeolocateControl', ${jsonStringify(opts, true)})
       `)
       this.params.html = this.writeBlock()

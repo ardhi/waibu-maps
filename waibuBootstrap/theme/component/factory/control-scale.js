@@ -16,7 +16,7 @@ async function controlScale () {
       if (['imperial', 'metric', 'nautical'].includes(this.params.attr.unit)) opts.unit = this.params.attr.unit
       if (isString(this.params.attr.maxWidth) && Number(this.params.attr.maxWidth)) opts.maxWidth = Number(this.params.attr.maxWidth)
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-left'
-      this.block.control.push(`
+      this.addBlock('control', `
         await wmaps.createControlNative('ScaleControl', ${jsonStringify(opts, true)})
       `)
       this.params.html = this.writeBlock()

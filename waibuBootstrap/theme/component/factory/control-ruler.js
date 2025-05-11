@@ -27,7 +27,7 @@ async function controlRuler () {
       const opts = {
         imageUrl: routePath('waibuMaps.asset:/image/ruler.svg')
       }
-      this.block.control.push(`
+      this.addBlock('control', `
         const rulerCtrl = new ControlRuler(${jsonStringify(opts, true)})
         map.addControl(rulerCtrl${pos ? `, '${pos}'` : ''})
         if (this.$store.mapControl) {

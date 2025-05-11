@@ -85,7 +85,7 @@ async function layerHtmlCluster () {
         extra.push(`${key}: ['+', ['case', this.filter.${key}, 1, 0]],`)
       }
       extra.push('}')
-      this.block.mapLoad.push(`
+      this.addBlock('mapLoad', `
         ${buildSource.call(this, this.params, extra)}
         map.addLayer(
           ${createLayerCircle.call(this, this.params, filters)}
@@ -100,7 +100,7 @@ async function layerHtmlCluster () {
           updateMarkers()
         })
       `)
-      this.block.reactive.push(
+      this.addBlock('reactive', [
         `colors: ${jsonStringify(colors, true)}`,
         `filter: ${jsonStringify(filters, true)}`,
         `updateMarkers () {
@@ -115,7 +115,7 @@ async function layerHtmlCluster () {
             }
           })
         }`
-      )
+      ])
       this.params.html = this.writeBlock()
     }
   }

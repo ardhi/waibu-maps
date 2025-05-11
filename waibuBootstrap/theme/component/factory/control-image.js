@@ -22,7 +22,7 @@ async function controlImage () {
       const url = isString(this.params.attr.url) ? routePath(this.params.attr.url) : null
       let animate = '@mouseenter="$el.style.opacity = 1" @mouseleave="$el.style.opacity = 0.3" '
       if (this.params.attr.noAnimate) animate = ''
-      this.block.reactive.push(`
+      this.addBlock('reactive', `
         async ${prefix}Builder () {
           const body = ['<c:${url ? `a url="${url}"` : 'div'}><c:img ${attribsStringify(img)} ']
           body.push('${animate}')
@@ -31,7 +31,7 @@ async function controlImage () {
         }
       `)
 
-      this.block.control.push(`
+      this.addBlock('control', `
         await wmaps.createControl(_.merge(${jsonStringify(opts, true)}, { builder: this.${prefix}Builder }))
       `)
 

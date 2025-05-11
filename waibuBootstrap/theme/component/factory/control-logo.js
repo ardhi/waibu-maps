@@ -39,7 +39,7 @@ async function controlLogo () {
         img.style = img.style ?? {}
         img.style.opacity = img.opacity
       }
-      this.block.reactive.push(`
+      this.addBlock('reactive', `
         async ${prefix}Builder () {
           const body = ['<c:a href="#" @click="wbs.appLauncher(\\'fullscreen darkmode language\\', \\'${this.params.attr.menu}\\')">']
           body.push('<c:img ${attribsStringify(img)} ${animate} />')
@@ -48,7 +48,7 @@ async function controlLogo () {
         }
       `)
 
-      this.block.control.push(`
+      this.addBlock('control', `
         await wmaps.createControl(_.merge(${jsonStringify(opts, true)}, { builder: this.${prefix}Builder }))
       `)
 

@@ -15,7 +15,7 @@ async function controlGlobe () {
       const opts = {}
       if (isString(this.params.attr.container)) opts.container = this.params.attr.container
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'
-      this.block.mapStyle.push(`
+      this.addBlock('mapStyle', `
         await wmaps.createControlNative('GlobeControl', ${jsonStringify(opts, true)})
       `)
       this.params.html = this.writeBlock()
