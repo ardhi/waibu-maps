@@ -47,7 +47,7 @@
 }
 
 .maplibregl-ctrl-wmaps.widget .smaller {
-  font-size: smaller;
+  font-size: 0.8rem;
 }
 
 .maplibregl-ctrl-loader {
@@ -92,7 +92,13 @@
 
 .maplibregl-ctrl-group .accordion-header button {
   width: 100%;
+  font-size: 0.9rem;
   display: flex;
+}
+
+.maplibregl-ctrl-group .list-group-item h5 {
+  font-size: 0.9rem;
+  font-weight: bold;
 }
 
 .maplibregl-ctrl-group .accordion-body .form-check-label {
@@ -100,7 +106,7 @@
 }
 
 .maplibregl-ctrl-group .dropdown-menu > div {
-  font-size: smaller;
+  font-size: 0.8rem;
 }
 
 .maplibregl-popup-content div span {
