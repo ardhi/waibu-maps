@@ -35,7 +35,7 @@ async function map () {
       this.addBlock('reactive', `
         async windowLoad () {
           const mapOpts = ${jsonStringify(mapOptions, true)}
-          ${this.block.mapOptions.join('\n')}
+          ${(this.block.mapOptions ?? []).join('\n')}
           await this.run(new maplibregl.Map(mapOpts))
         }
       `)
