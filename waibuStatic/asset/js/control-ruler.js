@@ -46,7 +46,7 @@ class ControlRuler { // eslint-disable-line no-unused-vars
     this.container = document.createElement('div')
     this.container.classList.add('maplibregl-ctrl')
     this.container.classList.add('maplibregl-ctrl-group')
-    this.container.classList.add('maplibregl-ctrl-ruler')
+    this.container.classList.add('maplibregl-ctrl-crlr')
     this.button = document.createElement('button')
     this.button.setAttribute('type', 'button')
     const img = document.createElement('img')

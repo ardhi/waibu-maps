@@ -1,5 +1,5 @@
 import control from './control.js'
-const storeKey = 'mapControl.centerPos'
+const storeKey = 'centerpos'
 
 async function controlCenterPosition () {
   const WmapsControl = await control.call(this)
@@ -17,9 +17,10 @@ async function controlCenterPosition () {
 
     constructor (options) {
       super(options)
+      const { camelCase } = this.plugin.lib._
       this.params.noTag = true
-      this.params.html = `<div class="childmap maplibregl-ctrl-center" x-data>
-        <div x-show="$store.mapControl ? $store.${storeKey} : true"></div>
+      this.params.html = `<div class="childmap maplibregl-ctrl-centerpos" x-data>
+        <div x-show="$store.mapCtrl ? $store.mapCtrl.${camelCase(storeKey)} : true"></div>
       </div>`
     }
   }

@@ -1,5 +1,5 @@
 import control from './control.js'
-const storeKey = 'mapControl.ruler'
+const storeKey = 'crlr'
 
 async function controlRuler () {
   const WmapsControl = await control.call(this)
@@ -30,10 +30,10 @@ async function controlRuler () {
       this.addBlock('control', `
         const rulerCtrl = new ControlRuler(${jsonStringify(opts, true)})
         map.addControl(rulerCtrl${pos ? `, '${pos}'` : ''})
-        if (this.$store.mapControl) {
-          el = document.querySelector('#' + map._container.id + ' .maplibregl-ctrl-ruler')
+        if (this.$store.map) {
+          el = document.querySelector('#' + map._container.id + ' .maplibregl-ctrl-crlr')
           el.setAttribute('x-data', '')
-          el.setAttribute('x-show', '$store.${storeKey}')
+          el.setAttribute('x-show', '$store.mapCtrl.${storeKey}')
           // TODO: disable measuring first
           // el.setAttribute('x-init', "$watch('$store.${storeKey}', val => console.log(rulerCtrl))")
         }

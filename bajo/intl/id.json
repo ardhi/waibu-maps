@@ -12,7 +12,7 @@
   "searchIn": "Cari di",
   "clearHistory": "Hapus Jejak",
   "enterPhrase": "Anda harus memasukkan frase pencarian terlebih dahulu",
-  "mapControl": {
+  "mapCtrl": {
     "csrc": "Cari",
     "navigation-control": "Navigasi",
     "crlr": "Pengukuran",
@@ -22,6 +22,7 @@
     "geolocate-control": "Geolokasi",
     "globe-control": "Bola Dunia",
     "czbp": "Zoom/Bearing/Pitch",
-    "cmp": "Posisi Tetikus"
+    "cmp": "Posisi Tetikus",
+    "centerpos": "Titik Tengah"
   }
 }

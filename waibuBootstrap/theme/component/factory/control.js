@@ -11,6 +11,7 @@ async function control () {
     }
 
     build = async () => {
+      const { jsonStringify } = this.plugin.app.waibuMpa
       const { $ } = this.component
       const html = []
       $(`<div>${this.params.html}</div>`).find('.childmap').each(function () {
@@ -20,18 +21,13 @@ async function control () {
       // persisting
       if (this.params.attr.persist) {
         this.component.addScriptBlock('alpineInitializing', `
-          Alpine.store('mapControl', {
-            attrib: Alpine.$persist(true).as('mapControlAttrib'),
-            centerPos: Alpine.$persist(true).as('mapControlCenterPos'),
-            fullscreen: Alpine.$persist(false).as('mapControlFullscreen'),
-            mousePos: Alpine.$persist(false).as('mapControlMousePos'),
-            nav: Alpine.$persist(true).as('mapControlNav'),
-            // globe: Alpine.$persist(true).as('mapControlGlobe'),
-            scale: Alpine.$persist(false).as('mapControlScale'),
-            geolocate: Alpine.$persist(false).as('mapControlGeolocate'),
-            ruler: Alpine.$persist(true).as('mapControlRuler'),
-            search: Alpine.$persist(true).as('mapControlSearch')
-          })
+          const controls = ${jsonStringify(WmapsBase.controls, true)}
+          const defOffs = ['scale-control', 'geolocate-control', 'czbp']
+          const ctrls = {}
+          for (const c of controls) {
+            ctrls[_.camelCase(c)] = Alpine.$persist(!defOffs.includes(c)).as(_.camelCase('mapCtrl ' + c))
+          }
+          Alpine.store('mapCtrl', ctrls)
         `)
       }
       this.params.html = this.writeBlock()

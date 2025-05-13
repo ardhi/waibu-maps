@@ -10,7 +10,7 @@
   "searchIn": "Search in",
   "clearHistory": "Clear History",
   "enterPhrase": "You need to enter a search phrase first",
-  "mapControl": {
+  "mapCtrl": {
     "csrc": "Search",
     "navigation-control": "Navigation",
     "crlr": "Measurement",
@@ -20,6 +20,7 @@
     "geolocate-control": "Geolocate",
     "globe-control": "Globe",
     "czbp": "Zoom/Bearing/Pitch",
-    "cmp": "Mouse Position"
+    "cmp": "Mouse Position",
+    "centerpos": "Center Point"
   }
 }

@@ -170,21 +170,22 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
   }
 
   createControlNative = async (className, options = {}) => {
-    const name = wmpa.pascalCase(className)
-    const ctrl = new maplibregl[name](options)
+    const ctrl = new maplibregl[wmpa.pascalCase(className)](options)
     let type = options.classSelector
-    if (!type) {
+    if (type) type = type.replace('maplibregl-ctrl-', '')
+    else {
       const types = _.kebabCase(className).split('-')
       types.pop()
-      type = 'maplibregl-ctrl-' + types.join('-')
+      type = types.join('-').replace('maplibregl-ctrl-', '')
     }
     this.map.addControl(ctrl, options.position)
-    let el = document.querySelector('#' + this.map._container.id + ' .' + type)
+    let el = document.querySelector('#' + this.map._container.id + ' .maplibregl-ctrl-' + type)
     if (el) {
+      if (!['scale', 'attrib'].includes(type)) el = el.parentElement
       if (options.classGroup) el = el.closest('.maplibregl-ctrl-group')
       el.setAttribute('oncontextmenu', 'return false')
       el.setAttribute('x-data', '')
-      el.setAttribute('x-show', '$store.map.ctrl' + name)
+      el.setAttribute('x-show', '$store.mapCtrl.' + _.camelCase(className))
     }
   }
 }
@@ -278,9 +279,9 @@ class WaibuMapsControl { // eslint-disable-line no-unused-vars
       const classes = _.without(this.class.split(' '), '', null, undefined)
       if (classes.length > 0) {
         this.container.classList.add(...classes)
-        const ctrlName = 'ctrl' + wmpa.pascalCase(classes[0])
-        if (_.has(Alpine.store('map'), ctrlName)) {
-          this.container.setAttribute('x-show', 'Alpine.store(\'map\')[\'' + ctrlName + '\']') // first class will be used as control switch class
+        const ctrlName = _.camelCase(classes[0])
+        if (_.has(Alpine.store('mapCtrl'), ctrlName)) {
+          this.container.setAttribute('x-show', 'Alpine.store(\'mapCtrl\')[\'' + ctrlName + '\']') // first class will be used as control switch class
         }
       }
     }
