@@ -184,8 +184,12 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
       if (!['scale', 'attrib'].includes(type)) el = el.parentElement
       if (options.classGroup) el = el.closest('.maplibregl-ctrl-group')
       el.setAttribute('oncontextmenu', 'return false')
-      el.setAttribute('x-data', '')
-      el.setAttribute('x-show', '$store.mapCtrl.' + _.camelCase(className))
+      el.setAttribute('x-data', `{
+        get show () {
+          return this.$store.mapCtrl ? this.$store.mapCtrl[_.camelCase('` + className + `')] : true
+        }
+      }`)
+      el.setAttribute('x-show', 'show')
     }
   }
 }

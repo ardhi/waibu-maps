@@ -30,16 +30,9 @@ async function map () {
       this.params.tag = 'div'
       this.params.attr['x-data'] = this.params.attr.id
       this.params.attr['@keyup'] = 'onKeyup'
+      this.params.attr['@load.window'] = 'await windowLoad()'
       const mapOptions = await options.call(this, this.params)
       const projection = this.params.attr.projection ?? 'mercator'
-      this.addBlock('reactive', `
-        async windowLoad () {
-          const mapOpts = ${jsonStringify(mapOptions, true)}
-          ${(this.block.mapOptions ?? []).join('\n')}
-          await this.run(new maplibregl.Map(mapOpts))
-        }
-      `)
-      this.params.attr['@load.window'] = 'await windowLoad()'
       this.component.addScriptBlock('alpineInit', `
         Alpine.data('${this.params.attr.id}', () => {
           let map
@@ -57,6 +50,11 @@ async function map () {
                   wbs.notify(msg, { type: 'warning' }).then()
                 }
               })
+            },
+            async windowLoad () {
+              const mapOpts = ${jsonStringify(mapOptions, true)}
+              ${(this.block.mapOptions ?? []).join('\n')}
+              await this.run(new maplibregl.Map(mapOpts))
             },
             ${(this.block.reactive ?? []).join(',\n')},
             async onMapLoad (evt) {
@@ -131,7 +129,7 @@ async function map () {
       })
       this.params.html = html.join('\n')
       const keys = without(Object.keys(mapOptions), 'style')
-      const omitted = ['noBasemap', ...keys]
+      const omitted = ['noBasemap', 'projection', ...keys]
       this.params.attr = omit(this.params.attr, omitted)
     }
   }
