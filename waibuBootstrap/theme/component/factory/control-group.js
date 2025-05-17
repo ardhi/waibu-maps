@@ -54,7 +54,8 @@ async function controlGroup () {
           const menu = el.querySelector('.dropdown-menu')
           if (!menu) return
           if (menu.children.length > 0) return
-          await wmpa.addComponent('<c:' + el.getAttribute('component') + '/>', menu)
+          const setting = el.getAttribute('setting') ? ('setting="' + el.getAttribute('setting') + '"') : ''
+          await wmpa.addComponent('<c:' + el.getAttribute('component') + ' ' + setting + ' />', menu)
         }
       `, `
         async ${prefix}Builder (params) {

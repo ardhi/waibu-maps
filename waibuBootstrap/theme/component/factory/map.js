@@ -33,6 +33,8 @@ async function map () {
       this.params.attr['@load.window'] = 'await windowLoad()'
       const mapOptions = await options.call(this, this.params)
       const projection = this.params.attr.projection ?? 'mercator'
+      let reactiveBlock = ''
+      if (this.block.reactive && this.block.reactive.length > 0) reactiveBlock = this.block.reactive.join(',\n') + ','
       this.component.addScriptBlock('alpineInit', `
         Alpine.data('${this.params.attr.id}', () => {
           let map
@@ -56,7 +58,7 @@ async function map () {
               ${(this.block.mapOptions ?? []).join('\n')}
               await this.run(new maplibregl.Map(mapOpts))
             },
-            ${(this.block.reactive ?? []).join(',\n')},
+            ${reactiveBlock}
             async onMapLoad (evt) {
               ${(this.block.mapLoad ?? []).join('\n')}
               this.onMapStyle()
