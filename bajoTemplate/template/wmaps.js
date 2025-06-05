@@ -131,19 +131,19 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
 
   loadImage = async (src) => {
     if (_.isString(src)) {
-      const [url, id] = src.split(';')
-      src = { url, id }
+      const [id, name] = src.split(';')
+      src = { id, name }
     }
-    if (!src.id) src.id = _.last(src.url.split('?')[0].split('#')[0].split('/')).split('.')[0]
-    if (this.map.listImages().includes(src.id)) return
-    const image = await this.map.loadImage(src.url)
-    this.map.addImage(src.id, image.data)
+    if (!src.name) src.name = _.last(src.id.split('?')[0].split('#')[0].split('/')).split('.')[0]
+    if (this.map.listImages().includes(src.name)) return
+    const image = await this.map.loadImage(src.id)
+    this.map.addImage(src.name, image.data)
   }
 
   loadImages = async (sources, fetch = true) => {
     for (const src of sources) {
       if (fetch) {
-        const data = await wmpa.fetchApi(src)
+        const data = await wmpa.fetchApi(src, {}, { limit: 200 })
         if (_.isEmpty(data)) continue
         for (const d of data) {
           this.loadImage(d)

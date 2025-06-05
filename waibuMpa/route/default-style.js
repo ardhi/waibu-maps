@@ -5,7 +5,7 @@ const wmaps = {
   method: 'GET',
   handler: async function (req, reply) {
     const { routePath } = this.app.waibu
-    const glyphs = routePath(glyphUrl)
+    const glyphs = routePath(glyphUrl, { uriEncoded: false })
     return reply.view('waibuMaps.template:/default-style.json', { glyphs })
   }
 }
