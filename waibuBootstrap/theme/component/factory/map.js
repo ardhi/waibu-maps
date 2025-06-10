@@ -103,10 +103,9 @@ async function map () {
               })
               map.on('styleimagemissing', this.onMissingImage.bind(this))
               map.on('load', this.onMapLoad.bind(this))
-              // TODO: sometimes onLoad isn't called, hence these next lines...
-              setTimeout(() => {
-                this.onMapStyle()
-              }, 2000)
+              // TODO: sometime onLoad isn't called, hence these next lines...
+              while (!map.isStyleLoaded()) await wmpa.delay(200)
+              this.onMapStyle()
             }
           }
         })

@@ -47,7 +47,7 @@ async function controlSearch () {
       this.addBlock('mapStyle', `
         await this.${prefix}Populate()
       `)
-      this.addBlock('reactive', `
+      this.addBlock('reactive', [`
         async ${prefix}Builder (params) {
           const body = [
             '<c:button dim="height:100" flex="align-items:center justify-content:center" open="${id}">',
@@ -55,7 +55,8 @@ async function controlSearch () {
             '</c:button>'
           ]
           return [await wmpa.createComponent(body)]
-        },
+        }
+      `, `
         async ${prefix}Populate () {
           const feeds = await ${this.params.attr.feed}() ?? []
           feeds.unshift({ code: 'latLng', name: 'gotoLatLng', feed: { id: 'latLng', label: 'latLng' } })
@@ -66,7 +67,7 @@ async function controlSearch () {
           const html = this.$store.mapSearch.recent ?? ''
           wmpa.replaceWithComponentHtml(html, '#${id} .result div', 'div')
         }
-      `)
+      `])
       const ui = await this.component.buildSentence(`
         <div class="childmap maplibregl-ctrl-search">
           <c:modal id="${id}" size="lg" no-header no-center x-data="{
