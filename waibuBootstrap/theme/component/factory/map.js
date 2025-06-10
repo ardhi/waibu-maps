@@ -61,7 +61,7 @@ async function map () {
             ${reactiveBlock}
             async onMapLoad (evt) {
               ${(this.block.mapLoad ?? []).join('\n')}
-              this.onMapStyle()
+              // this.onMapStyle()
             },
             async onMapStyle () {
               map.setProjection(projection)
@@ -103,6 +103,10 @@ async function map () {
               })
               map.on('styleimagemissing', this.onMissingImage.bind(this))
               map.on('load', this.onMapLoad.bind(this))
+              // TODO: sometimes onLoad isn't called, hence these next lines...
+              setTimeout(() => {
+                this.onMapStyle()
+              }, 2000)
             }
           }
         })

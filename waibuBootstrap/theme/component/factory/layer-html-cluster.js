@@ -85,7 +85,7 @@ async function layerHtmlCluster () {
         extra.push(`${key}: ['+', ['case', this.filter.${key}, 1, 0]],`)
       }
       extra.push('}')
-      this.addBlock('mapLoad', `
+      this.addBlock('mapStyle', `
         ${buildSource.call(this, this.params, extra)}
         map.addLayer(
           ${createLayerCircle.call(this, this.params, filters)}

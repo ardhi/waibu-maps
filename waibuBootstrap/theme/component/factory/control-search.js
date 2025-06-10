@@ -44,7 +44,7 @@ async function controlSearch () {
           el.disabled = !!val
         })
       `)
-      this.addBlock('mapLoad', `
+      this.addBlock('mapStyle', `
         await this.${prefix}Populate()
       `)
       this.addBlock('reactive', `
