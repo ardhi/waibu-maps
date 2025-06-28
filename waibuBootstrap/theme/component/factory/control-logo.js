@@ -23,7 +23,7 @@ async function controlLogo () {
       img.opacity = parseFloat(img.opacity) || 0.3
       let logo = 'waibu'
       let logoAlt
-      const files = await fastGlob(`${this.plugin.app.main.dir.pkg}/plugin/logo.*`)
+      const files = await fastGlob(`${this.plugin.app.main.dir.pkg}/logo.*`)
       if (files.length > 0) {
         const dir = path.dirname(files[0])
         const ext = path.extname(files[0])
