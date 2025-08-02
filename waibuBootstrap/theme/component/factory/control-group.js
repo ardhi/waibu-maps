@@ -55,7 +55,7 @@ async function controlGroup () {
           if (!menu) return
           if (menu.children.length > 0) return
           const setting = el.getAttribute('setting') ? ('setting="' + el.getAttribute('setting') + '"') : ''
-          await wmpa.addComponent('<c:' + el.getAttribute('component') + ' ' + setting + ' />', menu)
+          await wmpa.addComponent('<c:' + el.getAttribute('component') + ' ' + setting + ' />', menu, null, true)
         }
       `, `
         async ${prefix}Builder (params) {

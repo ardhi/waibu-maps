@@ -7,6 +7,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     this.markers = {}
     this.markersOnScreen = {}
     this.popup = null
+    this.iconPrefix = '<%= iconPrefix %>'
   }
 
   handleClusterClick = async (layerId, clusterId = 'cluster_id') => {
@@ -138,6 +139,13 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     if (this.map.listImages().includes(src.name)) return
     const image = await this.map.loadImage(src.id)
     this.map.addImage(src.name, image.data)
+  }
+
+  loadIcon = async (icon) => {
+    if (this.map.listImages().includes(icon)) return
+    const href = this.iconPrefix + icon.split(':')[1]
+    const image = await this.map.loadImage(href)
+    if (!this.map.listImages().includes(icon)) this.map.addImage(icon, image.data)
   }
 
   loadImages = async (sources, fetch = true) => {
