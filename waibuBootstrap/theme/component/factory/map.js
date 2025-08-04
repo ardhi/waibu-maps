@@ -68,6 +68,7 @@ async function map () {
               ${(this.block.mapStyle ?? []).join('\n')}
             },
             async onMissingImage (evt) {
+              if (evt.id.startsWith('icon:')) await wmaps.loadIcon(evt.id)
               ${(this.block.missingImage ?? []).join('\n')}
             },
             onLayerVisibility (layerId, shown) {
