@@ -118,6 +118,7 @@ async function map () {
           measure: Alpine.$persist('nautical').as('mapMeasure'),
           zoomScrollCenter: Alpine.$persist(false).as('mapZoomScrollCenter'),
           noMapRotate: Alpine.$persist(false).as('mapNoMapRotate'),
+          hideCompass: Alpine.$persist(false).as('mapHideCompass'),
           center: Alpine.$persist(null).as('mapCenter'),
           zoom: Alpine.$persist(null).as('mapZoom'),
           bearing: Alpine.$persist(null).as('mapBearing'),

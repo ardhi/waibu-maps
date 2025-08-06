@@ -11,7 +11,7 @@ async function controlNavigation () {
 
     build = async () => {
       const { jsonStringify } = this.plugin.app.waibuMpa
-      const opts = { showCompass: false }
+      const opts = { showCompass: true }
       if (this.params.attr.compass) opts.showCompass = true
       if (this.params.attr.noZoom) opts.showZoom = false
       if (this.params.attr.visualizePitch) opts.visualizePitch = true
@@ -19,7 +19,15 @@ async function controlNavigation () {
       opts.classGroup = true
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'
       this.addBlock('control', `
-        await wmaps.createControlNative('NavigationControl', ${jsonStringify(opts, true)})
+        const navOpts = ${jsonStringify(opts, true)}
+        if (Alpine.store('map').noMapRotate) {
+          map.dragRotate.disable()
+          map.touchZoomRotate.disableRotation()
+          navOpts.showCompass = false
+        } else {
+          if (Alpine.store('map').hideCompass) navOpts.showCompass = false
+        }
+        await wmaps.createControlNative('NavigationControl', navOpts)
       `)
       this.params.html = this.writeBlock()
     }
