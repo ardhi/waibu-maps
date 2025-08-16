@@ -13,8 +13,15 @@ async function factory (pkgName) {
         mapOptions: {
           center: [106.8229, -6.1944],
           zoom: 7
+        },
+        waibuAdmin: {
+          modelDisabled: []
         }
       }
+    }
+
+    init = async () => {
+      if (this.app.sumbaMaps) this.config.waibuAdmin.modelDisabled.push('icon')
     }
   }
 }
