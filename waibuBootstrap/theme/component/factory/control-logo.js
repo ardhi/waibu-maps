@@ -41,7 +41,7 @@ async function controlLogo () {
       }
       this.addBlock('reactive', `
         async ${prefix}Builder () {
-          const body = ['<c:a href="#" @click="wbs.appLauncher(\\'fullscreen darkmode language\\', \\'${this.params.attr.menu}\\')">']
+          const body = ['<c:a href="#" @click="wbs.appLauncher(\\'darkmode language\\', \\'${this.params.attr.menu}\\')">']
           body.push('<c:img ${attribsStringify(img)} ${animate} />')
           body.push('</c:a>')
           return await wmpa.createComponent(body)
