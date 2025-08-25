@@ -1,9 +1,9 @@
 import wmapsBase from '../wmaps-base.js'
 
 async function modalMisc () {
-  const SmapsBase = await wmapsBase.call(this)
+  const WmapsBase = await wmapsBase.call(this)
 
-  return class SmapsModalMisc extends SmapsBase {
+  return class WmapsModalMisc extends WmapsBase {
     constructor (options) {
       super(options)
       this.params.noTag = true

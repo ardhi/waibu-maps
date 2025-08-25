@@ -1,11 +1,12 @@
 async function factory (pkgName) {
   const me = this
 
-  return class WaibuMaps extends this.lib.Plugin {
+  class WaibuMaps extends this.lib.Plugin {
+    static alias = 'wmaps'
+    static dependencies = ['bajo-spatial']
+
     constructor () {
       super(pkgName, me.app)
-      this.alias = 'wmaps'
-      this.dependencies = ['bajo-spatial']
       this.config = {
         waibu: {
           prefix: 'wmaps'
@@ -24,6 +25,8 @@ async function factory (pkgName) {
       if (this.app.sumbaMaps) this.config.waibuAdmin.modelDisabled.push('icon')
     }
   }
+
+  return WaibuMaps
 }
 
 export default factory
