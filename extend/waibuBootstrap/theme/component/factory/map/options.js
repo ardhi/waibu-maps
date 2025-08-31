@@ -10,7 +10,7 @@ export const opts = {
 }
 
 async function options (params = {}) {
-  const { camelCase, isString } = this.plugin.app.bajo.lib._
+  const { camelCase, isString } = this.app.lib._
   const { attrToArray } = this.plugin.app.waibuMpa
   const { routePath } = this.plugin.app.waibu
   const mapOpts = this.plugin.app.waibuMaps.getConfig().mapOptions

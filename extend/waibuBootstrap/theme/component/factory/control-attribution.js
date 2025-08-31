@@ -11,7 +11,7 @@ async function controlAttribution () {
 
     build = async () => {
       const { jsonStringify } = this.plugin.app.waibuMpa
-      const { isString } = this.plugin.app.bajo.lib._
+      const { isString } = this.app.lib._
       const opts = {
         compact: !this.params.attr.noCompact
       }

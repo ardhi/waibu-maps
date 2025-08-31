@@ -4,7 +4,7 @@ const wmaps = {
   url: '/wmaps.js',
   method: 'GET',
   handler: async function (req, reply) {
-    const { get } = this.lib._
+    const { get } = this.app.lib._
     const { routePath } = this.app.waibu
     const glyphs = routePath(glyphUrl, { uriEncoded: false })
     const assetPrefix = get(this, 'app.waibuStatic.config.waibu.prefix')

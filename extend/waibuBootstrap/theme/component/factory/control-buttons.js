@@ -23,7 +23,7 @@ async function controlButtons () {
       const { generateId } = this.plugin.app.bajo
       const { routePath } = this.plugin.app.waibu
       const { jsonStringify } = this.plugin.app.waibuMpa
-      const { isEmpty, isString, pick, camelCase } = this.plugin.app.bajo.lib._
+      const { isEmpty, isString, pick, camelCase } = this.app.lib._
       const { $ } = this.component
       const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-right'
       const items = []

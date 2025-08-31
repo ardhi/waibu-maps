@@ -11,7 +11,7 @@ async function controlGeolocate () {
 
     build = async () => {
       const { jsonStringify } = this.plugin.app.waibuMpa
-      const { set } = this.plugin.app.bajo.lib._
+      const { set } = this.app.lib._
       const opts = {}
       if (this.params.attr.highAccuracy) set(opts, 'positionOptions.enableHighAccuracy', true)
       if (this.params.attr.trackUserLocation) opts.trackUserLocation = true

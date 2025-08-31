@@ -13,8 +13,8 @@ async function controlGroupMenu () {
 
     build = async () => {
       const { $ } = this.component
-      const { fastGlob } = this.plugin.app.bajo.lib
-      const { isString } = this.plugin.app.bajo.lib._
+      const { fastGlob } = this.app.lib
+      const { isString } = this.app.lib._
       const { routePath } = this.plugin.app.waibu
       let icon
       let image = ''

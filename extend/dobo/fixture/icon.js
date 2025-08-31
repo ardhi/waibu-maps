@@ -1,7 +1,7 @@
 import path from 'path'
 
 async function icon () {
-  const { map } = this.lib._
+  const { map } = this.app.lib._
   if (!this.app.waibuStatic) return []
   const icons = await this.app.waibuStatic.listResources(`${this.name}.asset:/icon`)
   return map(icons, icon => {

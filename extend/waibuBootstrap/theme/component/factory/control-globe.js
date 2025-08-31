@@ -11,7 +11,7 @@ async function controlGlobe () {
 
     build = async () => {
       const { jsonStringify } = this.plugin.app.waibuMpa
-      const { isString } = this.plugin.app.bajo.lib._
+      const { isString } = this.app.lib._
       const opts = {}
       if (isString(this.params.attr.container)) opts.container = this.params.attr.container
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'

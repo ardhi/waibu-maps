@@ -1,7 +1,7 @@
 import wmapsBase from '../wmaps-base.js'
 
 export function buildLayers (params) {
-  const { isString, map } = this.plugin.app.bajo.lib._
+  const { isString, map } = this.app.lib._
   const { routePath } = this.plugin.app.waibu
   const { attrToArray, jsonStringify } = this.plugin.app.waibuMpa
 
@@ -17,7 +17,7 @@ export function buildLayers (params) {
 }
 
 export function buildImage (params) {
-  const { isString, map } = this.plugin.app.bajo.lib._
+  const { isString, map } = this.app.lib._
   const { routePath } = this.plugin.app.waibu
   const { attrToArray, jsonStringify } = this.plugin.app.waibuMpa
 
@@ -35,7 +35,7 @@ export function buildImage (params) {
 }
 
 export async function buildSrcImages (params) {
-  const { isString } = this.plugin.app.bajo.lib._
+  const { isString } = this.app.lib._
   const { routePath, fetch } = this.plugin.app.waibu
 
   if (!isString(params.attr.srcImages)) return
@@ -77,7 +77,7 @@ async function layerGeojson () {
 
     build = async () => {
       const { generateId } = this.plugin.app.bajo
-      const { isString } = this.plugin.app.bajo.lib._
+      const { isString } = this.app.lib._
       const { groupAttrs } = this.plugin.app.waibuMpa
       this.params.noTag = true
       if (!this.params.attr.src) return

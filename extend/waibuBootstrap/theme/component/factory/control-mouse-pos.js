@@ -14,7 +14,7 @@ async function controlMousePos () {
     build = async () => {
       const { generateId } = this.plugin.app.bajo
       const { jsonStringify, minify } = this.plugin.app.waibuMpa
-      const { has, omit } = this.plugin.app.bajo.lib._
+      const { has, omit } = this.app.lib._
       const options = omit(this.params.attr, ['octag', 'class', 'style', 'content'])
       options.class = prefix + ' maplibregl-ctrl-group widget'
       const id = generateId('alpha')

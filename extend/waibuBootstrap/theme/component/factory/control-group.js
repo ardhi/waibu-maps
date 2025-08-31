@@ -13,7 +13,7 @@ async function controlGroup () {
     build = async () => {
       const { generateId } = this.plugin.app.bajo
       const { jsonStringify, minify } = this.plugin.app.waibuMpa
-      const { isString, trim } = this.plugin.app.bajo.lib._
+      const { isString, trim } = this.app.lib._
       const { $ } = this.component
       const tpl = await this.component.buildSentence(this.loadTemplate('waibuMaps.partial:/menu.html', { escape: true }), {}, { minify: true })
       const id = isString(this.params.attr.id) ? this.params.attr.id : generateId('alpha')

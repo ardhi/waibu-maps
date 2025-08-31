@@ -67,7 +67,7 @@ async function layerHtmlCluster () {
       const { generateId } = this.plugin.app.bajo
       const { attrToArray, jsonStringify } = this.plugin.app.waibuMpa
       const { fetch, routePath } = this.plugin.app.waibu
-      const { isString } = this.plugin.app.bajo.lib._
+      const { isString } = this.app.lib._
       if (!this.params.attr.src) return
       this.params.attr.name = this.params.attr.name ?? generateId('alpha')
       this.params.attr.valueKey = this.params.attr.valueKey ?? ''

@@ -13,7 +13,7 @@ async function controlLogo () {
     }
 
     build = async () => {
-      const { fs, fastGlob } = this.plugin.app.bajo.lib
+      const { fs, fastGlob } = this.app.lib
       const { routePath } = this.plugin.app.waibu
       const { jsonStringify, groupAttrs, attribsStringify } = this.plugin.app.waibuMpa
       const opts = { class: prefix }

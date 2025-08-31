@@ -12,7 +12,7 @@ async function controlSearch () {
 
     build = async () => {
       const { generateId } = this.plugin.app.bajo
-      const { isString } = this.plugin.app.bajo.lib._
+      const { isString } = this.app.lib._
       const { jsonStringify } = this.plugin.app.waibuMpa
       const id = isString(this.params.attr.id) ? this.params.attr.id : generateId('alpha')
       const opts = {}

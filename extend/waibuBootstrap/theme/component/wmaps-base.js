@@ -16,7 +16,7 @@ async function wmapsBase () {
       'centerpos', 'fullscreen-control', 'geolocate-control', 'czbp', 'cmp']
 
     async getWmapsTemplate (html, type, defEmpty = '') {
-      const { trim, isEmpty } = this.plugin.app.bajo.lib._
+      const { trim, isEmpty } = this.app.lib._
       const { minify } = this.plugin.app.waibuMpa
       const { $ } = this.component
       let tpl = trim($(`<div>${html}</div>`).find(`wmaps-template[type="${type}"]`).prop('innerHTML'))

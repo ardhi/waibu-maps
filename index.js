@@ -1,7 +1,7 @@
 async function factory (pkgName) {
   const me = this
 
-  class WaibuMaps extends this.lib.Plugin {
+  class WaibuMaps extends this.app.pluginClass.base {
     static alias = 'wmaps'
     static dependencies = ['bajo-spatial']
 

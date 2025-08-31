@@ -17,7 +17,7 @@ async function controlCenterPosition () {
 
     constructor (options) {
       super(options)
-      const { camelCase } = this.plugin.lib._
+      const { camelCase } = this.app.lib._
       this.params.noTag = true
       this.params.html = `<div class="childmap maplibregl-ctrl-centerpos" x-data>
         <div x-show="$store.mapCtrl ? $store.mapCtrl.${camelCase(storeKey)} : true"></div>

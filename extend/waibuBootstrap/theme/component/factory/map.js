@@ -21,7 +21,7 @@ async function map () {
 
     build = async () => {
       const { generateId } = this.plugin.app.bajo
-      const { without, omit, isString } = this.plugin.app.bajo.lib._
+      const { without, omit, isString } = this.app.lib._
       const { jsonStringify } = this.plugin.app.waibuMpa
       const { $ } = this.component
 

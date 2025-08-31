@@ -11,7 +11,7 @@ async function controlScale () {
 
     build = async () => {
       const { jsonStringify } = this.plugin.app.waibuMpa
-      const { isString } = this.plugin.app.bajo.lib._
+      const { isString } = this.app.lib._
       const opts = {}
       if (['imperial', 'metric', 'nautical'].includes(this.params.attr.unit)) opts.unit = this.params.attr.unit
       if (isString(this.params.attr.maxWidth) && Number(this.params.attr.maxWidth)) opts.maxWidth = Number(this.params.attr.maxWidth)

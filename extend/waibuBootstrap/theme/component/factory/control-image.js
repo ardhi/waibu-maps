@@ -13,7 +13,7 @@ async function controlImage () {
     build = async () => {
       const { routePath } = this.plugin.app.waibu
       const { jsonStringify, groupAttrs, attribsStringify } = this.plugin.app.waibuMpa
-      const { isString, isEmpty } = this.plugin.app.bajo.lib._
+      const { isString, isEmpty } = this.app.lib._
       const opts = {}
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
       const group = groupAttrs(this.params.attr, ['img'])
