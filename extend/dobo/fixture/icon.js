@@ -3,7 +3,7 @@ import path from 'path'
 async function icon () {
   const { map } = this.app.lib._
   if (!this.app.waibuStatic) return []
-  const icons = await this.app.waibuStatic.listResources(`${this.name}.asset:/icon`)
+  const icons = await this.app.waibuStatic.listResources(`${this.ns}.asset:/icon`)
   return map(icons, icon => {
     const base = path.basename(icon.href)
     const dir = path.dirname(icon.href)
