@@ -10,7 +10,7 @@ async function controlScale () {
     }
 
     build = async () => {
-      const { jsonStringify } = this.plugin.app.waibuMpa
+      const { jsonStringify } = this.app.waibuMpa
       const { isString } = this.app.lib._
       const opts = {}
       if (['imperial', 'metric', 'nautical'].includes(this.params.attr.unit)) opts.unit = this.params.attr.unit

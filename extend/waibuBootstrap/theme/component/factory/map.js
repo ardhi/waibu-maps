@@ -20,9 +20,9 @@ async function map () {
     }
 
     build = async () => {
-      const { generateId } = this.plugin.app.bajo
+      const { generateId } = this.app.lib.aneka
       const { without, omit, isString } = this.app.lib._
-      const { jsonStringify } = this.plugin.app.waibuMpa
+      const { jsonStringify } = this.app.waibuMpa
       const { $ } = this.component
 
       this.params.attr.id = 'map' + (isString(this.params.attr.id) ? this.params.attr.id : generateId('alpha'))

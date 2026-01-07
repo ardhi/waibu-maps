@@ -15,7 +15,7 @@ async function controlGroupMenu () {
       const { $ } = this.component
       const { fastGlob } = this.app.lib
       const { isString } = this.app.lib._
-      const { routePath } = this.plugin.app.waibu
+      const { routePath } = this.app.waibu
       let icon
       let image = ''
       const items = []
@@ -26,7 +26,7 @@ async function controlGroupMenu () {
       if (isString(this.params.attr.image)) {
         if (this.params.attr.image === 'logo') {
           let logo = 'waibu'
-          const files = await fastGlob(`${this.plugin.app.main.dir.pkg}/extend/bajo/logo.*`)
+          const files = await fastGlob(`${this.app.main.dir.pkg}/extend/bajo/logo.*`)
           if (files.length > 0) logo = 'main'
           image = routePath(`waibuMpa:/logo/${logo}`)
         } else image = routePath(this.params.attr.image)

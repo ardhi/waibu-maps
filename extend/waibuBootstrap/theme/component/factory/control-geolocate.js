@@ -10,7 +10,7 @@ async function controlGeolocate () {
     }
 
     build = async () => {
-      const { jsonStringify } = this.plugin.app.waibuMpa
+      const { jsonStringify } = this.app.waibuMpa
       const { set } = this.app.lib._
       const opts = {}
       if (this.params.attr.highAccuracy) set(opts, 'positionOptions.enableHighAccuracy', true)

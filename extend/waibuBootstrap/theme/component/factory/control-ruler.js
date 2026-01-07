@@ -21,8 +21,8 @@ async function controlRuler () {
     }
 
     build = async () => {
-      const { routePath } = this.plugin.app.waibu
-      const { jsonStringify } = this.plugin.app.waibuMpa
+      const { routePath } = this.app.waibu
+      const { jsonStringify } = this.app.waibuMpa
       const pos = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'bottom-right'
       const opts = {
         imageUrl: routePath('waibuMaps.asset:/image/ruler.svg')

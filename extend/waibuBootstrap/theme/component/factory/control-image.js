@@ -11,8 +11,8 @@ async function controlImage () {
     }
 
     build = async () => {
-      const { routePath } = this.plugin.app.waibu
-      const { jsonStringify, groupAttrs, attribsStringify } = this.plugin.app.waibuMpa
+      const { routePath } = this.app.waibu
+      const { jsonStringify, groupAttrs, stringifyAttribs } = this.app.waibuMpa
       const { isString, isEmpty } = this.app.lib._
       const opts = {}
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
@@ -24,7 +24,7 @@ async function controlImage () {
       if (this.params.attr.noAnimate) animate = ''
       this.addBlock('reactive', `
         async ${prefix}Builder () {
-          const body = ['<c:${url ? `a url="${url}"` : 'div'}><c:img ${attribsStringify(img)} ']
+          const body = ['<c:${url ? `a url="${url}"` : 'div'}><c:img ${stringifyAttribs(img)} ']
           body.push('${animate}')
           body.push('/></c:${url ? 'a' : 'div'}>')
           return await wmpa.createComponent(body)

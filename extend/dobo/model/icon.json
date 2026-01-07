@@ -1,0 +1,7 @@
+{
+  "connection": "memory",
+  "properties": [
+    "id,,255,primary,true",
+    "name,,255,true"
+  ]
+}

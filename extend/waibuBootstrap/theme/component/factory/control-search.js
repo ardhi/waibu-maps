@@ -11,9 +11,9 @@ async function controlSearch () {
     }
 
     build = async () => {
-      const { generateId } = this.plugin.app.bajo
+      const { generateId } = this.app.lib.aneka
       const { isString } = this.app.lib._
-      const { jsonStringify } = this.plugin.app.waibuMpa
+      const { jsonStringify } = this.app.waibuMpa
       const id = isString(this.params.attr.id) ? this.params.attr.id : generateId('alpha')
       const opts = {}
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'

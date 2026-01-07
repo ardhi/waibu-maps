@@ -17,7 +17,7 @@ async function wmapsBase () {
 
     async getWmapsTemplate (html, type, defEmpty = '') {
       const { trim, isEmpty } = this.app.lib._
-      const { minify } = this.plugin.app.waibuMpa
+      const { minify } = this.app.waibuMpa
       const { $ } = this.component
       let tpl = trim($(`<div>${html}</div>`).find(`wmaps-template[type="${type}"]`).prop('innerHTML'))
       if (isEmpty(tpl)) {

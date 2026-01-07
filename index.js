@@ -12,7 +12,7 @@ async function factory (pkgName) {
    *
    * @class
    */
-  class WaibuMaps extends this.app.pluginClass.base {
+  class WaibuMaps extends this.app.baseClass.Base {
     static alias = 'wmaps'
     static dependencies = ['bajo-spatial']
 

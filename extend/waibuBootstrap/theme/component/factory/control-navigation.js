@@ -10,7 +10,7 @@ async function controlNavigation () {
     }
 
     build = async () => {
-      const { jsonStringify } = this.plugin.app.waibuMpa
+      const { jsonStringify } = this.app.waibuMpa
       const opts = { showCompass: true }
       if (this.params.attr.compass) opts.showCompass = true
       if (this.params.attr.noZoom) opts.showZoom = false

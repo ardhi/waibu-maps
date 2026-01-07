@@ -10,7 +10,7 @@ async function controlFullscreen () {
     }
 
     build = async () => {
-      const { jsonStringify } = this.plugin.app.waibuMpa
+      const { jsonStringify } = this.app.waibuMpa
       const { isString } = this.app.lib._
       const opts = {}
       if (isString(this.params.attr.container)) opts.container = this.params.attr.container

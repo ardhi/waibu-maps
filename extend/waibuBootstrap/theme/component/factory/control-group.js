@@ -11,8 +11,8 @@ async function controlGroup () {
     }
 
     build = async () => {
-      const { generateId } = this.plugin.app.bajo
-      const { jsonStringify, minify } = this.plugin.app.waibuMpa
+      const { generateId } = this.app.lib.aneka
+      const { jsonStringify, minify } = this.app.waibuMpa
       const { isString, trim } = this.app.lib._
       const { $ } = this.component
       const tpl = await this.component.buildSentence(this.loadTemplate('waibuMaps.partial:/menu.html', { escape: true }), {}, { minify: true })

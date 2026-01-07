@@ -14,8 +14,8 @@ async function controlLogo () {
 
     build = async () => {
       const { fs, fastGlob } = this.app.lib
-      const { routePath } = this.plugin.app.waibu
-      const { jsonStringify, groupAttrs, attribsStringify } = this.plugin.app.waibuMpa
+      const { routePath } = this.app.waibu
+      const { jsonStringify, groupAttrs, stringifyAttribs } = this.app.waibuMpa
       const opts = { class: prefix }
       opts.position = this.ctrlPos.includes(this.params.attr.position) ? this.params.attr.position : 'top-left'
       const group = groupAttrs(this.params.attr, ['img'])
@@ -23,7 +23,7 @@ async function controlLogo () {
       img.opacity = parseFloat(img.opacity) || 0.3
       let logo = 'waibu'
       let logoAlt
-      const files = await fastGlob(`${this.plugin.app.main.dir.pkg}/logo.*`)
+      const files = await fastGlob(`${this.app.main.dir.pkg}/logo.*`)
       if (files.length > 0) {
         const dir = path.dirname(files[0])
         const ext = path.extname(files[0])
@@ -42,7 +42,7 @@ async function controlLogo () {
       this.addBlock('reactive', `
         async ${prefix}Builder () {
           const body = ['<c:a href="#" @click="wbs.appLauncher(\\'darkmode language\\', \\'${this.params.attr.menu}\\')">']
-          body.push('<c:img ${attribsStringify(img)} ${animate} />')
+          body.push('<c:img ${stringifyAttribs(img)} ${animate} />')
           body.push('</c:a>')
           return await wmpa.createComponent(body)
         }

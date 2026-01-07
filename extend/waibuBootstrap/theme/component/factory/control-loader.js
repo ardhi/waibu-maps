@@ -10,7 +10,7 @@ async function controlLoader () {
     }
 
     build = async () => {
-      const { groupAttrs, attribsStringify } = this.plugin.app.waibuMpa
+      const { groupAttrs, stringifyAttribs } = this.app.waibuMpa
       const group = groupAttrs(this.params.attr, ['progress'])
       const attr = group.progress ?? {}
       attr.value = '100'
@@ -18,7 +18,7 @@ async function controlLoader () {
       if (!attr.height) attr.height = 3
       if (!attr.background) attr.background = 'color:danger'
       this.params.html = await this.component.buildSentence(`<c:div class="childmap maplibregl-ctrl-loader">
-        <c:progress ${attribsStringify(attr)} x-show="$store.wmpa.loading"/>
+        <c:progress ${stringifyAttribs(attr)} x-show="$store.wmpa.loading"/>
       </c:div>`)
     }
   }

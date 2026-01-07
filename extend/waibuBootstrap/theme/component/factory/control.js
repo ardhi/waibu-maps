@@ -11,7 +11,7 @@ async function control () {
     }
 
     build = async () => {
-      const { jsonStringify } = this.plugin.app.waibuMpa
+      const { jsonStringify } = this.app.waibuMpa
       const { $ } = this.component
       const html = []
       $(`<div>${this.params.html}</div>`).find('.childmap').each(function () {

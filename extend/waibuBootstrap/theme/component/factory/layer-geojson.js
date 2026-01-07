@@ -2,8 +2,8 @@ import wmapsBase from '../wmaps-base.js'
 
 export function buildLayers (params) {
   const { isString, map } = this.app.lib._
-  const { routePath } = this.plugin.app.waibu
-  const { attrToArray, jsonStringify } = this.plugin.app.waibuMpa
+  const { routePath } = this.app.waibu
+  const { attrToArray, jsonStringify } = this.app.waibuMpa
 
   if (!isString(params.attr.layer)) return ''
   const items = map(attrToArray(params.attr.layer), item => routePath(item))
@@ -18,8 +18,8 @@ export function buildLayers (params) {
 
 export function buildImage (params) {
   const { isString, map } = this.app.lib._
-  const { routePath } = this.plugin.app.waibu
-  const { attrToArray, jsonStringify } = this.plugin.app.waibuMpa
+  const { routePath } = this.app.waibu
+  const { attrToArray, jsonStringify } = this.app.waibuMpa
 
   if (!isString(params.attr.image)) return ''
   const items = map(attrToArray(params.attr.image), item => routePath(item))
@@ -36,7 +36,7 @@ export function buildImage (params) {
 
 export async function buildSrcImages (params) {
   const { isString } = this.app.lib._
-  const { routePath, fetch } = this.plugin.app.waibu
+  const { routePath, fetch } = this.app.waibu
 
   if (!isString(params.attr.srcImages)) return
   params.attr.srcImages = routePath(params.attr.srcImages)
@@ -50,7 +50,7 @@ export async function buildSrcImages (params) {
 }
 
 export function buildSource (params, extra = []) {
-  const { routePath } = this.plugin.app.waibu
+  const { routePath } = this.app.waibu
   params.attr.src = routePath(params.attr.src)
   return `
     const rsc = await this.loadResource('${params.attr.src}')
@@ -76,9 +76,9 @@ async function layerGeojson () {
     }
 
     build = async () => {
-      const { generateId } = this.plugin.app.bajo
+      const { generateId } = this.app.lib.aneka
       const { isString } = this.app.lib._
-      const { groupAttrs } = this.plugin.app.waibuMpa
+      const { groupAttrs } = this.app.waibuMpa
       this.params.noTag = true
       if (!this.params.attr.src) return
       this.params.attr.name = this.params.attr.name ?? generateId('alpha')
