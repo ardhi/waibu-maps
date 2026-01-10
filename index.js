@@ -13,9 +13,6 @@ async function factory (pkgName) {
    * @class
    */
   class WaibuMaps extends this.app.baseClass.Base {
-    static alias = 'wmaps'
-    static dependencies = ['bajo-spatial']
-
     constructor () {
       super(pkgName, me.app)
       this.config = {

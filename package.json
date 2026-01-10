@@ -9,7 +9,11 @@
   },
   "type": "module",
   "bajo": {
-    "type": "plugin"
+    "type": "plugin",
+    "alias": "wmaps",
+    "dependencies": [
+      "bajo-spatial"
+    ]
   },
   "repository": {
     "type": "git",
