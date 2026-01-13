@@ -1,5 +1,5 @@
 async function wmapsBase () {
-  return class WmapsBase extends this.baseFactory {
+  return class WmapsBase extends this.app.baseClass.MpaWidget {
     static scripts = [...super.scripts,
       'waibuMaps.asset:/js/lib/worker-timers.js',
       'bajoSpatial.virtual:/geolib/lib/index.js',
