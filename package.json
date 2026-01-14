@@ -1,6 +1,6 @@
 {
   "name": "waibu-maps",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Maps for Waibu MPA",
   "main": "index.js",
   "scripts": {
@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/ardhi/waibu-maps#readme",
   "dependencies": {
-    "maplibre-gl": "^5.15.0"
+    "maplibre-gl": "^5.16.0"
   },
   "devDependencies": {
     "clean-jsdoc-theme": "^4.3.0",
