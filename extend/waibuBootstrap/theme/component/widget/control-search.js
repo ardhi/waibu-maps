@@ -54,7 +54,7 @@ async function controlSearch () {
             '<c:icon name="search" />',
             '</c:button>'
           ]
-          return [await wmpa.createComponent(body)]
+          return [await wmpa.createComponent(body, null, { theme: '${this.component.theme.name}', iconset: '${this.component.iconset.name}' })]
         }
       `, `
         async ${prefix}Populate () {

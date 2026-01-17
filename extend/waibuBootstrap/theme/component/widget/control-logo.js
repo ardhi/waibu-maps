@@ -41,10 +41,10 @@ async function controlLogo () {
       }
       this.addBlock('reactive', `
         async ${prefix}Builder () {
-          const body = ['<c:a href="#" @click="wbs.appLauncher(\\'darkmode language\\', \\'${this.params.attr.menu}\\')">']
+          const body = ['<c:a href="#" @click="wbs.appLauncher(\\'darkmode language\\', \\'${this.params.attr.menu}\\', { theme: \\'${this.component.theme.name}\\', iconset: \\'${this.component.iconset.name}\\' })">']
           body.push('<c:img ${stringifyAttribs(img)} ${animate} />')
           body.push('</c:a>')
-          return await wmpa.createComponent(body)
+          return await wmpa.createComponent(body, null)
         }
       `)
 

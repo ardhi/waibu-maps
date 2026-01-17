@@ -54,7 +54,7 @@ async function controlZbp () {
             ' }',
             '}" />'
           ]
-          return await wmpa.createComponent(body)
+          return await wmpa.createComponent(body, null, { theme: '${this.component.theme.name}', iconset: '${this.component.iconset.name}' })
         }
       `])
 

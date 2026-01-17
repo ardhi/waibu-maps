@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-01-17
+
+- [2.1.3] Add capability to set custom theme & iconset through headers
+
 ## 2026-01-13
 
 - [2.1.1] Bug fix on waibuMpa's widgeting system

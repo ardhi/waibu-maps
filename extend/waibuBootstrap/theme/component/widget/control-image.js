@@ -27,7 +27,7 @@ async function controlImage () {
           const body = ['<c:${url ? `a url="${url}"` : 'div'}><c:img ${stringifyAttribs(img)} ']
           body.push('${animate}')
           body.push('/></c:${url ? 'a' : 'div'}>')
-          return await wmpa.createComponent(body)
+          return await wmpa.createComponent(body, null, { theme: '${this.component.theme.name}', iconset: '${this.component.iconset.name}' })
         }
       `)
 
