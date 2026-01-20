@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-01-20
+
+- [2.1.4] Bug fix on ```wmaps.createControl()```
+
 ## 2026-01-17
 
 - [2.1.3] Add capability to set custom theme & iconset through headers

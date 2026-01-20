@@ -166,7 +166,7 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     if (options.builder) {
       if (_.isArray(options.builder)) ctrl.panels = options.builder
       else if (_.isString(options.builder)) {
-        ctrl.panels = await wmpa.createComponent(options.builder)
+        ctrl.panels = await wmpa.createComponent(options.builder, undefined, options.opts)
       } else {
         const fn = options.builder.bind(ctrl.scope)
         ctrl.panels = await fn(options.params)
