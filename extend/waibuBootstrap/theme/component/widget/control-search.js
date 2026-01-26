@@ -61,7 +61,7 @@ async function controlSearch () {
           const feeds = await ${this.params.attr.feed}() ?? []
           feeds.unshift({ code: 'latLng', name: 'gotoLatLng', feed: { id: 'latLng', label: 'latLng' } })
           this.$store.mapSearch.feeds = feeds
-          const body = feeds.map(feed => '<c:dropdown-item :class="$store.mapSearch.feed === $el.getAttribute(\\'data-code-feedid\\') ? \\'active\\' : \\'\\'" data-code-feedid="' + feed.code + ':' + feed.feed.id + '" t:content="' + feed.feed.label + '" @click="$store.mapSearch.feed = \\'' + feed.code + ':' + feed.feed.id + '\\'"/>')
+          const body = feeds.map(feed => '<c:dropdown-item :class="$store.mapSearch.feed === $el.getAttribute(\\'data-code-feedid\\') ? \\'active\\' : \\'\\'" data-code-feedid="' + feed.code + ':' + feed.feed.id + '" t:content="' + _.camelCase(feed.code) + '" @click="$store.mapSearch.feed = \\'' + feed.code + ':' + feed.feed.id + '\\'"/>')
           await wmpa.addComponent(body, '#${id} .input-group .dropdown-menu', 'div', true, { theme: '${this.component.theme.name}', iconset: '${this.component.iconset.name}' })
           if (!this.$store.mapSearch.feed) this.$store.mapSearch.feed = feeds[0].code + ':' + feeds[0].feed.id
           const html = this.$store.mapSearch.recent ?? ''
@@ -78,7 +78,7 @@ async function controlSearch () {
             get feedName () {
               const [code, feedId] = (this.$store.mapSearch.feed ?? '').split(':')
               const item = _.find(this.$store.mapSearch.feeds, f => f.code === code && f.feed.id === feedId)
-              return item ? item.feed.label : feedId
+              return _.camelCase(item ? item.code : code)
             },
             search () {
               this.$store.mapSearch.value = this.$refs.input.value
