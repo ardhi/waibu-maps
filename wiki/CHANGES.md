@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-02-15
+
+- [2.1.6] Bug fix on ```<:wmaps-control-search />``` feed labeling
+
 ## 2026-01-20
 
 - [2.1.4] Bug fix on ```wmaps.createControl()```
