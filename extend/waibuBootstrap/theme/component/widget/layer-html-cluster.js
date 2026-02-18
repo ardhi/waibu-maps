@@ -65,8 +65,8 @@ async function layerHtmlCluster () {
 
     build = async () => {
       const { generateId } = this.app.lib.aneka
-      const { attrToArray, jsonStringify } = this.app.waibuMpa
-      const { fetch, routePath } = this.app.waibu
+      const { jsonStringify } = this.app.waibuMpa
+      const { fetch, routePath, attrToArray } = this.app.waibu
       const { isString } = this.app.lib._
       if (!this.params.attr.src) return
       this.params.attr.name = this.params.attr.name ?? generateId('alpha')

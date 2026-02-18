@@ -11,7 +11,7 @@ export const opts = {
 
 async function options (params = {}) {
   const { camelCase, isString } = this.app.lib._
-  const { attrToArray } = this.app.waibuMpa
+  const { attrToArray } = this.app.waibu
   const { routePath } = this.app.waibu
   const mapOpts = this.app.waibuMaps.getConfig().mapOptions
   mapOpts.container = params.attr.id

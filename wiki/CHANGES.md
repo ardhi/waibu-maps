@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-02-18
+
+- [2.2.0] Update attribute functions from ```waibu```
+
 ## 2026-02-15
 
 - [2.1.6] Bug fix on ```<:wmaps-control-search />``` feed labeling

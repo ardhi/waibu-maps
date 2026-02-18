@@ -2,8 +2,8 @@ import wmapsBase from '../wmaps-base.js'
 
 export function buildLayers (params) {
   const { isString, map } = this.app.lib._
-  const { routePath } = this.app.waibu
-  const { attrToArray, jsonStringify } = this.app.waibuMpa
+  const { routePath, attrToArray } = this.app.waibu
+  const { jsonStringify } = this.app.waibuMpa
 
   if (!isString(params.attr.layer)) return ''
   const items = map(attrToArray(params.attr.layer), item => routePath(item))
@@ -18,8 +18,8 @@ export function buildLayers (params) {
 
 export function buildImage (params) {
   const { isString, map } = this.app.lib._
-  const { routePath } = this.app.waibu
-  const { attrToArray, jsonStringify } = this.app.waibuMpa
+  const { routePath, attrToArray } = this.app.waibu
+  const { jsonStringify } = this.app.waibuMpa
 
   if (!isString(params.attr.image)) return ''
   const items = map(attrToArray(params.attr.image), item => routePath(item))
