@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-02-25
+
+- [2.2.1] Bug fix on ```wmaps.loadIcon()```
+
 ## 2026-02-18
 
 - [2.2.0] Update attribute functions from ```waibu```

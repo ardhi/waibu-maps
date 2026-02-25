@@ -141,9 +141,9 @@ class WaibuMaps { // eslint-disable-line no-unused-vars
     this.map.addImage(src.name, image.data)
   }
 
-  loadIcon = async (icon) => {
+  loadIcon = async (icon, prefix) => {
     if (this.map.listImages().includes(icon)) return
-    const href = this.iconPrefix + icon.split(':')[1]
+    const href = (prefix ?? this.iconPrefix) + icon.split(':')[1]
     const image = await this.map.loadImage(href)
     if (!this.map.listImages().includes(icon)) this.map.addImage(icon, image.data)
   }
