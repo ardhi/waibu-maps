@@ -34,7 +34,7 @@ async function controlSearch () {
             wbs.closeModal('${id}')
             this.$store.mapSearch.recent = ''
           }
-          wmpa.replaceWithComponentHtml(val, '#${id} .result div', 'div')
+          wmpa.replaceWithComponentHtml(val, { selector: '#${id} .result div', wrapper: 'div' })
         })
         this.$watch('$store.mapSearch.feed', async val => {
           this.$store.mapSearch.recent = ''
@@ -54,7 +54,7 @@ async function controlSearch () {
             '<c:icon name="search" />',
             '</c:button>'
           ]
-          return [await wmpa.createComponent(body, null, { theme: '${this.component.theme.name}', iconset: '${this.component.iconset.name}' })]
+          return [await wmpa.createComponent(body, { theme: '${this.component.theme.name}', iconset: '${this.component.iconset.name}' })]
         }
       `, `
         async ${prefix}Populate () {
@@ -62,10 +62,11 @@ async function controlSearch () {
           feeds.unshift({ code: 'latLng', name: 'gotoLatLng', feed: { id: 'latLng', cmpLabel: 'latLng' } })
           this.$store.mapSearch.feeds = feeds
           const body = feeds.map(feed => '<c:dropdown-item :class="$store.mapSearch.feed === $el.getAttribute(\\'data-code-feedid\\') ? \\'active\\' : \\'\\'" data-code-feedid="' + feed.code + ':' + feed.feed.id + '" t:content="' + feed.feed.cmpLabel + '" @click="$store.mapSearch.feed = \\'' + feed.code + ':' + feed.feed.id + '\\'"/>')
-          await wmpa.addComponent(body, '#${id} .input-group .dropdown-menu', 'div', true, { theme: '${this.component.theme.name}', iconset: '${this.component.iconset.name}' })
+          const options = { selector: '#${id} .input-group .dropdown-menu', wrapper: 'div', checkChild: true, theme: '${this.component.theme.name}', iconset: '${this.component.iconset.name}' }
+          await wmpa.addComponent(body, options)
           if (!this.$store.mapSearch.feed) this.$store.mapSearch.feed = feeds[0].code + ':' + feeds[0].feed.id
           const html = this.$store.mapSearch.recent ?? ''
-          wmpa.replaceWithComponentHtml(html, '#${id} .result div', 'div')
+          wmpa.replaceWithComponentHtml(html, { selector: '#${id} .result div', wrapper: 'div' })
         }
       `])
       const ui = await this.component.buildSentence(`
@@ -84,7 +85,7 @@ async function controlSearch () {
               this.$store.mapSearch.value = this.$refs.input.value
             },
             clearHistory () {
-              wmpa.replaceWithComponentHtml('', '#${id} .result div', 'div')
+              wmpa.replaceWithComponentHtml('', { selector: '#${id} .result div', wrapper: 'div' })
             },
             abort () {
               const endpoint = this.$store.mapSearch.busy

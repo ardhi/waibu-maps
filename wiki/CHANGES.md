@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-03-05
+
+- [2.2.2] Bug fix on ```wmpa``` component function parameters
+
 ## 2026-02-25
 
 - [2.2.1] Bug fix on ```wmaps.loadIcon()```
