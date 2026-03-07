@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-03-07
+
+- [2.2.3] Bug fix on map's search box
+
 ## 2026-03-05
 
 - [2.2.2] Bug fix on ```wmpa``` component function parameters
