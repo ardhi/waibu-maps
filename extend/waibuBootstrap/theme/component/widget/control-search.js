@@ -85,7 +85,7 @@ async function controlSearch () {
               this.$store.mapSearch.value = this.$refs.input.value
             },
             clearHistory () {
-              wmpa.replaceWithComponentHtml('', { selector: '#${id} .result div', wrapper: 'div' })
+              this.$store.mapSearch.recent = ''
             },
             abort () {
               const endpoint = this.$store.mapSearch.busy

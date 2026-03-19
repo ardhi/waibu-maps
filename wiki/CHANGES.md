@@ -1,5 +1,10 @@
 # Changes
 
+
+## 2026-03-19
+
+- [2.2.5] Bug fix in ```wmaps-control-search:clearHistory()``` widget
+
 ## 2026-03-15
 
 - [2.2.4] Bug fix in ```wmaps-control-logo``` widget
