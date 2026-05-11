@@ -1,5 +1,8 @@
 # Changes
 
+## 2026-05-11
+
+- [2.3.0] Updates to match ```dobo@2.23.0``` specs
 
 ## 2026-03-19
 

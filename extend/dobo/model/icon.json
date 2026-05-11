@@ -3,5 +3,9 @@
   "properties": [
     "id,,255,primary,true",
     "name,,255,true"
-  ]
+  ],
+  "options": {
+    "attachment": false,
+    "persistence": false
+  }
 }
