@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-05-22
+
+- [2.3.1] Bug fix in icon model schema
+
 ## 2026-05-11
 
 - [2.3.0] Updates to match ```dobo@2.23.0``` specs
