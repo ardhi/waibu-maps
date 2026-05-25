@@ -1,5 +1,11 @@
 # Changes
 
+## 2026-05-25
+
+- [2.4.0] Auto detect theme & iconset
+- [2.4.0] Bug fix in ```control-group``` widget
+- [2.4.0] Add ```noCacheReq``` to ```wmaps.js``` route
+
 ## 2026-05-22
 
 - [2.3.1] Bug fix in icon model schema

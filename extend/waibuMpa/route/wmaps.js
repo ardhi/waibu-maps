@@ -3,6 +3,7 @@ import { glyphUrl } from './default-style.js'
 const wmaps = {
   url: '/wmaps.js',
   method: 'GET',
+  noCacheReq: true,
   handler: async function (req, reply) {
     const { get } = this.app.lib._
     const { routePath } = this.app.waibu

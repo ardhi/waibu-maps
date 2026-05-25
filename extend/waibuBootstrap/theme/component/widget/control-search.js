@@ -54,7 +54,7 @@ async function controlSearch () {
             '<c:icon name="search" />',
             '</c:button>'
           ]
-          return [await wmpa.createComponent(body, { theme: '${this.component.theme.name}', iconset: '${this.component.iconset.name}' })]
+          return [await wmpa.createComponent(body)]
         }
       `, `
         async ${prefix}Populate () {
@@ -62,7 +62,7 @@ async function controlSearch () {
           feeds.unshift({ code: 'latLng', name: 'gotoLatLng', feed: { id: 'latLng', cmpLabel: 'latLng' } })
           this.$store.mapSearch.feeds = feeds
           const body = feeds.map(feed => '<c:dropdown-item :class="$store.mapSearch.feed === $el.getAttribute(\\'data-code-feedid\\') ? \\'active\\' : \\'\\'" data-code-feedid="' + feed.code + ':' + feed.feed.id + '" t:content="' + feed.feed.cmpLabel + '" @click="$store.mapSearch.feed = \\'' + feed.code + ':' + feed.feed.id + '\\'"/>')
-          const options = { selector: '#${id} .input-group .dropdown-menu', wrapper: 'div', checkChild: true, theme: '${this.component.theme.name}', iconset: '${this.component.iconset.name}' }
+          const options = { selector: '#${id} .input-group .dropdown-menu', wrapper: 'div', checkChild: true }
           await wmpa.addComponent(body, options)
           if (!this.$store.mapSearch.feed) this.$store.mapSearch.feed = feeds[0].code + ':' + feeds[0].feed.id
           const html = this.$store.mapSearch.recent ?? ''

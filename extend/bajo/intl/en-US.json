@@ -10,6 +10,7 @@
   "searchIn": "Search in",
   "clearHistory": "Clear History",
   "enterPhrase": "You need to enter a search phrase first",
+  "loading": "Loading...",
   "mapCtrl": {
     "csrc": "Search",
     "navigation-control": "Navigation",

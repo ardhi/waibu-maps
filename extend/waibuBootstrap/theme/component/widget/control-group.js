@@ -14,7 +14,7 @@ async function controlGroup () {
       const { generateId } = this.app.lib.aneka
       const { jsonStringify, minify } = this.app.waibuMpa
       const { isString, trim } = this.app.lib._
-      const { $ } = this.component
+      const { $, req } = this.component
       const tpl = await this.component.buildSentence(this.loadTemplate('waibuMaps.partial:/menu.html', { escape: true }), {}, { minify: true })
       const id = isString(this.params.attr.id) ? this.params.attr.id : generateId('alpha')
       const opts = {}
@@ -51,12 +51,12 @@ async function controlGroup () {
         async ${prefix}Trigger (evt) {
           const el = evt.target.closest('button')
           if (!el) return
-          const menu = el.querySelector('.dropdown-menu')
+          const menu = el.querySelector('.dropdown-menu .loading')
           if (!menu) return
           if (menu.children.length > 0) return
           const setting = el.getAttribute('setting') ? ('setting="' + el.getAttribute('setting') + '"') : ''
-          const options = { selector: menu, checkChild: true, theme: '${this.component.theme.name}', iconset: '${this.component.iconset.name}' }
-          await wmpa.addComponent('<c:' + el.getAttribute('component') + ' ' + setting + ' />', options)
+          const options = { selector: menu, checkChild: true }
+          await wmpa.replaceWithComponent('<c:' + el.getAttribute('component') + ' ' + setting + ' />', options)
         }
       `, `
         async ${prefix}Builder (params) {
@@ -69,7 +69,7 @@ async function controlGroup () {
               html: param.html
             }
             if (param.wrapper.includes('component=')) {
-              args.html = ''
+              args.html = '<div class="loading mx-2">${req.t('loading')}</div>'
               args.click = '${prefix}Trigger'
             }
             const wfn = _.template(param.wrapper)

@@ -12,6 +12,7 @@
   "searchIn": "Cari di",
   "clearHistory": "Hapus Jejak",
   "enterPhrase": "Anda harus memasukkan frase pencarian terlebih dahulu",
+  "loading": "Memuat...",
   "mapCtrl": {
     "csrc": "Cari",
     "navigation-control": "Navigasi",

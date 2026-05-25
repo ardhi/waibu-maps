@@ -56,8 +56,7 @@ async function controlMousePos () {
       `, `
         async ${prefix}Builder () {
           const body = '<c:div id="${id}" margin="x-2 top-1" text="align:center nowrap"/>'
-          const options = { theme: '${this.component.theme.name}', iconset: '${this.component.iconset.name}' }
-          return await wmpa.createComponent(body, options)
+          return await wmpa.createComponent(body)
         }
       `])
       this.addBlock('run', `
