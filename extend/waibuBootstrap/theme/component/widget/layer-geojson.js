@@ -1,28 +1,28 @@
 import wmapsBase from '../wmaps-base.js'
 
-export function buildLayers (params) {
+export function buildLayers () {
   const { isString, map } = this.app.lib._
   const { routePath, attrToArray } = this.app.waibu
   const { jsonStringify } = this.app.waibuMpa
 
-  if (!isString(params.attr.layer)) return ''
-  const items = map(attrToArray(params.attr.layer), item => routePath(item))
+  if (!isString(this.params.attr.layer)) return ''
+  const items = map(attrToArray(this.params.attr.layer), item => routePath(item))
   return `
     for (const l of ${jsonStringify(items, true)}) {
       const layer = await this.loadResource(l)
-      layer.source = '${params.attr.name}'
+      layer.source = '${this.params.attr.name}'
       map.addLayer(layer)
     }
   `
 }
 
-export function buildImage (params) {
+export function buildImage () {
   const { isString, map } = this.app.lib._
   const { routePath, attrToArray } = this.app.waibu
   const { jsonStringify } = this.app.waibuMpa
 
-  if (!isString(params.attr.image)) return ''
-  const items = map(attrToArray(params.attr.image), item => routePath(item))
+  if (!isString(this.params.attr.image)) return ''
+  const items = map(attrToArray(this.params.attr.image), item => routePath(item))
   return `
     for (const l of ${jsonStringify(items, true)}) {
       let [item, name] = l.split(';')
@@ -34,35 +34,35 @@ export function buildImage (params) {
   `
 }
 
-export async function buildSrcImages (params) {
+export async function buildSrcImages () {
   const { isString } = this.app.lib._
   const { routePath, fetch } = this.app.waibu
 
-  if (!isString(params.attr.srcImages)) return
-  params.attr.srcImages = routePath(params.attr.srcImages)
-  const items = await fetch(params.attr.srcImages)
+  if (!isString(this.params.attr.srcImages)) return
+  this.params.attr.srcImages = routePath(this.params.attr.srcImages)
+  const items = await fetch(this.params.attr.srcImages)
   const lines = []
   for (const key in items) {
     lines.push(`${items[key]};${key}`)
   }
-  params.attr.image = lines.join(' ')
-  return buildImage.call(this, params)
+  this.params.attr.image = lines.join(' ')
+  return buildImage.call(this)
 }
 
-export function buildSource (params, extra = []) {
+export function buildSource (extra = []) {
   const { routePath } = this.app.waibu
-  params.attr.src = routePath(params.attr.src)
+  this.params.attr.src = routePath(this.params.attr.src)
   return `
-    const rsc = await this.loadResource('${params.attr.src}')
+    const rsc = await this.loadResource('${this.params.attr.src}')
     let data = {}
     if (rsc.type === 'geojson' && rsc.data) data = rsc
     else {
       data.type = 'geojson'
       data.data = rsc
     }
-    ${params.attr.lineGradient ? 'data.lineMetrics = true' : ''}
+    ${this.params.attr.lineGradient ? 'data.lineMetrics = true' : ''}
     ${extra.join('\n')}
-    map.addSource('${params.attr.name}', data)
+    map.addSource('${this.params.attr.name}', data)
   `
 }
 
@@ -91,9 +91,9 @@ async function layerGeojson () {
       }
 
       this.addBlock('mapLoad', `
-        ${this.params.attr.srcImages ? (await buildSrcImages.call(this, this.params)) : buildImage.call(this, this.params)}
-        ${buildSource.call(this, this.params, cluster)}
-        ${buildLayers.call(this, this.params)}
+        ${this.params.attr.srcImages ? (await buildSrcImages.call(this)) : buildImage.call(this)}
+        ${buildSource.call(this, cluster)}
+        ${buildLayers.call(this)}
       `)
       this.params.html = this.writeBlock()
     }
