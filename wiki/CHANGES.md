@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-06-10
+
+- [2.5.0] Add secure routes declaration
+
 ## 2026-06-01
 
 - [2.4.1] Bug fix in ```wmaps-layer-geojson``` widget
