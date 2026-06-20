@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-06-20
+
+- [2.5.1] Bug fix in ```secure.json```
+
 ## 2026-06-10
 
 - [2.5.0] Add secure routes declaration
