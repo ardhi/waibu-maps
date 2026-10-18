@@ -1,0 +1,12 @@
+<c:div x-data="{
+  get imgSrc () {
+    let url = '<%= _routePath('dobo:/attachment/cms-post') %>/'
+    url += item.id + '/file/_first?notfound=true'
+    return url
+  }
+}">
+  <c:heading type="5"><%= item.title %></c:heading>
+  <c:div flex="justify-content:center" border="side:bottom">
+    <c:img :src="imgSrc" responsive style="max-height: 200px;"/>
+  </c:div>
+</c:div>

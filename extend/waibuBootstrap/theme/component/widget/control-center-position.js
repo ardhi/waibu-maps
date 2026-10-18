@@ -6,8 +6,7 @@ async function controlCenterPosition () {
 
   return class WmapsControlCenterPosition extends WmapsControl {
     static scripts = [
-      ...super.scripts,
-      'waibuMaps.asset:/js/control-center-position.js'
+      ...super.scripts
     ]
 
     static css = [

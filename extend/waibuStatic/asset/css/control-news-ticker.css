@@ -1,0 +1,8 @@
+.maplibregl-ctrl-newsticker {
+  z-index: 1000;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 600px;
+  bottom: 10px;
+}

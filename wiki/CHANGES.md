@@ -1,8 +1,12 @@
 # Changes
 
+## 2026-10-19
+
+- [2.6.0] Add `control-newsticker` widget
+
 ## 2026-06-20
 
-- [2.5.1] Bug fix in ```secure.json```
+- [2.5.1] Bug fix in `secure.json`
 
 ## 2026-06-10
 
@@ -10,13 +14,13 @@
 
 ## 2026-06-01
 
-- [2.4.1] Bug fix in ```wmaps-layer-geojson``` widget
+- [2.4.1] Bug fix in `wmaps-layer-geojson` widget
 
 ## 2026-05-25
 
 - [2.4.0] Auto detect theme & iconset
-- [2.4.0] Bug fix in ```control-group``` widget
-- [2.4.0] Add ```noCacheReq``` to ```wmaps.js``` route
+- [2.4.0] Bug fix in `control-group` widget
+- [2.4.0] Add `noCacheReq` to `wmaps.js` route
 
 ## 2026-05-22
 
@@ -24,15 +28,15 @@
 
 ## 2026-05-11
 
-- [2.3.0] Updates to match ```dobo@2.23.0``` specs
+- [2.3.0] Updates to match `dobo@2.23.0` specs
 
 ## 2026-03-19
 
-- [2.2.5] Bug fix in ```wmaps-control-search:clearHistory()``` widget
+- [2.2.5] Bug fix in `wmaps-control-search:clearHistory()` widget
 
 ## 2026-03-15
 
-- [2.2.4] Bug fix in ```wmaps-control-logo``` widget
+- [2.2.4] Bug fix in `wmaps-control-logo` widget
 
 ## 2026-03-07
 
@@ -40,23 +44,23 @@
 
 ## 2026-03-05
 
-- [2.2.2] Bug fix in ```wmpa``` component function parameters
+- [2.2.2] Bug fix in `wmpa` component function parameters
 
 ## 2026-02-25
 
-- [2.2.1] Bug fix in ```wmaps.loadIcon()```
+- [2.2.1] Bug fix in `wmaps.loadIcon()`
 
 ## 2026-02-18
 
-- [2.2.0] Update attribute functions from ```waibu```
+- [2.2.0] Update attribute functions from `waibu`
 
 ## 2026-02-15
 
-- [2.1.6] Bug fix in ```<:wmaps-control-search />``` feed labeling
+- [2.1.6] Bug fix in `<:wmaps-control-search />` feed labeling
 
 ## 2026-01-20
 
-- [2.1.4] Bug fix in ```wmaps.createControl()```
+- [2.1.4] Bug fix in `wmaps.createControl()`
 
 ## 2026-01-17
 
@@ -68,4 +72,4 @@
 
 ## 2026-01-07
 
-- [2.1.0] Ported to match ```bajo@2.2.x``` & ```dobo@2.2.x``` specs
+- [2.1.0] Ported to match `bajo@2.2.x` & `dobo@2.2.x` specs

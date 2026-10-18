@@ -13,7 +13,7 @@ async function wmapsBase () {
     ]
 
     static controls = ['csrc', 'navigation-control', 'crlr', 'scale-control', 'attribution-control',
-      'centerpos', 'fullscreen-control', 'geolocate-control', 'czbp', 'cmp']
+      'centerpos', 'fullscreen-control', 'geolocate-control', 'czbp', 'cmp', 'newsticker']
 
     async getWmapsTemplate (html, type, defEmpty = '') {
       const { trim, isEmpty } = this.app.lib._
