@@ -1,4 +1,8 @@
 async function wmapsBase () {
+  const controls = ['csrc', 'navigation-control', 'crlr', 'scale-control', 'attribution-control',
+    'centerpos', 'fullscreen-control', 'geolocate-control', 'czbp', 'cmp']
+  if (this.app.sumbaCms) controls.push('newsticker')
+
   return class WmapsBase extends this.app.baseClass.MpaWidget {
     static scripts = [...super.scripts,
       'waibuMaps.asset:/js/lib/worker-timers.js',
@@ -12,8 +16,7 @@ async function wmapsBase () {
       'waibuMaps.asset:/css/wmaps.css'
     ]
 
-    static controls = ['csrc', 'navigation-control', 'crlr', 'scale-control', 'attribution-control',
-      'centerpos', 'fullscreen-control', 'geolocate-control', 'czbp', 'cmp', 'newsticker']
+    static controls = controls
 
     async getWmapsTemplate (html, type, defEmpty = '') {
       const { trim, isEmpty } = this.app.lib._

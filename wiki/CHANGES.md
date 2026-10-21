@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-10-21
+
+- [2.6.1] Bug fix for newsticker condition
+
 ## 2026-10-19
 
 - [2.6.0] Add `control-newsticker` widget
