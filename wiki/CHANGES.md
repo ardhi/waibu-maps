@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-10-25
+
+- [2.7.0] Refactor getPosts()
+
 ## 2026-10-21
 
 - [2.6.1] Bug fix for newsticker condition

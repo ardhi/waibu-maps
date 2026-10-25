@@ -7,9 +7,13 @@ async function controlNewsticker () {
   return class WmapsControlNewsticker extends WmapsControl {
     static scripts = [
       ...super.scripts,
-      'waibuExtra.virtual:/acmeticker/acmeticker.min.js',
-      'waibuMaps.asset:/js/control-news-ticker.js'
+      'bajo.virtual:/dayjs/dayjs.min.js',
+      'bajo.virtual:/dayjs/plugin/timezone.js',
+      'bajo.virtual:/dayjs/plugin/utc.js',
+      'waibuExtra.virtual:/acmeticker/acmeticker.min.js'
     ]
+
+    static inlineScript = 'dayjs.extend(dayjs_plugin_timezone); dayjs.extend(dayjs_plugin_utc)'
 
     static css = [
       ...super.css,
@@ -17,6 +21,13 @@ async function controlNewsticker () {
       'waibuMaps.asset:/css/atomic.min.css',
       'waibuMaps.asset:/css/acmeticker.css'
     ]
+
+    static inlineCss = `
+    :root { --at-gtr: 0 }
+    .at-ticker-label { --at-bg-cl: #f00 }
+    .at-ticker-box { font-size: larger }
+    .at-ticker-box ul { padding-top: 5px }
+    `
 
     constructor (options) {
       super(options)
@@ -26,29 +37,68 @@ async function controlNewsticker () {
     build = async () => {
       const { camelCase } = this.app.lib._
       const { minify } = this.app.waibuMpa
-      const { getModel } = this.app.dobo
 
-      const model = getModel('CmsPost')
-      const posts = await model.findRecord({ query: { status: 'PUBLISHED' }, limit: 10 }, { noMagic: true })
-      console.log(posts)
+      this.addBlock('nonReactive', `
+        this.posts = []
+      `)
 
       this.addBlock('reactive', [`
         async ${prefix}Click (id) {
-          const item = await wmpa.fetchApi('/cms/post/' + id)
-          const imgUrl = '/dobo/attachment/cms-post/' + id + '/file/_first?notfound=true'
+          const item = this.posts.find(p => p.id === id)
+          const att = item._attachments[0]
+          let rsc = ''
+          if (att) {
+            if (att.mimeType.startsWith('video')) {
+              rsc = '<iframe style="max-height:600px; min-height:400px; width:100%" frameborder="0" allowfullscreen scrolling="no" allow="camera; microphone; fullscreen" src="' + att.url + '"></iframe>'
+            } else {
+              rsc = '<img style="max-height:600px" class="img-fluid" src="' + att.url + '">'
+            }
+          }
           const html = '<div class="d-flex border-bottom justify-content-center">' +
-            '<img style="max-height:200px" class="img-fluid" src="/db/attachment/cms-post/' + id + '/file/_first?notfound=true">' +
+            rsc +
             '</div><div class="px-3 py-2"><h5>' + item.title + '</h5>' +
             item.content.replaceAll('\\n', '<br>') +
             '</div>'
 
-          smaps.showDetails(html)
+          smaps.showDetails(html, { title: item.category })
           const el = document.querySelector('.maplibregl-ctrl-newsticker .content')
           if (!el) return
         }
+      `, `
+        newstickerDt () {
+          const el = document.querySelector('.maplibregl-ctrl-newsticker .datetime h5')
+          el.textContent = dayjs().tz('Asia/Jakarta').format('HH:mm [WIB]')
+        }
+      `, `
+        async getPosts () {
+          if (window.newsticker) window.newsticker.destroy()
+          const el = document.querySelector('.maplibregl-ctrl-newsticker .content')
+          el.innerHTML = ''
+          this.posts = await wmpa.fetchApi('/cms/post', { headers: { 'X-Attachments': 'true' } })
+          this.posts.forEach(post => {
+            const li = document.createElement('li')
+            const a = document.createElement('a')
+            a.href = '#'
+            a.classList.add('text-decoration-none')
+            a.textContent = post.title
+            a.addEventListener('click', () => this.${prefix}Click(post.id))
+            li.appendChild(a)
+            el.appendChild(li)
+          })
+          window.newsticker = new window.AcmeTicker(el, { 
+            type: 'vertical',
+            direction: 'down',
+            speed: 600
+          })
+        }
       `])
 
-      const content = posts.map(post => `<li><a href="#" @click="${prefix}Click(${post.id})">${post.title}</a></li>`).join('\n')
+      this.addBlock('run', `
+        this.newstickerDt()
+        setInterval(this.newstickerDt, 1000)
+        await this.getPosts()
+        setInterval(this.getPosts, 5 * 60 * 1000)
+      `)
 
       const ui = await minify(await this.component.buildSentence(`
         <c:div class="childmap maplibregl-ctrl-newsticker" x-data>
@@ -56,10 +106,9 @@ async function controlNewsticker () {
             <c:div class="wrapper maplibregl-ctrl-group">
               <div class="at-ctnr">
                 <div class="at-ticker at-flx at-pos at-h at-bdr at-bg-cl">
-                  <div class="at-ticker-label at-bg-cl at-cl at-p at-flx-srnk-0">Headlines</div>
+                  <div class="at-ticker-label at-bg-cl at-cl at-p at-flx-srnk-0 datetime"><h5></h5></div>
                   <c:div class="at-ticker-box at-h at-ovf at-p at-flx-grw-1" margin="start-2">
                     <ul class="content">
-                      ${content}
                     </ul>
                   </c:div>
                 </div>
