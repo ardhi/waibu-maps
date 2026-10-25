@@ -3,6 +3,7 @@
 ## 2026-10-25
 
 - [2.7.0] Refactor getPosts()
+- [2.7.1] Bug fix some positioning & dimensions
 
 ## 2026-10-21
 

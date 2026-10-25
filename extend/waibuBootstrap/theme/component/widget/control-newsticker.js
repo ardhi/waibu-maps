@@ -25,8 +25,9 @@ async function controlNewsticker () {
     static inlineCss = `
     :root { --at-gtr: 0 }
     .at-ticker-label { --at-bg-cl: #f00 }
-    .at-ticker-box { font-size: larger }
+    .at-ticker-box { font-size: larger; padding-right: 10px }
     .at-ticker-box ul { padding-top: 5px }
+    .text-content { max-height: calc(100vh - 600px); overflow-y: auto }
     `
 
     constructor (options) {
@@ -49,16 +50,16 @@ async function controlNewsticker () {
           let rsc = ''
           if (att) {
             if (att.mimeType.startsWith('video')) {
-              rsc = '<iframe style="max-height:600px; min-height:400px; width:100%" frameborder="0" allowfullscreen scrolling="no" allow="camera; microphone; fullscreen" src="' + att.url + '"></iframe>'
+              rsc = '<iframe style="height:400px; width:100%" frameborder="0" allowfullscreen scrolling="no" allow="camera; microphone; fullscreen" src="' + att.url + '"></iframe>'
             } else {
-              rsc = '<img style="max-height:600px" class="img-fluid" src="' + att.url + '">'
+              rsc = '<img style="height:400px" class="img-fluid" src="' + att.url + '">'
             }
           }
           const html = '<div class="d-flex border-bottom justify-content-center">' +
             rsc +
-            '</div><div class="px-3 py-2"><h5>' + item.title + '</h5>' +
+            '</div><div class="px-3 py-2"><h5>' + item.title + '</h5><div class="text-content">' +
             item.content.replaceAll('\\n', '<br>') +
-            '</div>'
+            '</div></div>'
 
           smaps.showDetails(html, { title: item.category })
           const el = document.querySelector('.maplibregl-ctrl-newsticker .content')
@@ -74,13 +75,16 @@ async function controlNewsticker () {
           if (window.newsticker) window.newsticker.destroy()
           const el = document.querySelector('.maplibregl-ctrl-newsticker .content')
           el.innerHTML = ''
-          this.posts = await wmpa.fetchApi('/cms/post', { headers: { 'X-Attachments': 'true' } })
+          this.posts = await wmpa.fetchApi('/cms/post', { headers: { 'X-Attachments': 'true' } }, { limit: 1 })
           this.posts.forEach(post => {
             const li = document.createElement('li')
             const a = document.createElement('a')
             a.href = '#'
             a.classList.add('text-decoration-none')
-            a.textContent = post.title
+            a.classList.add('text-truncate')
+            a.classList.add('d-inline-block')
+            a.style.width = '460px'
+            a.textContent = post.title.toUpperCase()
             a.addEventListener('click', () => this.${prefix}Click(post.id))
             li.appendChild(a)
             el.appendChild(li)
@@ -88,7 +92,8 @@ async function controlNewsticker () {
           window.newsticker = new window.AcmeTicker(el, { 
             type: 'vertical',
             direction: 'down',
-            speed: 600
+            speed: 600,
+            autoplay: 4000000000
           })
         }
       `])
