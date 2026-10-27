@@ -27,7 +27,7 @@ async function controlNewsticker () {
     .at-ticker-label { --at-bg-cl: #f00 }
     .at-ticker-box { font-size: larger; padding-right: 10px }
     .at-ticker-box ul { padding-top: 5px }
-    .text-content { max-height: calc(100vh - 600px); overflow-y: auto }
+    .text-content { max-height: calc(100vh - 450px); overflow-y: auto }
     `
 
     constructor (options) {
@@ -50,9 +50,9 @@ async function controlNewsticker () {
           let rsc = ''
           if (att) {
             if (att.mimeType.startsWith('video')) {
-              rsc = '<iframe style="height:400px; width:100%" frameborder="0" allowfullscreen scrolling="no" allow="camera; microphone; fullscreen" src="' + att.url + '"></iframe>'
+              rsc = '<iframe style="height:250px; width:100%" frameborder="0" allowfullscreen scrolling="no" allow="camera; microphone; fullscreen" src="' + att.url + '"></iframe>'
             } else {
-              rsc = '<img style="height:400px" class="img-fluid" src="' + att.url + '">'
+              rsc = '<img style="height:250px" class="img-fluid" src="' + att.url + '">'
             }
           }
           const html = '<div class="d-flex border-bottom justify-content-center">' +
@@ -75,7 +75,8 @@ async function controlNewsticker () {
           if (window.newsticker) window.newsticker.destroy()
           const el = document.querySelector('.maplibregl-ctrl-newsticker .content')
           el.innerHTML = ''
-          this.posts = await wmpa.fetchApi('/cms/post', { headers: { 'X-Attachments': 'true' } }, { limit: 1 })
+          this.posts = await wmpa.fetchApi('/cms/post', { headers: { 'X-Attachments': 'true' } }, { limit: 10 })
+          if (this.posts.length === 0) return
           this.posts.forEach(post => {
             const li = document.createElement('li')
             const a = document.createElement('a')
@@ -93,7 +94,7 @@ async function controlNewsticker () {
             type: 'vertical',
             direction: 'down',
             speed: 600,
-            autoplay: 4000000000
+            autoplay: 4000
           })
         }
       `])
@@ -102,7 +103,7 @@ async function controlNewsticker () {
         this.newstickerDt()
         setInterval(this.newstickerDt, 1000)
         await this.getPosts()
-        setInterval(this.getPosts, 5 * 60 * 1000)
+        setInterval(this.getPosts, 3 * 60 * 1000)
       `)
 
       const ui = await minify(await this.component.buildSentence(`

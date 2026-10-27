@@ -1,9 +1,15 @@
 # Changes
 
+## 2026-10-27
+
+- [2.7.4] Bug fix in `getPosts()`
+
 ## 2026-10-25
 
-- [2.7.0] Refactor getPosts()
+- [2.7.0] Refactor `getPosts()`
 - [2.7.1] Bug fix some positioning & dimensions
+- [2.7.2] Bug fix in timer
+- [2.7.3] Bug fix in image dimension
 
 ## 2026-10-21
 
