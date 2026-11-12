@@ -52,8 +52,7 @@ async function controlGroup () {
           const el = evt.target.closest('button')
           if (!el) return
           const menu = el.querySelector('.dropdown-menu .loading')
-          if (!menu) return
-          if (menu.children.length > 0) return
+          if (!menu || menu.children.length > 0) return
           const setting = el.getAttribute('setting') ? ('setting="' + el.getAttribute('setting') + '"') : ''
           const options = { selector: menu, checkChild: true }
           await wmpa.replaceWithComponent('<c:' + el.getAttribute('component') + ' ' + setting + ' />', options)

@@ -1,5 +1,10 @@
 # Changes
 
+## 2026-11-12
+
+- [2.7.5] Bug fix in `control-search.js` widget
+- [2.7.5] Bug fix in `control-group.js` widget
+
 ## 2026-10-27
 
 - [2.7.4] Bug fix in `getPosts()`
