@@ -1,7 +1,7 @@
 async function wmapsBase () {
   const controls = ['csrc', 'navigation-control', 'crlr', 'scale-control', 'attribution-control',
     'centerpos', 'fullscreen-control', 'geolocate-control', 'czbp', 'cmp']
-  if (this.app.sumbaCms) controls.push('newsticker')
+  if (this.app.sumbaCms) controls.push('news')
 
   return class WmapsBase extends this.app.baseClass.MpaWidget {
     static scripts = [...super.scripts,

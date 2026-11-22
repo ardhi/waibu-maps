@@ -1,5 +1,5 @@
 import control from './control.js'
-const prefix = 'newsticker'
+const prefix = 'news'
 
 async function controlNewsticker () {
   const WmapsControl = await control.call(this)
@@ -49,9 +49,9 @@ async function controlNewsticker () {
           const att = item._attachments[0]
           let rsc = ''
           if (att) {
-            if (att.mimeType.startsWith('video')) {
+            if (att.mimeType.startsWith('video') && !att.url.endsWith('.olv')) {
               rsc = '<iframe style="height:250px; width:100%" frameborder="0" allowfullscreen scrolling="no" allow="camera; microphone; fullscreen" src="' + att.url + '"></iframe>'
-            } else {
+            } else if (att.mimeType.startsWith('image')) {
               rsc = '<img style="height:250px" class="img-fluid" src="' + att.url + '">'
             }
           }
@@ -66,13 +66,13 @@ async function controlNewsticker () {
           if (!el) return
         }
       `, `
-        newstickerDt () {
+        ${prefix}Dt () {
           const el = document.querySelector('.maplibregl-ctrl-newsticker .datetime h5')
           el.textContent = dayjs().tz('Asia/Jakarta').format('HH:mm [WIB]')
         }
       `, `
-        async getPosts () {
-          if (window.newsticker) window.newsticker.destroy()
+        async ${prefix}GetPosts () {
+          // if (window.${prefix}) window.${prefix}.destroy()
           const el = document.querySelector('.maplibregl-ctrl-newsticker .content')
           el.innerHTML = ''
           this.posts = await wmpa.fetchApi('/cms/post', { headers: { 'X-Attachments': 'true' } }, { limit: 10 })
@@ -90,7 +90,7 @@ async function controlNewsticker () {
             li.appendChild(a)
             el.appendChild(li)
           })
-          window.newsticker = new window.AcmeTicker(el, { 
+          window.${prefix} = new window.AcmeTicker(el, { 
             type: 'vertical',
             direction: 'down',
             speed: 600,
@@ -100,10 +100,10 @@ async function controlNewsticker () {
       `])
 
       this.addBlock('run', `
-        this.newstickerDt()
-        setInterval(this.newstickerDt, 1000)
-        await this.getPosts()
-        setInterval(this.getPosts, 3 * 60 * 1000)
+        this.${prefix}Dt()
+        setInterval(this.${prefix}Dt, 1000)
+        await this.${prefix}GetPosts()
+        setInterval(this.${prefix}GetPosts, 3 * 60 * 1000)
       `)
 
       const ui = await minify(await this.component.buildSentence(`

@@ -1,5 +1,10 @@
 # Changes
 
+## 2026-11-22
+
+- [2.7.6] Bug fix in `control-newsticker.js` widget
+- [2.7.6] Bug fix in `wmaps-base.js` widget
+
 ## 2026-11-12
 
 - [2.7.5] Bug fix in `control-search.js` widget
