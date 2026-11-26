@@ -23,10 +23,10 @@ async function controlSearch () {
       `)
       this.addBlock('dataInit', `
         this.$watch('$store.mapSearch.value', async val => {
-          if (_.isEmpty(val)) return wbs.notify('enterPhrase', { type: 'danger' })
-          const html = await ${this.params.attr.method}(val, this.$store.mapSearch.feed)
-          this.$store.mapSearch.recent = html ?? ''
-          this.$store.mapSearch.busy = false
+          await this.${prefix}FetchList(val)
+        })
+        this.$watch('$store.mapSearch.page', async val => {
+          if (val > 0) await this.${prefix}FetchList(this.$store.mapSearch.value, val)
         })
         this.$watch('$store.mapSearch.recent', async val => {
           val = val ?? ''
@@ -38,6 +38,7 @@ async function controlSearch () {
         })
         this.$watch('$store.mapSearch.feed', async val => {
           this.$store.mapSearch.recent = ''
+          this.$store.mapSearch.page = null
         })
         this.$watch('$store.mapSearch.busy', async val => {
           const el = document.querySelector('#${id} .input-group .dropdown-toggle')
@@ -55,6 +56,52 @@ async function controlSearch () {
             '</c:button>'
           ]
           return [await wmpa.createComponent(body)]
+        }
+      `, `
+        async ${prefix}FetchList (val, page) {
+          if (_.isEmpty(val)) return wbs.notify('enterPhrase', { type: 'danger' })
+          page = page || this.$store.mapSearch.page || 1
+          let result = await ${this.params.attr.method}(val, this.$store.mapSearch.feed, { page })
+          if (_.isString(result)) {
+            this.$store.mapSearch.recent = result
+            this.$store.mapSearch.busy = false
+            return
+          }
+
+          let pagination = ''
+          const { response, transformer, fields } = result
+          if (response.data.length === 0) {
+            this.$store.mapSearch.recent = await smaps.searchNotFound()
+            this.$store.mapSearch.busy = false
+            return
+          }
+          if (transformer) response.data = await transformer(response)
+          const body = ['<c:div><c:table hover><c:thead><c:tr>']
+          for (const key of fields) {
+            body.push('<c:th t:content="field.' + key + '" />')
+          }
+          body.push('</c:tr></c:thead><c:tbody divider>')
+          for (const row of response.data) {
+            body.push('<c:tr style="cursor:pointer" @click="select(\\'' + row._selector + '\\')">')
+            for (const key of fields) {
+              body.push('<c:td>' + (row[key] || '') + '</c:td>')
+            }
+            body.push('</c:tr>')
+          }
+          body.push('</c:tbody></c:table>')
+          if (response.pages > 1) {
+            body.push('<c:div flex=justify-content:center margin=top-3><c:pagination>')
+            const max = response.pages < 10 ? response.pages : 10
+            for (let idx = 0; idx < max; idx++) {
+              const pageNo = idx + 1
+              body.push('<c:pagination-item @click=goto(' + pageNo + ') ' + (pageNo === response.page ? 'active' : '') + '>' + (idx + 1) + '</c:pagination-item>')
+            }
+            body.push('</c:pagination></c:div>')
+          }
+          body.push('</c:div>')
+          result = await wmpa.fetchRender(body)
+          this.$store.mapSearch.recent = result
+          this.$store.mapSearch.busy = false
         }
       `, `
         async ${prefix}Populate () {
@@ -86,8 +133,12 @@ async function controlSearch () {
             search () {
               this.$store.mapSearch.value = this.$refs.input.value
             },
+            goto (page) {
+              this.$store.mapSearch.page = page
+            },
             clearHistory () {
               this.$store.mapSearch.recent = ''
+              Alpine.store('mapSearch').page = null
             },
             abort () {
               const endpoint = this.$store.mapSearch.busy
@@ -99,6 +150,7 @@ async function controlSearch () {
             resetValue () {
               const el = document.querySelector('#${id} input[type=search]')
               el.value = ''
+              Alpine.store('mapSearch').page = null
             },
             select (id) {
               this.$store.mapSearch.select = id
@@ -106,7 +158,7 @@ async function controlSearch () {
               instance.hide()
             }
           }" x-init="$watch('$store.mapSearch.feed', resetValue)">
-            <c:form-input x-ref="input" type="search" dim="width:max" @keyup.enter="search()" :disabled="$store.mapSearch.busy">
+            <c:form-input x-ref="input" type="search" dim="width:max" @keyup.enter="search()" :disabled="$store.mapSearch.busy" :value="$store.mapSearch.value">
               <c:form-input-addon prepend>
                 <c:dropdown>
                 </c:dropdown>
@@ -148,9 +200,10 @@ async function controlSearch () {
         Alpine.store('mapSearch', {
           feed: Alpine.$persist('latLng:latLng').as('mapSearchFeed'),
           recent: Alpine.$persist('').as('mapSearchRecent'),
+          page: null,
           feeds: [],
           select: null,
-          value: null,
+          value: Alpine.$persist(null).as('mapSearchValue'),
           busy: false
         })
       `)

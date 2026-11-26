@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-11-26
+
+- [2.7.7] Bug fix in `control-search.js` widget
+
 ## 2026-11-22
 
 - [2.7.6] Bug fix in `control-newsticker.js` widget
