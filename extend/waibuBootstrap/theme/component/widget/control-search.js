@@ -76,15 +76,15 @@ async function controlSearch () {
             return
           }
           if (transformer) response.data = await transformer(response)
-          const body = ['<c:div><c:table hover><c:thead><c:tr>']
+          const body = ['<c:div><c:table hover responsive><c:thead><c:tr>']
           for (const key of fields) {
-            body.push('<c:th t:content="field.' + key + '" />')
+            body.push('<c:th t:content="field.' + key + '" text="nowrap" />')
           }
           body.push('</c:tr></c:thead><c:tbody divider>')
           for (const row of response.data) {
             body.push('<c:tr style="cursor:pointer" @click="select(\\'' + row._selector + '\\')">')
             for (const key of fields) {
-              body.push('<c:td>' + (row[key] || '') + '</c:td>')
+              body.push('<c:td text="nowrap">' + (row[key] || '') + '</c:td>')
             }
             body.push('</c:tr>')
           }

@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-11-27
+
+- [2.7.8] Bug fix in `control-search.js` widget for better support of responsive tables
+
 ## 2026-11-26
 
 - [2.7.7] Bug fix in `control-search.js` widget
