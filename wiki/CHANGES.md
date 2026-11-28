@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-11-28
+
+- [2.8.0] Add `control-fitbounds` widget
+
 ## 2026-11-27
 
 - [2.7.8] Bug fix in `control-search.js` widget for better support of responsive tables
